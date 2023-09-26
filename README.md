@@ -9,7 +9,7 @@ Will install all neede packages
 ### Compile
 
 ```
-./node_modules/.bin/tsc -p tsconfig.json
+npm run build:dev
 ```
 
 ### Formatting
