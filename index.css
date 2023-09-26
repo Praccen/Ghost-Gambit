@@ -1,0 +1,78 @@
+* {
+	padding: 0;
+	margin: 0;
+}
+html, body {
+	background: #000;
+	color: #fff;
+	overflow: hidden;
+	touch-action: none;
+	-ms-touch-action: none;
+}
+
+gameDiv {
+	position: absolute;
+}
+
+canvas {
+	position: absolute;
+	size: inherit;
+	touch-action-delay: none;
+	touch-action: none;
+	-ms-touch-action: none;
+	
+	image-rendering: optimizeSpeed;             /* Older versions of FF          */
+    image-rendering: -moz-crisp-edges;          /* FF 6.0+                       */
+    image-rendering: -webkit-optimize-contrast; /* Safari                        */
+    image-rendering: -o-crisp-edges;            /* OS X & Windows Opera (12.02+) */
+    image-rendering: pixelated;                 /* Awesome future-browsers       */
+    -ms-interpolation-mode: nearest-neighbor;   /* IE                            */
+}
+ 
+#guicontainer {
+	position: relative;
+	width: inherit;
+	height: inherit;
+
+    z-index: 10;
+}
+
+.floating-div {
+    position: absolute;
+	font-family:'Courier New', Courier, monospace;
+	white-space: pre;
+	width: fit-content;
+	height: fit-content;
+	
+	color: white;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+	
+	/* Make text not selectable */
+	-webkit-touch-callout: none; /* iOS Safari */
+	-webkit-user-select: none; /* Safari */
+	 -khtml-user-select: none; /* Konqueror HTML */
+	   -moz-user-select: none; /* Old versions of Firefox */
+		-ms-user-select: none; /* Internet Explorer/Edge */
+			user-select: none; /* Non-prefixed version, currently
+								  supported by Chrome, Opera and Firefox */
+}
+
+.button {
+	font-size: inherit;
+	font-family: inherit;
+	background-color: purple;
+	color: white;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+	border-radius: 4px;
+	padding: 5px;
+}
+
+.listButton {
+	font-size: inherit;
+	font-family: inherit;
+	background-color: transparent;
+	color: white;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+	width: 100%;
+	text-align: left;
+}
