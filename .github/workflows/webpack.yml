@@ -1,4 +1,4 @@
-name: NodeJS with Webpack
+name: Build and publish main
 
 on:
   push:
@@ -27,4 +27,4 @@ jobs:
           PATH=/run/wrappers/bin:/root/.nix-profile/bin:/etc/profiles/per-user/root/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin:$PATH
           npm install
           npm run build
-          rsync -r /run/github-runner/ldjam54/ldjam54/ldjam54/out/* /tmp/ldjam54.rlyeh.nu/
+          rsync -og -r out/* /var/www/ldjam54.rlyeh.nu/
