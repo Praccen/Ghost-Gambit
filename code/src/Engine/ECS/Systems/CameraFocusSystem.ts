@@ -31,7 +31,13 @@ export default class CameraFocusSystem extends System {
 			let tempMatrix = new Matrix4(null);
 			posComp.calculateMatrix(tempMatrix);
 			let camPosVector = tempMatrix.multiplyVector4(new Vector4([0, 0, 0, 1]));
-			let camPos = new Vec3().setValues(camPosVector.elements[0], camPosVector.elements[1], camPosVector.elements[2]).add(camFocusComp.offset);
+			let camPos = new Vec3()
+				.setValues(
+					camPosVector.elements[0],
+					camPosVector.elements[1],
+					camPosVector.elements[2]
+				)
+				.add(camFocusComp.offset);
 
 			this.camera.setPosition(camPos.x, camPos.y, camPos.z);
 			this.camera.setDir(

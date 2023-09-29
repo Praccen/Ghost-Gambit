@@ -27,5 +27,9 @@ export class Component {
 		return this._type;
 	}
 
-	addToGui(overlayRendering: OverlayRendering, parentDiv: Div, objectPlacer: ObjectPlacer) {}
+	addToGui(
+		overlayRendering: OverlayRendering,
+		parentDiv: Div,
+		objectPlacer: ObjectPlacer
+	) {}
 }

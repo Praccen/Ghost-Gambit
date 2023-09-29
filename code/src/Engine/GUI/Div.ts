@@ -8,7 +8,7 @@ export default class Div extends GuiObject {
 
 	constructor(parentDiv?: Div) {
 		super(parentDiv);
-		
+
 		this.position = new Vec2();
 		this.size = 42;
 		this.children = new Array<GuiObject>();

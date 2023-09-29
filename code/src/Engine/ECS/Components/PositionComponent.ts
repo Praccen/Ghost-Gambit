@@ -45,7 +45,11 @@ export default class PositionComponent extends Component {
 		matrix.translate(-this.origin.x, -this.origin.y, -this.origin.z);
 	}
 
-	addToGui(overlayRendering: OverlayRendering, parentDiv: Div, objectPlacer: ObjectPlacer) {
+	addToGui(
+		overlayRendering: OverlayRendering,
+		parentDiv: Div,
+		objectPlacer: ObjectPlacer
+	) {
 		let addTextEdit = (label: string, vec: Vec3, index: number) => {
 			let propEditText = overlayRendering.getNewEditText(parentDiv);
 			propEditText.textString = label;
@@ -62,11 +66,11 @@ export default class PositionComponent extends Component {
 		addTextEdit("PosX", this.position, 0);
 		addTextEdit("PosY", this.position, 1);
 		addTextEdit("PosZ", this.position, 2);
-		
+
 		addTextEdit("RotX", this.rotation, 0);
 		addTextEdit("RotY", this.rotation, 1);
 		addTextEdit("RotZ", this.rotation, 2);
-		
+
 		addTextEdit("ScaleX", this.scale, 0);
 		addTextEdit("ScaleY", this.scale, 1);
 		addTextEdit("ScaleZ", this.scale, 2);
@@ -87,11 +91,11 @@ export default class PositionComponent extends Component {
 		updateTextEdit("PosX", this.position, 0);
 		updateTextEdit("PosY", this.position, 1);
 		updateTextEdit("PosZ", this.position, 2);
-		
+
 		updateTextEdit("RotX", this.rotation, 0);
 		updateTextEdit("RotY", this.rotation, 1);
 		updateTextEdit("RotZ", this.rotation, 2);
-		
+
 		updateTextEdit("ScaleX", this.scale, 0);
 		updateTextEdit("ScaleY", this.scale, 1);
 		updateTextEdit("ScaleZ", this.scale, 2);

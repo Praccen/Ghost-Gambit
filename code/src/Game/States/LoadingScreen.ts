@@ -65,7 +65,7 @@ export default class LoadingScreen extends State {
 				if (row.includes(".png") || row.includes(".jpg")) {
 					row = row.replace("\r", "");
 					textures.push("Assets/textures/" + row);
-				} 
+				}
 			}
 		}
 
@@ -85,7 +85,7 @@ export default class LoadingScreen extends State {
 				if (row.includes(".obj")) {
 					row = row.replace("\r", "");
 					meshes.push("Assets/objs/" + row);
-				} 
+				}
 			}
 		}
 
@@ -94,7 +94,7 @@ export default class LoadingScreen extends State {
 
 		// Heightmaps to load
 		let heightmaps: (string | number)[][] = [
-			["Assets/heightmaps/heightmap.png", 200, 200, 1.0, 1.0]
+			["Assets/heightmaps/heightmap.png", 200, 200, 1.0, 1.0],
 		];
 		this.heightmapsRequested = heightmaps.length;
 		this.heightmapsLoaded = 0;

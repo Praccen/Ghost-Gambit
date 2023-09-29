@@ -88,12 +88,11 @@ export default class Input {
 
 		document.addEventListener("mousedown", (event) => {
 			if (event.button == 0) {
-				self.mouseClicked = true;	
+				self.mouseClicked = true;
 				if (self.simulateTouchBasedOnMouse) {
 					self.handleTouch([event]);
 				}
-			}
-			else if (event.button == 2) {
+			} else if (event.button == 2) {
 				self.mouseRightClicked = true;
 			}
 		});
@@ -103,8 +102,7 @@ export default class Input {
 				if (self.simulateTouchBasedOnMouse) {
 					self.handleTouch([]);
 				}
-			}
-			else if (event.button == 2) {
+			} else if (event.button == 2) {
 				self.mouseRightClicked = false;
 			}
 		});
@@ -193,7 +191,8 @@ export default class Input {
 		this.bButton.setHidden(true);
 	}
 
-	mouseMoveCallBack(event: MouseEvent) { // Overload this if you want direct controll of the events
+	mouseMoveCallBack(event: MouseEvent) {
+		// Overload this if you want direct controll of the events
 	}
 
 	handleTouch(touches) {

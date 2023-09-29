@@ -38,7 +38,8 @@ export class OverlayRendering {
 
 	hide() {
 		for (let guiObject2D of this.guiObjects2D) {
-			if (!guiObject2D.hasParent) { // Only change top level objects
+			if (!guiObject2D.hasParent) {
+				// Only change top level objects
 				guiObject2D.setHidden(true);
 			}
 		}
@@ -50,7 +51,8 @@ export class OverlayRendering {
 
 	show() {
 		for (let guiObject2D of this.guiObjects2D) {
-			if (!guiObject2D.hasParent) { // Only change top level objects
+			if (!guiObject2D.hasParent) {
+				// Only change top level objects
 				guiObject2D.setHidden(false);
 			}
 		}

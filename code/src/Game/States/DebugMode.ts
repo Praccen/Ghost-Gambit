@@ -43,7 +43,11 @@ export default class DebugMode extends State {
 		if (posCookie != "") {
 			let coords = posCookie.split(",");
 			if (coords.length == 3) {
-				this.game.rendering.camera.setPosition(parseFloat(coords[0]), parseFloat(coords[1]), parseFloat(coords[2]));
+				this.game.rendering.camera.setPosition(
+					parseFloat(coords[0]),
+					parseFloat(coords[1]),
+					parseFloat(coords[2])
+				);
 			}
 		}
 
@@ -51,7 +55,11 @@ export default class DebugMode extends State {
 		if (dirCookie != "") {
 			let coords = dirCookie.split(",");
 			if (coords.length == 3) {
-				this.game.rendering.camera.setDir(parseFloat(coords[0]), parseFloat(coords[1]), parseFloat(coords[2]));
+				this.game.rendering.camera.setDir(
+					parseFloat(coords[0]),
+					parseFloat(coords[1]),
+					parseFloat(coords[2])
+				);
 			}
 		}
 
@@ -72,11 +80,9 @@ export default class DebugMode extends State {
 				this.gotoState = StatesEnum.GAME;
 			}
 			this.oWasPressed = true;
-		}
-		else {
+		} else {
 			this.oWasPressed = false;
 		}
-		
 
 		let moveVec: Vec3 = new Vec3();
 		let move = false;
@@ -120,7 +126,12 @@ export default class DebugMode extends State {
 		let rotVec: Vec2 = new Vec2([0.0, 0.0]);
 		let rotate = false;
 
-		if (input.mouseRightClicked && !this.debugMenu.mouseOverGuiElement && (input.mousePosition.x != input.mousePosition.previousX || input.mousePosition.y != input.mousePosition.previousY)) {
+		if (
+			input.mouseRightClicked &&
+			!this.debugMenu.mouseOverGuiElement &&
+			(input.mousePosition.x != input.mousePosition.previousX ||
+				input.mousePosition.y != input.mousePosition.previousY)
+		) {
 			rotVec.setValues(
 				(input.mousePosition.previousY - input.mousePosition.y) * 0.2,
 				(input.mousePosition.previousX - input.mousePosition.x) * 0.2
@@ -167,7 +178,7 @@ export default class DebugMode extends State {
 			if (input.keys["T"] || input.keys["G"]) {
 				let ray = MousePicking.GetRay(this.game.rendering.camera);
 				let dist: number = Infinity;
-				
+
 				if (input.keys["T"]) {
 					dist = this.game.doRayCast(ray);
 				}
@@ -178,14 +189,14 @@ export default class DebugMode extends State {
 
 				if (dist >= 0.0 && dist < Infinity) {
 					newPosition = new Vec3(this.game.rendering.camera.getPosition()).add(
-						new Vec3(ray.getDir()).multiply(dist));
+						new Vec3(ray.getDir()).multiply(dist)
+					);
 					edited = true;
 				}
 				this.actionString = "Moving";
 			}
 			if (input.keys["Y"]) {
-				scaleChange =
-				(this.lastMousePos.y - input.mousePosition.y) * 0.001;
+				scaleChange = (this.lastMousePos.y - input.mousePosition.y) * 0.001;
 				edited = true;
 				this.actionString = "Scaling";
 			}
@@ -199,8 +210,8 @@ export default class DebugMode extends State {
 				// this.debugMenu.updateEntityBoxComponents(this.game.objectPlacer.currentlyEditingEntityId);
 				checkpointTriggeredThisFrame = true;
 				this.checkpointNeeded = true;
-			}
-			else if (!this.mouseWasPressed) { // If we clicked the mouse button this frame
+			} else if (!this.mouseWasPressed) {
+				// If we clicked the mouse button this frame
 				// Try to select a new object to edit
 				let ray = MousePicking.GetRay(this.game.rendering.camera);
 				this.game.objectPlacer.rayCastToSelectNewObject(ray);
@@ -210,7 +221,7 @@ export default class DebugMode extends State {
 			this.mouseWasPressed = true;
 		} else {
 			this.mouseWasPressed = false;
-			this.actionString = "Currently selected:"
+			this.actionString = "Currently selected:";
 		}
 
 		if (input.keys["DELETE"]) {
@@ -228,8 +239,7 @@ export default class DebugMode extends State {
 				this.checkpointNeeded = true;
 			}
 			this.cWasPressed = true;
-		}
-		else {
+		} else {
 			this.cWasPressed = false;
 		}
 
@@ -245,10 +255,11 @@ export default class DebugMode extends State {
 
 		this.game.grassHandler.update(dt);
 
-		this.debugMenu.actionText.textString = this.actionString + " " + this.game.objectPlacer.getCurrentObjectName();
+		this.debugMenu.actionText.textString =
+			this.actionString + " " + this.game.objectPlacer.getCurrentObjectName();
 
 		this.debugMenu.update(dt);
-		
+
 		this.game.ecsManager.update(0.0);
 
 		if (this.checkpointNeeded && !checkpointTriggeredThisFrame) {

@@ -29,14 +29,13 @@ export default class BloomRenderPass {
 		for (let i = 1; i <= 5; i++) {
 			this.bloomLevelsFramebuffers.push(
 				new Framebuffer(
-					this.bloomResolutionWidth * Math.pow(0.5, i), 
+					this.bloomResolutionWidth * Math.pow(0.5, i),
 					this.bloomResolutionHeight * Math.pow(0.5, i),
 					[new Texture(false)],
 					null
 				)
 			);
 		}
-		
 
 		this.screenQuad = new ScreenQuad(screenQuadShaderProgram, inputTextures);
 		this.outputFramebuffer = null;
@@ -57,7 +56,7 @@ export default class BloomRenderPass {
 
 	draw() {
 		gl.disable(gl.DEPTH_TEST);
-		
+
 		// Extract the bloom areas
 		this.bloomExtractionOutputFramebuffer.bind(gl.DRAW_FRAMEBUFFER);
 		bloomExtraction.use();
@@ -67,7 +66,12 @@ export default class BloomRenderPass {
 		screenQuadShaderProgram.use();
 		this.bloomExtractionOutputFramebuffer.textures[1].bind(0);
 		for (let i = 0; i < this.bloomLevelsFramebuffers.length; i++) {
-			gl.viewport(0, 0, this.bloomResolutionWidth * Math.pow(0.5, i + 1), this.bloomResolutionHeight * Math.pow(0.5, i + 1));
+			gl.viewport(
+				0,
+				0,
+				this.bloomResolutionWidth * Math.pow(0.5, i + 1),
+				this.bloomResolutionHeight * Math.pow(0.5, i + 1)
+			);
 			this.bloomLevelsFramebuffers[i].bind(gl.DRAW_FRAMEBUFFER);
 			this.screenQuad.draw(false);
 			this.bloomLevelsFramebuffers[i].textures[0].bind(0);
@@ -80,7 +84,7 @@ export default class BloomRenderPass {
 		this.bloomExtractionOutputFramebuffer.textures[0].bind(0); // Normal scene
 		// Bloom levels
 		for (let i = 0; i < this.bloomLevelsFramebuffers.length; i++) {
-			this.bloomLevelsFramebuffers[i].textures[0].bind(i+1);
+			this.bloomLevelsFramebuffers[i].textures[0].bind(i + 1);
 		}
 
 		this.bindFramebuffers();

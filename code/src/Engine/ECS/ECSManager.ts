@@ -155,9 +155,7 @@ export default class ECSManager {
 			}
 
 			// Delete in manager
-			let index = this.entities.findIndex(
-				(e) => e.id == entityId
-			);
+			let index = this.entities.findIndex((e) => e.id == entityId);
 			if (index != -1) {
 				this.entities.splice(index, 1);
 			}

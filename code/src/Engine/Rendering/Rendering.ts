@@ -237,7 +237,7 @@ export default class Rendering {
 			this.skyboxRenderPass.draw(this.camera);
 		}
 		// ----------------
-		
+
 		// ---- Particles ----
 		this.particleRenderPass.draw(this.scene, this.camera);
 		// -------------------

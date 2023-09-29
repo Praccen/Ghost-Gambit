@@ -28,7 +28,7 @@ export default class GuiObject {
 		this.divContainerElement = <HTMLElement>(
 			document.getElementById("guicontainer")
 		);
-	
+
 		// make the div
 		this.div = document.createElement("div");
 
@@ -39,12 +39,11 @@ export default class GuiObject {
 			parentDiv.appendChild(this);
 			this.div.style.position = "relative";
 			this.hasParent = true;
-		}
-		else {
+		} else {
 			// add it to the divcontainer
 			this.divContainerElement.appendChild(this.div);
 			this.hasParent = false;
-		}		
+		}
 	}
 
 	getElement(): HTMLDivElement {

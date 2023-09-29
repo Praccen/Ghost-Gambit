@@ -108,11 +108,18 @@ export default class Game extends State {
 		let fireflies = this.ecsManager.createEntity();
 
 		let nrOfFireflies = 10000;
-		let firefliesParticles = this.scene.getNewParticleSpawner("Assets/textures/fire.png", nrOfFireflies);
+		let firefliesParticles = this.scene.getNewParticleSpawner(
+			"Assets/textures/fire.png",
+			nrOfFireflies
+		);
 		let invertedMatrix = new Matrix4(this.mapBundle.modelMatrix).invert(); // Invert the transform matrix used for the heightmap
 
 		for (let i = 0; i < nrOfFireflies; i++) {
-			let tempPos = new Vec3([Math.random() * 200.0 - 10.0, -5.0, Math.random() * 200.0 - 10.0]);
+			let tempPos = new Vec3([
+				Math.random() * 200.0 - 10.0,
+				-5.0,
+				Math.random() * 200.0 - 10.0,
+			]);
 			// Get the height of the heightmap at the corresponding position
 			let height = (<Heightmap>(
 				this.mapBundle.graphicsObject
@@ -123,12 +130,17 @@ export default class Game extends State {
 			);
 			tempPos.y = height;
 			firefliesParticles.setParticleData(
-				i, 
-				tempPos, 
-				0.03, 
+				i,
+				tempPos,
+				0.03,
 				new Vec3([Math.random() * 0.2 - 0.1, 0.0, Math.random() * 0.2 - 0.1]),
-				new Vec3([Math.random() * 0.2 - 0.1, Math.random() * 0.1, Math.random() * 0.2 - 0.1]))
-		};
+				new Vec3([
+					Math.random() * 0.2 - 0.1,
+					Math.random() * 0.1,
+					Math.random() * 0.2 - 0.1,
+				])
+			);
+		}
 		firefliesParticles.sizeChangePerSecond = 0;
 		firefliesParticles.fadePerSecond = 0.05;
 
@@ -138,15 +150,19 @@ export default class Game extends State {
 
 		let fire = this.ecsManager.createEntity();
 		let nrOfFireParticles = 1000;
-		let fireParticles = this.scene.getNewParticleSpawner("Assets/textures/fire.png", nrOfFireParticles);
+		let fireParticles = this.scene.getNewParticleSpawner(
+			"Assets/textures/fire.png",
+			nrOfFireParticles
+		);
 		for (let i = 0; i < nrOfFireParticles; i++) {
 			fireParticles.setParticleData(
-				i, 
-				new Vec3(), 
-				0.1, 
+				i,
+				new Vec3(),
+				0.1,
 				new Vec3([Math.random() - 0.5, 0.0, Math.random() - 0.5]),
-				new Vec3([0.0, 0.5, 0.0]))
-		};
+				new Vec3([0.0, 0.5, 0.0])
+			);
+		}
 		fireParticles.sizeChangePerSecond = 0.1;
 		fireParticles.fadePerSecond = 0.5;
 
@@ -275,11 +291,10 @@ export default class Game extends State {
 		if (input.keys["O"]) {
 			if (!this.oWasPressed) {
 				this.gotoState = StatesEnum.DEBUGMODE;
-				WebUtils.SetCookie("debug", "true")
+				WebUtils.SetCookie("debug", "true");
 			}
 			this.oWasPressed = true;
-		}
-		else {
+		} else {
 			this.oWasPressed = false;
 		}
 

@@ -1,7 +1,10 @@
 import MeshStore from "../Engine/AssetHandling/MeshStore";
 import BoundingBoxComponent from "../Engine/ECS/Components/BoundingBoxComponent";
 import CollisionComponent from "../Engine/ECS/Components/CollisionComponent";
-import { Component, ComponentTypeEnum } from "../Engine/ECS/Components/Component";
+import {
+	Component,
+	ComponentTypeEnum,
+} from "../Engine/ECS/Components/Component";
 import GraphicsComponent from "../Engine/ECS/Components/GraphicsComponent";
 import MeshCollisionComponent from "../Engine/ECS/Components/MeshCollisionComponent";
 import PositionComponent from "../Engine/ECS/Components/PositionComponent";
@@ -69,12 +72,14 @@ export default class ObjectPlacer {
 
 	private async loadFromFile() {
 		// Execute the PlacementList code
-		const placementsResponse = await fetch("Assets/placements/PlacementList.js");
+		const placementsResponse = await fetch(
+			"Assets/placements/PlacementList.js"
+		);
 		if (placementsResponse.ok) {
 			const content = await placementsResponse.text();
 
 			eval(content);
-		}		
+		}
 
 		// Now read all transforms for the placements from Placements.txt
 		const response = await fetch("Assets/placements/Placements.txt");
@@ -82,7 +87,7 @@ export default class ObjectPlacer {
 			const content = await response.text();
 
 			if (content != "") {
-				let currentPlacementType = ""; 
+				let currentPlacementType = "";
 				for (let t of content.split("\n")) {
 					t = t.trim();
 					if (t == "") {
@@ -90,8 +95,7 @@ export default class ObjectPlacer {
 					}
 					if (t.startsWith("Placement:")) {
 						currentPlacementType = t.substring("Placement:".length);
-					}
-					else {
+					} else {
 						let [p, s, r] = t.split("|");
 						this.placeObject(
 							currentPlacementType,
@@ -105,13 +109,9 @@ export default class ObjectPlacer {
 		}
 	}
 
-	makeCheckpoint() {
+	makeCheckpoint() {}
 
-	}
-
-	undo() {
-		
-	}
+	undo() {}
 
 	getCurrentObjectName(): string {
 		if (this.currentlyEditingEntityId == undefined) {
@@ -137,7 +137,7 @@ export default class ObjectPlacer {
 		if (placement == undefined) {
 			return null;
 		}
-		
+
 		// Mark that we have changed something
 		this.downloadNeeded = true;
 
@@ -177,9 +177,7 @@ export default class ObjectPlacer {
 		if (octree == undefined) {
 			return entity;
 		}
-		let meshColComp = new MeshCollisionComponent(
-			octree
-		);
+		let meshColComp = new MeshCollisionComponent(octree);
 		meshColComp.octree.setModelMatrix(mesh.modelMatrix);
 		this.ecsManager.addComponent(entity, meshColComp);
 		return entity;
@@ -192,30 +190,42 @@ export default class ObjectPlacer {
 			if (e.id == this.currentlyEditingEntityId) {
 				continue;
 			}
-			
-			let bbComp = e.getComponent(ComponentTypeEnum.BOUNDINGBOX) as BoundingBoxComponent;
+
+			let bbComp = e.getComponent(
+				ComponentTypeEnum.BOUNDINGBOX
+			) as BoundingBoxComponent;
 			if (bbComp == undefined) {
 				continue;
 			}
 
 			bbComp.boundingBox.setUpdateNeeded();
 
-			let dist = IntersectionTester.doRayCast(ray, [bbComp.boundingBox], closest); // Ray cast against bounding box, only caring about hits closer than the previous closest
-			if (dist >= 0 && dist < closest) { // Boundingbox is closer than current closest hit
+			let dist = IntersectionTester.doRayCast(
+				ray,
+				[bbComp.boundingBox],
+				closest
+			); // Ray cast against bounding box, only caring about hits closer than the previous closest
+			if (dist >= 0 && dist < closest) {
+				// Boundingbox is closer than current closest hit
 				// Ray cast against mesh if there is one, only caring about hits closer than the previous closest
-				let meshColComp = e.getComponent(ComponentTypeEnum.MESHCOLLISION) as MeshCollisionComponent;
+				let meshColComp = e.getComponent(
+					ComponentTypeEnum.MESHCOLLISION
+				) as MeshCollisionComponent;
 				if (meshColComp != undefined) {
 					// TODO: This is ugly but works. Makes sure we have the correct transform matrix in the octree, and in case it was already correct, we force it to update anyways.
-					meshColComp.octree.setModelMatrix(bbComp.boundingBox.getTransformMatrix());
+					meshColComp.octree.setModelMatrix(
+						bbComp.boundingBox.getTransformMatrix()
+					);
 					meshColComp.octree.setModelMatrix();
 					let shapeArray = new Array<Triangle>();
 					meshColComp.octree.getShapesForRayCast(ray, shapeArray, closest);
 					dist = IntersectionTester.doRayCast(ray, shapeArray, closest);
 				}
-				
-				if (dist >= 0.0 && dist < closest) { // Hit is still closer than current closest
+
+				if (dist >= 0.0 && dist < closest) {
+					// Hit is still closer than current closest
 					// Update the closest information and save the object for editing
-					closest = dist;	
+					closest = dist;
 				}
 			}
 		}
@@ -226,28 +236,40 @@ export default class ObjectPlacer {
 		let closest = Infinity;
 
 		for (let e of this.ecsManager.entities) {
-			let bbComp = e.getComponent(ComponentTypeEnum.BOUNDINGBOX) as BoundingBoxComponent;
+			let bbComp = e.getComponent(
+				ComponentTypeEnum.BOUNDINGBOX
+			) as BoundingBoxComponent;
 			if (bbComp == undefined) {
 				continue;
 			}
 
 			bbComp.boundingBox.setUpdateNeeded();
 
-			let dist = IntersectionTester.doRayCast(ray, [bbComp.boundingBox], closest); // Ray cast against bounding box, only caring about hits closer than the previous closest
-			if (dist >= 0 && dist < closest) { // Boundingbox is closer than current closest hit
+			let dist = IntersectionTester.doRayCast(
+				ray,
+				[bbComp.boundingBox],
+				closest
+			); // Ray cast against bounding box, only caring about hits closer than the previous closest
+			if (dist >= 0 && dist < closest) {
+				// Boundingbox is closer than current closest hit
 
 				// Ray cast against mesh if there is one, only caring about hits closer than the previous closest
-				let meshColComp = e.getComponent(ComponentTypeEnum.MESHCOLLISION) as MeshCollisionComponent;
+				let meshColComp = e.getComponent(
+					ComponentTypeEnum.MESHCOLLISION
+				) as MeshCollisionComponent;
 				if (meshColComp != undefined) {
 					// TODO: This is ugly but works. Makes sure we have the correct transform matrix in the octree, and in case it was already correct, we force it to update anyways.
-					meshColComp.octree.setModelMatrix(bbComp.boundingBox.getTransformMatrix());
+					meshColComp.octree.setModelMatrix(
+						bbComp.boundingBox.getTransformMatrix()
+					);
 					meshColComp.octree.setModelMatrix();
 					let shapeArray = new Array<Triangle>();
 					meshColComp.octree.getShapesForRayCast(ray, shapeArray, closest);
 					dist = IntersectionTester.doRayCast(ray, shapeArray, closest);
 				}
-				
-				if (dist >= 0 && dist < closest) { // Hit is still closer than current closest
+
+				if (dist >= 0 && dist < closest) {
+					// Hit is still closer than current closest
 					// Update the closest information and save the object for editing
 					closest = dist;
 					this.currentlyEditingEntityId = e.id;
@@ -264,13 +286,21 @@ export default class ObjectPlacer {
 		this.currentlyEditingEntityId = id;
 	}
 
-	updateCurrentlyEditingObject(rotationChange: number, scaleChange: number, newPosition?: Vec3) {
+	updateCurrentlyEditingObject(
+		rotationChange: number,
+		scaleChange: number,
+		newPosition?: Vec3
+	) {
 		if (this.currentlyEditingEntityId != null) {
 			let entity = this.ecsManager.getEntity(this.currentlyEditingEntityId);
 			if (entity != undefined) {
-				let posComp = entity.getComponent(ComponentTypeEnum.POSITIONPARENT) as PositionComponent;
+				let posComp = entity.getComponent(
+					ComponentTypeEnum.POSITIONPARENT
+				) as PositionComponent;
 				if (posComp == undefined) {
-					posComp = entity.getComponent(ComponentTypeEnum.POSITION) as PositionComponent;
+					posComp = entity.getComponent(
+						ComponentTypeEnum.POSITION
+					) as PositionComponent;
 				}
 
 				if (posComp == undefined) {
@@ -306,7 +336,9 @@ export default class ObjectPlacer {
 			if (entity != undefined) {
 				// Remove graphics bundle from scene
 				// TODO: Make this automatic when entity is removed
-				let graphicsComponent = entity.getComponent(ComponentTypeEnum.GRAPHICS) as GraphicsComponent;
+				let graphicsComponent = entity.getComponent(
+					ComponentTypeEnum.GRAPHICS
+				) as GraphicsComponent;
 				if (graphicsComponent != undefined) {
 					this.scene.deleteGraphicsBundle(graphicsComponent.object);
 				}
@@ -318,13 +350,15 @@ export default class ObjectPlacer {
 				this.downloadNeeded = true;
 			}
 		}
-		
+
 		this.currentlyEditingEntityId = null;
 	}
 
 	duplicateCurrentObject() {
 		if (this.currentlyEditingEntityId != undefined) {
-			let entityPlacement = this.entityPlacements.get(this.currentlyEditingEntityId);
+			let entityPlacement = this.entityPlacements.get(
+				this.currentlyEditingEntityId
+			);
 			if (entityPlacement == undefined) {
 				return;
 			}
@@ -335,12 +369,16 @@ export default class ObjectPlacer {
 				return;
 			}
 
-			let posComp: PositionComponent = <PositionComponent>entity.getComponent(ComponentTypeEnum.POSITIONPARENT);
-			
+			let posComp: PositionComponent = <PositionComponent>(
+				entity.getComponent(ComponentTypeEnum.POSITIONPARENT)
+			);
+
 			if (posComp == undefined) {
-				posComp = <PositionComponent>entity.getComponent(ComponentTypeEnum.POSITION);
+				posComp = <PositionComponent>(
+					entity.getComponent(ComponentTypeEnum.POSITION)
+				);
 			}
-			
+
 			if (posComp == undefined) {
 				return;
 			}
@@ -350,10 +388,9 @@ export default class ObjectPlacer {
 				new Vec3(posComp.position).add([0.0, 5.0, 0.0]),
 				new Vec3(posComp.scale),
 				new Vec3(posComp.rotation)
-			)
+			);
 		}
 	}
-
 
 	downloadTransforms() {
 		let transformsData = "";
@@ -364,14 +401,23 @@ export default class ObjectPlacer {
 				if (ep[1] == placementString) {
 					let entity = this.ecsManager.getEntity(ep[0]);
 					if (entity != undefined) {
-						let posComp: PositionComponent = <PositionComponent>entity.getComponent(ComponentTypeEnum.POSITIONPARENT);
+						let posComp: PositionComponent = <PositionComponent>(
+							entity.getComponent(ComponentTypeEnum.POSITIONPARENT)
+						);
 						if (posComp == undefined) {
-							posComp = <PositionComponent>entity.getComponent(ComponentTypeEnum.POSITION);
+							posComp = <PositionComponent>(
+								entity.getComponent(ComponentTypeEnum.POSITION)
+							);
 						}
 
 						if (posComp != undefined) {
 							transformsData +=
-								posComp.position + "|" + posComp.scale + "|" + posComp.rotation + "\n";
+								posComp.position +
+								"|" +
+								posComp.scale +
+								"|" +
+								posComp.rotation +
+								"\n";
 						}
 					}
 				}

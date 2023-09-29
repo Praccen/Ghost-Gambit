@@ -18,7 +18,7 @@ export default class DebugMenu {
 	private downloadTransformsButton: Button;
 
 	private placementMenu: Div;
-	private movingPlacementBox: Boolean
+	private movingPlacementBox: Boolean;
 
 	private entitiesBox: Div;
 	private movingEntitiesBox: boolean;
@@ -68,12 +68,12 @@ export default class DebugMenu {
 		// Prevent picking through gui element (also don't update the properties box when hovering the properties window)
 		this.placementMenu.getElement().onmouseenter = () => {
 			this.mouseOverGuiElement = true;
-		}
+		};
 		this.placementMenu.getElement().onmouseleave = () => {
 			if (!input.mouseClicked) {
 				this.mouseOverGuiElement = false;
 			}
-		}
+		};
 
 		let placementMenuText = this.overlay.getNew2DText(this.placementMenu);
 		placementMenuText.textString = "Placement menu";
@@ -102,25 +102,24 @@ export default class DebugMenu {
 		// Prevent picking through gui element (also don't update the properties box when hovering the properties window)
 		this.entitiesBox.getElement().onmouseenter = () => {
 			this.mouseOverGuiElement = true;
-		}
+		};
 		this.entitiesBox.getElement().onmouseleave = () => {
 			if (!input.mouseClicked) {
 				this.mouseOverGuiElement = false;
 			}
-		}
+		};
 
 		this.movingEntitiesBox = false;
 
 		let entitiesText = this.overlay.getNew2DText(this.entitiesBox);
 		entitiesText.textString = "Entities";
-		entitiesText.getElement().style.backgroundColor = "dimgray"
+		entitiesText.getElement().style.backgroundColor = "dimgray";
 		entitiesText.getElement().style.width = "100%";
 		entitiesText.getElement().style.cursor = "move";
 		entitiesText.getElement().style.borderRadius = "5px";
 		entitiesText.getElement().onmousedown = () => {
 			this.movingEntitiesBox = true;
 		};
-		
 	}
 
 	async init() {
@@ -130,7 +129,7 @@ export default class DebugMenu {
 		let length = this.entitiesBox.children.length;
 		if (length > 1) {
 			this.entitiesBox.children[1].remove();
-			this.entitiesBox.children.splice(1,1);
+			this.entitiesBox.children.splice(1, 1);
 		}
 	}
 
@@ -147,7 +146,7 @@ export default class DebugMenu {
 			comp.addToGui(this.overlay, compPropDiv, this.game.objectPlacer);
 
 			compBtn.onClick(() => {
-				compPropDiv.toggleHidden()
+				compPropDiv.toggleHidden();
 			});
 			compPropDiv.setHidden(true);
 		}
@@ -175,25 +174,31 @@ export default class DebugMenu {
 	// }
 
 	update(dt: number) {
-		// Moving of boxes 
+		// Moving of boxes
 		if (!input.mouseClicked) {
 			this.movingPlacementBox = false;
 			this.movingEntitiesBox = false;
 		}
 
 		if (this.movingPlacementBox) {
-			this.placementMenu.position.x = input.mousePositionOnCanvas.x / windowInfo.resolutionWidth;
-			this.placementMenu.position.y = input.mousePositionOnCanvas.y / windowInfo.resolutionHeight;
+			this.placementMenu.position.x =
+				input.mousePositionOnCanvas.x / windowInfo.resolutionWidth;
+			this.placementMenu.position.y =
+				input.mousePositionOnCanvas.y / windowInfo.resolutionHeight;
 		}
 
 		if (this.movingEntitiesBox) {
-			this.entitiesBox.position.x = input.mousePositionOnCanvas.x / windowInfo.resolutionWidth;
-			this.entitiesBox.position.y = input.mousePositionOnCanvas.y / windowInfo.resolutionHeight;
+			this.entitiesBox.position.x =
+				input.mousePositionOnCanvas.x / windowInfo.resolutionWidth;
+			this.entitiesBox.position.y =
+				input.mousePositionOnCanvas.y / windowInfo.resolutionHeight;
 		}
 
-
 		// Update the placement menu if it is not synced with placements (+1 is because there is a text child as well)
-		if (this.placementMenu.children.length != this.game.objectPlacer.placements.size + 1) {
+		if (
+			this.placementMenu.children.length !=
+			this.game.objectPlacer.placements.size + 1
+		) {
 			for (let i = 1; i < this.placementMenu.children.length; i++) {
 				this.placementMenu.children[i].remove();
 				this.placementMenu.children.splice(i, 1);
@@ -219,7 +224,10 @@ export default class DebugMenu {
 		}
 
 		// Update the entities menu
-		if (this.entitiesBox.children.length != this.game.ecsManager.entities.length * 2 + 1) {
+		if (
+			this.entitiesBox.children.length !=
+			this.game.ecsManager.entities.length * 2 + 1
+		) {
 			for (let i = 1; i < this.entitiesBox.children.length; i++) {
 				this.entitiesBox.children[i].remove();
 				this.entitiesBox.children.splice(i, 1);
@@ -241,17 +249,21 @@ export default class DebugMenu {
 				this.addComponentButtons(e, componentsDiv);
 
 				entityBtn.onClick(() => {
-					componentsDiv.toggleHidden()
+					componentsDiv.toggleHidden();
 					this.game.objectPlacer.selectNewObjectFromEntityId(e.id);
 				});
 			});
 		}
 
-		for (let i = 1; i < this.entitiesBox.children.length; i+=2) {
+		for (let i = 1; i < this.entitiesBox.children.length; i += 2) {
 			let eChild = this.entitiesBox.children[i];
 			eChild.getElement().style.backgroundColor = "transparent";
-			
-			if (this.game.objectPlacer.currentlyEditingEntityId != undefined && eChild.textString == "" + this.game.objectPlacer.currentlyEditingEntityId) {
+
+			if (
+				this.game.objectPlacer.currentlyEditingEntityId != undefined &&
+				eChild.textString ==
+					"" + this.game.objectPlacer.currentlyEditingEntityId
+			) {
 				eChild.getElement().style.backgroundColor = "dimgray";
 			}
 		}

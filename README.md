@@ -15,5 +15,5 @@ npm run build:dev
 ### Formatting
 
 ```
-./node_modules/.bin/prettier --write src
+npx prettier --write code/src/
 ```
