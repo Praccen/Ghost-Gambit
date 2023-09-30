@@ -23,6 +23,8 @@ export default class DebugMenu {
 	private entitiesBox: Div;
 	private movingEntitiesBox: boolean;
 
+	private hidden: boolean;
+
 	mouseOverGuiElement: boolean;
 	actionText: TextObject2D;
 
@@ -120,10 +122,13 @@ export default class DebugMenu {
 		entitiesText.getElement().onmousedown = () => {
 			this.movingEntitiesBox = true;
 		};
+
+		this.hidden = true;
 	}
 
 	async init() {
 		this.overlay.show();
+		this.hidden = false;
 
 		// Force the entities box to reload.
 		let length = this.entitiesBox.children.length;
@@ -250,6 +255,18 @@ export default class DebugMenu {
 
 	reset() {
 		this.overlay.hide();
+		this.hidden = true;
+	}
+
+	toggleHidden() {
+		if (this.hidden) {
+			this.overlay.show();
+			this.hidden = false;
+		}
+		else {
+			this.overlay.hide();
+			this.hidden = true;
+		}
 	}
 
 	draw() {

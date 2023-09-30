@@ -17,6 +17,7 @@ export default class DebugMode extends State {
 	private checkpointNeeded: boolean;
 	private actionString: string;
 	private oWasPressed: boolean;
+	private pWasPressed: boolean;
 
 	constructor(sa: StateAccessible, game: Game) {
 		super();
@@ -30,6 +31,7 @@ export default class DebugMode extends State {
 		]);
 
 		this.oWasPressed = true;
+		this.pWasPressed = true;
 		this.mouseWasPressed = false;
 		this.cWasPressed = false;
 		this.checkpointNeeded = true;
@@ -64,6 +66,7 @@ export default class DebugMode extends State {
 		}
 
 		this.oWasPressed = true;
+		this.pWasPressed = true;
 	}
 
 	reset() {
@@ -82,6 +85,15 @@ export default class DebugMode extends State {
 			this.oWasPressed = true;
 		} else {
 			this.oWasPressed = false;
+		}
+
+		if (input.keys["P"]) {
+			if (!this.pWasPressed) {
+				this.debugMenu.toggleHidden();
+			}
+			this.pWasPressed = true;
+		} else {
+			this.pWasPressed = false;
 		}
 
 		let moveVec: Vec3 = new Vec3();
