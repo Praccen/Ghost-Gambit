@@ -16,13 +16,10 @@ import Triangle from "../../Engine/Physics/Shapes/Triangle";
 import { OverlayRendering } from "../../Engine/Rendering/OverlayRendering";
 import { gl } from "../../main";
 import Scene from "../../Engine/Rendering/Scene";
-import GrassHandler from "../GrassHandler";
 import ObjectPlacer from "../ObjectPlacer";
 import { WebUtils } from "../../Engine/Utils/WebUtils";
 import Doggo from "../Doggo";
-import { ComponentTypeEnum } from "../../Engine/ECS/Components/Component";
 import ParticleSpawnerComponent from "../../Engine/ECS/Components/ParticleSpawnerComponent";
-import ParticleSpawner from "../../Engine/Objects/ParticleSpawner";
 import Vec3 from "../../Engine/Maths/Vec3";
 import PointLightComponent from "../../Engine/ECS/Components/PointLightComponent";
 
@@ -34,7 +31,6 @@ export default class Game extends State {
 	private overlayRendering: OverlayRendering;
 	private menuButton: Button;
 	private mapBundle: GraphicsBundle;
-	grassHandler: GrassHandler;
 	objectPlacer: ObjectPlacer;
 
 	private scene: Scene;
@@ -82,13 +78,6 @@ export default class Game extends State {
 		dirLight.colour.setValues(0.1, 0.1, 0.4);
 
 		this.doggo = new Doggo(this.scene, this.rendering, this.ecsManager);
-
-		this.grassHandler = new GrassHandler(
-			this.scene,
-			this.mapBundle,
-			this.doggo,
-			this.rendering.camera
-		);
 
 		this.menuButton = this.overlayRendering.getNewButton();
 		this.menuButton.position.x = 0.9;
@@ -233,13 +222,13 @@ export default class Game extends State {
 		let vertices = heightmap.getVertices();
 
 		for (let i = 0; i < heightmap.xResolution * heightmap.zResolution; i++) {
-			if (vertices[i * 8 + 4] > 0.999999999 && vertices[i * 8 + 1] > 0.001) {
+			if (vertices[i * 8 + 4] > 0.999999999) {
 				// Normal is pointing upwards and height is not 0 (ditches)
-				// Set uvs to be tarmac
-				vertices[i * 8 + 6] = 0.75;
-			} else {
 				// Set uvs to be grass
 				vertices[i * 8 + 6] = 0.25;
+			} else {
+				// Set uvs to be tarmac
+				vertices[i * 8 + 6] = 0.75;
 			}
 		}
 
@@ -282,8 +271,6 @@ export default class Game extends State {
 
 	update(dt: number) {
 		this.doggo.update(dt);
-
-		this.grassHandler.update(dt);
 
 		if (input.keys["P"]) {
 			this.doggo.respawn();

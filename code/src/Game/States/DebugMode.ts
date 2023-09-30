@@ -253,8 +253,6 @@ export default class DebugMode extends State {
 		let camDir = this.game.rendering.camera.getDir();
 		WebUtils.SetCookie("debugDir", camDir.x + "," + camDir.y + "," + camDir.z);
 
-		this.game.grassHandler.update(dt);
-
 		this.debugMenu.actionText.textString =
 			this.actionString + " " + this.game.objectPlacer.getCurrentObjectName();
 

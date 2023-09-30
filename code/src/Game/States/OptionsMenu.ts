@@ -37,14 +37,6 @@ export default class OptionsMenu extends State {
 		this.bloomCB.getInputElement().style.accentColor = "red";
 		this.bloomCB.getInputElement().checked = options.useBloom;
 
-		this.grassCB = this.overlayRendering.getNewCheckbox();
-		this.grassCB.position.x = 0.4;
-		this.grassCB.position.y = 0.35;
-		this.grassCB.textString = "Foldable grass ";
-		this.grassCB.getElement().style.color = "cyan";
-		this.grassCB.getInputElement().style.accentColor = "red";
-		this.grassCB.getInputElement().checked = options.foldableGrass;
-
 		this.grassDensitySlider = this.overlayRendering.getNewSlider();
 		this.grassDensitySlider.position.x = 0.4;
 		this.grassDensitySlider.position.y = 0.4;
@@ -53,7 +45,6 @@ export default class OptionsMenu extends State {
 		this.grassDensitySlider.getInputElement().style.accentColor = "red";
 		this.grassDensitySlider.getInputElement().min = "1000";
 		this.grassDensitySlider.getInputElement().max = "100000";
-		this.grassDensitySlider.getInputElement().value = options.grassDensity + "";
 
 		this.fpsDisplayCB = this.overlayRendering.getNewCheckbox();
 		this.fpsDisplayCB.position.x = 0.4;
@@ -99,9 +90,7 @@ export default class OptionsMenu extends State {
 	update(dt: number) {
 		options.useCrt = this.crtCB.getChecked();
 		options.useBloom = this.bloomCB.getChecked();
-		options.foldableGrass = this.grassCB.getChecked();
 		options.showFps = this.fpsDisplayCB.getChecked();
-		options.grassDensity = this.grassDensitySlider.getValue();
 	}
 
 	draw() {

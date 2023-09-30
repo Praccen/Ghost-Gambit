@@ -19,9 +19,7 @@ export let input = new Input();
 export let options = {
 	useCrt: false,
 	useBloom: false,
-	foldableGrass: false,
 	showFps: true,
-	grassDensity: 10000,
 	volume: 0.05,
 };
 
@@ -103,12 +101,7 @@ export default class GameMachine extends StateMachine {
 		WebUtils.SetCookie("showFps", options.showFps.valueOf().toString());
 		WebUtils.SetCookie("useCrt", options.useCrt.valueOf().toString());
 		WebUtils.SetCookie("useBloom", options.useBloom.valueOf().toString());
-		WebUtils.SetCookie(
-			"foldableGrass",
-			options.foldableGrass.valueOf().toString()
-		);
 		WebUtils.SetCookie("volume", options.volume.toString());
-		WebUtils.SetCookie("grassDensity", options.grassDensity.toString());
 
 		for (let s of this.states) {
 			s[1].state.onExit(e);
@@ -119,14 +112,9 @@ export default class GameMachine extends StateMachine {
 		options.showFps = !(WebUtils.GetCookie("showFps") == "false");
 		options.useCrt = WebUtils.GetCookie("useCrt") == "true";
 		options.useBloom = WebUtils.GetCookie("useBloom") == "true";
-		options.foldableGrass = WebUtils.GetCookie("foldableGrass") == "true";
 		let volumeCookie = WebUtils.GetCookie("volume");
 		if (volumeCookie != "") {
 			options.volume = parseFloat(volumeCookie);
-		}
-		let grassDensityCookie = WebUtils.GetCookie("grassDensity");
-		if (grassDensityCookie != "") {
-			options.grassDensity = parseFloat(grassDensityCookie);
 		}
 	}
 
