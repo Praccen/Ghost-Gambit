@@ -99,7 +99,7 @@ export default class Game extends State {
 			self.gotoState = StatesEnum.MAINMENU;
 		});
 
-		this.rendering.setSkybox("Assets/textures/skyboxes/LordKittyNight");
+		this.rendering.setSkybox("Assets/textures/skyboxes/NightSky");
 
 		let fireflies = this.ecsManager.createEntity();
 
