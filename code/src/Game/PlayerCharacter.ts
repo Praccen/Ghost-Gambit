@@ -303,7 +303,9 @@ export default class PlayerCharacter {
 		// }
 	}
 
-	private resetAnimation() {}
+	private resetAnimation() {
+		
+	}
 
 	private walkAnimation(animationSpeed: number = 7.5) {
 		this.resetAnimation();

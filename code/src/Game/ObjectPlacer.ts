@@ -207,16 +207,16 @@ export default class ObjectPlacer {
 
 		let fireParticleComp = new ParticleSpawnerComponent(fireParticles);
 		fireParticleComp.lifeTime = 0.5;
-		fireEntity.addComponent(fireParticleComp);
+		this.ecsManager.addComponent(fireEntity, fireParticleComp);
 
 		let firePosComp = new PositionComponent();
 		firePosComp.origin.y = -1.15 * 4.0;
-		fireEntity.addComponent(firePosComp);
-		fireEntity.addComponent(groupPositionComp);
+		this.ecsManager.addComponent(fireEntity,firePosComp);
+		this.ecsManager.addComponent(fireEntity, groupPositionComp);
 
 		let pointLightComp = new PointLightComponent(this.scene.getNewPointLight());
 		pointLightComp.pointLight.colour.setValues(0.2, 0.06, 0.0);
-		fireEntity.addComponent(pointLightComp);
+		this.ecsManager.addComponent(fireEntity, pointLightComp);
 
 		return bodyEntity;
 	}
