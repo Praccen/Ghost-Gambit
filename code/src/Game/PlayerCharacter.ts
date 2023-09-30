@@ -18,6 +18,7 @@ import Rendering from "../Engine/Rendering/Rendering";
 import Scene from "../Engine/Rendering/Scene";
 import { input } from "./GameMachine";
 import Game from "./States/Game";
+import ParticleSpawner from "d:/Repos/ldjam54/code/src/Engine/Objects/ParticleSpawner";
 
 export default class PlayerCharacter {
 	private rendering: Rendering;
@@ -37,6 +38,10 @@ export default class PlayerCharacter {
 	private offGroundTimer;
 
 	private timer: number;
+
+	private is_lit: boolean;
+	private fireParticles: import("d:/Repos/ldjam54/code/src/Engine/Objects/ParticleSpawner").default;
+
 	constructor(
 		rendering: Rendering,
 		ecsManager: ECSManager,
@@ -50,16 +55,32 @@ export default class PlayerCharacter {
 		this.lastAnimation = this.resetAnimation;
 		this.currentAnimation = this.resetAnimation;
 		this.offGroundTimer = 0.0;
+		this.is_lit = false;
 	}
 
 	async init() {
-		this.bodyEntity = Game.getInstanceNoSa().objectPlacer.placeObject(
-			"Ghost Character",
-			new Vec3(),
-			new Vec3([0.25, 0.25, 0.25]),
-			new Vec3(),
-			false
-		);
+		let result: Entity | [Entity, ParticleSpawner] =
+			Game.getInstanceNoSa().objectPlacer.placeObject(
+				"Ghost Character",
+				new Vec3(),
+				new Vec3([0.25, 0.25, 0.25]),
+				new Vec3(),
+				false
+			);
+
+		let particleSpawner;
+		let entity;
+
+		if (Array.isArray(result)) {
+			let [_entity, _particleSpawner] = result;
+			particleSpawner = _particleSpawner;
+			entity = _entity;
+		} else {
+			console.error("placeObject did not return Entity, ParticleSpawner");
+		}
+
+		this.bodyEntity = entity;
+		this.fireParticles = particleSpawner;
 
 		this.cameraFocusComp = new CameraFocusComponent();
 		this.cameraFocusComp.offset.setValues(0.0, 1.5, -3.0);
@@ -85,6 +106,44 @@ export default class PlayerCharacter {
 
 		if (this.movComp != undefined) {
 			this.movComp.velocity.setValues(0.0, 0.0, 0.0);
+		}
+	}
+
+	extinguish() {
+		if (this.is_lit) {
+			this.audioPlayer.playAudio("extinguish", false);
+			this.audioPlayer.pauseAudio("fire");
+			this.fireParticles.setNumParticles(0);
+			this.is_lit = false;
+		}
+	}
+
+	light_up() {
+		if (!this.is_lit) {
+			this.audioPlayer.playAudio("light_up", false);
+			this.audioPlayer.playAudio("fire", true);
+
+			let nrOfFireParticles = 5;
+			this.fireParticles.setNumParticles(nrOfFireParticles);
+			for (let i = 0; i < nrOfFireParticles; i++) {
+				let dir = new Vec3([
+					Math.random() * 2.0 - 1.0,
+					1.0,
+					Math.random() * 2.0 - 1.0,
+				]);
+				this.fireParticles.setParticleData(
+					i,
+					new Vec3(),
+					0.15,
+					dir,
+					new Vec3(dir)
+						.flip()
+						.multiply(0.65)
+						.setValues(null, 0.0, null)
+						.add(new Vec3([0.0, 0.5, 0.0]))
+				);
+			}
+			this.is_lit = true;
 		}
 	}
 
@@ -223,6 +282,14 @@ export default class PlayerCharacter {
 			this.movComp.jumpRequested = false;
 		}
 
+		if (input.keys["K"]) {
+			this.light_up();
+		}
+
+		if (input.keys["L"]) {
+			this.extinguish();
+		}
+
 		if (!this.movComp.onGround || this.movComp.jumpRequested) {
 			this.offGroundTimer += dt;
 			if (this.offGroundTimer >= 0.5) {
@@ -311,9 +378,7 @@ export default class PlayerCharacter {
 		// }
 	}
 
-	private resetAnimation() {
-		
-	}
+	private resetAnimation() {}
 
 	private walkAnimation(animationSpeed: number = 7.5) {
 		this.resetAnimation();

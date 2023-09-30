@@ -16,6 +16,7 @@ import PositionParentComponent from "../Engine/ECS/Components/PositionParentComp
 import ECSManager from "../Engine/ECS/ECSManager";
 import Entity from "../Engine/ECS/Entity";
 import Vec3 from "../Engine/Maths/Vec3";
+import ParticleSpawner from "../Engine/Objects/ParticleSpawner";
 import { IntersectionTester } from "../Engine/Physics/IntersectionTester";
 import Ray from "../Engine/Physics/Shapes/Ray";
 import Triangle from "../Engine/Physics/Shapes/Triangle";
@@ -143,7 +144,7 @@ export default class ObjectPlacer {
 		position: Vec3,
 		size: Vec3,
 		rotation: Vec3
-	): Entity {
+	): [Entity, ParticleSpawner] {
 		let bodyMesh = this.scene.getNewMesh(
 			placement.modelPath,
 			placement.diffuseTexturePath,
@@ -179,29 +180,12 @@ export default class ObjectPlacer {
 
 		// Fire
 		let fireEntity = this.ecsManager.createEntity();
-		let nrOfFireParticles = 3;
+
+		let nrOfFireParticles = 0;
 		let fireParticles = this.scene.getNewParticleSpawner(
 			"Assets/textures/fire.png",
 			nrOfFireParticles
 		);
-		for (let i = 0; i < nrOfFireParticles; i++) {
-			let dir = new Vec3([
-				Math.random() * 2.0 - 1.0,
-				1.0,
-				Math.random() * 2.0 - 1.0,
-			]);
-			fireParticles.setParticleData(
-				i,
-				new Vec3(),
-				0.15,
-				dir,
-				new Vec3(dir)
-					.flip()
-					.multiply(0.65)
-					.setValues(null, 0.0, null)
-					.add(new Vec3([0.0, 0.5, 0.0]))
-			);
-		}
 		fireParticles.sizeChangePerSecond = -0.3;
 		fireParticles.fadePerSecond = 0.7;
 
@@ -211,14 +195,14 @@ export default class ObjectPlacer {
 
 		let firePosComp = new PositionComponent();
 		firePosComp.origin.y = -1.15 * 4.0;
-		this.ecsManager.addComponent(fireEntity,firePosComp);
+		this.ecsManager.addComponent(fireEntity, firePosComp);
 		this.ecsManager.addComponent(fireEntity, groupPositionComp);
 
 		let pointLightComp = new PointLightComponent(this.scene.getNewPointLight());
 		pointLightComp.pointLight.colour.setValues(0.2, 0.06, 0.0);
 		this.ecsManager.addComponent(fireEntity, pointLightComp);
 
-		return bodyEntity;
+		return [bodyEntity, fireParticles];
 	}
 
 	placeObject(
@@ -227,7 +211,7 @@ export default class ObjectPlacer {
 		size: Vec3,
 		rotation: Vec3,
 		triggerDownloadNeeded: boolean = true
-	): Entity {
+	): Entity | [Entity, ParticleSpawner] {
 		let placement = this.placements.get(type);
 		if (placement == undefined) {
 			return null;
@@ -239,10 +223,15 @@ export default class ObjectPlacer {
 		}
 
 		if (type == "Ghost Character") {
-			let entity = this.placePlayer(placement, position, size, rotation);
+			let [entity, particleSpawner] = this.placePlayer(
+				placement,
+				position,
+				size,
+				rotation
+			);
 			this.currentlyEditingEntityId = entity.id;
 			this.entityPlacements.set(entity.id, type);
-			return entity;
+			return [entity, particleSpawner];
 		}
 
 		let entity = this.ecsManager.createEntity();

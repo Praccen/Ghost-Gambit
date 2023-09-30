@@ -69,9 +69,7 @@ export default class LoadingScreen extends State {
 			}
 		}
 
-		let cubeMaps = [
-			"Assets/textures/skyboxes/NightSky",
-		];
+		let cubeMaps = ["Assets/textures/skyboxes/NightSky"];
 
 		// Meshes to load
 		let meshes = [];
