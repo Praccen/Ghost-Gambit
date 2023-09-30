@@ -3,6 +3,7 @@ import AudioPlayer from "../Engine/Audio/AudioPlayer";
 import BoundingBoxComponent from "../Engine/ECS/Components/BoundingBoxComponent";
 import CameraFocusComponent from "../Engine/ECS/Components/CameraFocusCompontent";
 import CollisionComponent from "../Engine/ECS/Components/CollisionComponent";
+import { ComponentTypeEnum } from "../Engine/ECS/Components/Component";
 import GraphicsComponent from "../Engine/ECS/Components/GraphicsComponent";
 import MovementComponent from "../Engine/ECS/Components/MovementComponent";
 import ParticleSpawnerComponent from "../Engine/ECS/Components/ParticleSpawnerComponent";
@@ -16,15 +17,14 @@ import GraphicsBundle from "../Engine/Objects/GraphicsBundle";
 import Rendering from "../Engine/Rendering/Rendering";
 import Scene from "../Engine/Rendering/Scene";
 import { input } from "./GameMachine";
+import Game from "./States/Game";
 
 export default class PlayerCharacter {
-	private scene: Scene;
 	private rendering: Rendering;
 	private ecsManager: ECSManager;
-	private textureStore: TextureStore;
+	private audioPlayer: AudioPlayer;
 
 	private bodyEntity: Entity;
-	private fireEntity: Entity;
 
 	private groupPositionComp: PositionParentComponent;
 	private movComp: MovementComponent;
@@ -37,20 +37,14 @@ export default class PlayerCharacter {
 	private offGroundTimer;
 
 	private timer: number;
-	private audioPlayer: AudioPlayer;
-
 	constructor(
-		scene: Scene,
 		rendering: Rendering,
 		ecsManager: ECSManager,
-		audioPlayer: AudioPlayer,
-		textureStore: TextureStore
+		audioPlayer: AudioPlayer
 	) {
-		this.scene = scene;
 		this.rendering = rendering;
 		this.ecsManager = ecsManager;
 		this.audioPlayer = audioPlayer;
-		this.textureStore = textureStore;
 
 		this.timer = 0.0;
 		this.lastAnimation = this.resetAnimation;
@@ -59,91 +53,39 @@ export default class PlayerCharacter {
 	}
 
 	async init() {
-		this.bodyMesh = await this.scene.getNewMesh(
-			"Assets/objs/CharacterGhost.obj",
-			"Assets/textures/characterTextureAlbedo.jpg",
-			"Assets/textures/black.png"
+		this.bodyEntity = Game.getInstanceNoSa().objectPlacer.placeObject(
+			"Ghost Character",
+			new Vec3(),
+			new Vec3([0.25, 0.25, 0.25]),
+			new Vec3(),
+			false
 		);
-		this.bodyMesh.emission = this.textureStore.getTexture(
-			"Assets/textures/characterTextureEmission.jpg"
-		);
-		this.bodyMesh.emissionColor.setValues(0.0, 1.0, 0.3);
 
-		this.groupPositionComp = new PositionParentComponent();
-
-		this.groupPositionComp.scale.setValues(0.25, 0.25, 0.25);
-
-		this.bodyEntity = this.ecsManager.createEntity();
-		this.ecsManager.addComponent(
-			this.bodyEntity,
-			new GraphicsComponent(this.bodyMesh)
-		);
-		let posComp = new PositionComponent();
-		posComp.rotation.y = 90.0;
-		this.ecsManager.addComponent(this.bodyEntity, posComp);
-		this.ecsManager.addComponent(this.bodyEntity, this.groupPositionComp);
 		this.cameraFocusComp = new CameraFocusComponent();
 		this.cameraFocusComp.offset.setValues(0.0, 1.5, -3.0);
 		this.cameraFocusComp.focusPoint.setValues(0.0, 1.5, 0.0);
 		this.ecsManager.addComponent(this.bodyEntity, this.cameraFocusComp);
-
-		let boundingBoxComp = new BoundingBoxComponent();
-		boundingBoxComp.setup(this.bodyMesh.graphicsObject);
-		boundingBoxComp.updateTransformMatrix(this.groupPositionComp.matrix);
-		this.ecsManager.addComponent(this.bodyEntity, boundingBoxComp);
-		this.ecsManager.addComponent(this.bodyEntity, new CollisionComponent());
-		this.movComp = new MovementComponent();
-		this.movComp.acceleration = 20.0;
-		this.movComp.drag = 10.0;
-		this.ecsManager.addComponent(this.bodyEntity, this.movComp);
-
-		// Fire
-		this.fireEntity = this.ecsManager.createEntity();
-		let nrOfFireParticles = 3;
-		let fireParticles = this.scene.getNewParticleSpawner(
-			"Assets/textures/fire.png",
-			nrOfFireParticles
-		);
-		for (let i = 0; i < nrOfFireParticles; i++) {
-			let dir = new Vec3([
-				Math.random() * 2.0 - 1.0,
-				1.0,
-				Math.random() * 2.0 - 1.0,
-			]);
-			fireParticles.setParticleData(
-				i,
-				new Vec3(),
-				0.15,
-				dir,
-				new Vec3(dir)
-					.flip()
-					.multiply(0.65)
-					.setValues(null, 0.0, null)
-					.add(new Vec3([0.0, 0.5, 0.0]))
-			);
-		}
-		fireParticles.sizeChangePerSecond = -0.3;
-		fireParticles.fadePerSecond = 0.7;
-
-		let fireParticleComp = new ParticleSpawnerComponent(fireParticles);
-		fireParticleComp.lifeTime = 0.5;
-		this.fireEntity.addComponent(fireParticleComp);
-
-		let firePosComp = new PositionComponent();
-		firePosComp.origin.y = -1.15 * 4.0;
-		this.fireEntity.addComponent(firePosComp);
-		this.fireEntity.addComponent(this.groupPositionComp);
-
-		let pointLightComp = new PointLightComponent(this.scene.getNewPointLight());
-		pointLightComp.pointLight.colour.setValues(0.2, 0.06, 0.0);
-		this.fireEntity.addComponent(pointLightComp);
-
-		this.respawn();
 	}
 
 	respawn() {
-		this.groupPositionComp.position.setValues(0.0, -1.5, 0.0);
-		this.movComp.velocity.setValues(0.0, 0.0, 0.0);
+		if (this.groupPositionComp == undefined) {
+			this.groupPositionComp = <PositionParentComponent>(
+				this.bodyEntity.getComponent(ComponentTypeEnum.POSITIONPARENT)
+			);
+		}
+		if (this.movComp == undefined) {
+			this.movComp = <MovementComponent>(
+				this.bodyEntity.getComponent(ComponentTypeEnum.MOVEMENT)
+			);
+		}
+
+		if (this.groupPositionComp != undefined) {
+			this.groupPositionComp.position.setValues(0.0, -1.5, 0.0);
+		}
+
+		if (this.movComp != undefined) {
+			this.movComp.velocity.setValues(0.0, 0.0, 0.0);
+		}
 	}
 
 	getPosition(): Vec3 {
@@ -155,6 +97,33 @@ export default class PlayerCharacter {
 	}
 
 	update(dt: number) {
+		if (this.groupPositionComp == undefined) {
+			this.groupPositionComp = <PositionParentComponent>(
+				this.bodyEntity.getComponent(ComponentTypeEnum.POSITIONPARENT)
+			);
+		}
+		if (this.movComp == undefined) {
+			this.movComp = <MovementComponent>(
+				this.bodyEntity.getComponent(ComponentTypeEnum.MOVEMENT)
+			);
+		}
+		if (this.bodyMesh == undefined) {
+			let graphicsComp = <GraphicsComponent>(
+				this.bodyEntity.getComponent(ComponentTypeEnum.GRAPHICS)
+			);
+			if (graphicsComp != undefined) {
+				this.bodyMesh = graphicsComp.object;
+			}
+		}
+
+		if (
+			this.groupPositionComp == undefined ||
+			this.movComp == undefined ||
+			this.bodyMesh == undefined
+		) {
+			return;
+		}
+
 		this.timer += dt;
 
 		let accVec = new Vec3();
@@ -308,6 +277,11 @@ export default class PlayerCharacter {
 		this.lastAnimation = this.currentAnimation;
 
 		let currentTime = Date.now() * 0.001;
+		this.bodyMesh.emissionColor.setValues(
+			Math.cos(currentTime),
+			Math.sin(currentTime * 0.66),
+			Math.sin(currentTime * 0.33)
+		);
 		this.bodyMesh.emissionColor.setValues(
 			Math.cos(currentTime),
 			Math.sin(currentTime * 0.66),

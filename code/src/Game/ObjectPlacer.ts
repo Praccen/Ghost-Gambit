@@ -1,4 +1,5 @@
 import MeshStore from "../Engine/AssetHandling/MeshStore";
+import TextureStore from "../Engine/AssetHandling/TextureStore";
 import BoundingBoxComponent from "../Engine/ECS/Components/BoundingBoxComponent";
 import CollisionComponent from "../Engine/ECS/Components/CollisionComponent";
 import {
@@ -7,7 +8,11 @@ import {
 } from "../Engine/ECS/Components/Component";
 import GraphicsComponent from "../Engine/ECS/Components/GraphicsComponent";
 import MeshCollisionComponent from "../Engine/ECS/Components/MeshCollisionComponent";
+import MovementComponent from "../Engine/ECS/Components/MovementComponent";
+import ParticleSpawnerComponent from "../Engine/ECS/Components/ParticleSpawnerComponent";
+import PointLightComponent from "../Engine/ECS/Components/PointLightComponent";
 import PositionComponent from "../Engine/ECS/Components/PositionComponent";
+import PositionParentComponent from "../Engine/ECS/Components/PositionParentComponent";
 import ECSManager from "../Engine/ECS/ECSManager";
 import Entity from "../Engine/ECS/Entity";
 import Vec3 from "../Engine/Maths/Vec3";
@@ -24,17 +29,20 @@ class Placement {
 	specularTexturePath: string;
 	sizeMultiplier: number;
 	addCollision: boolean;
+	saveToTransforms: boolean;
 
 	constructor(
 		modelPath: string,
 		diffuseTexturePath: string,
 		specularTexturePath: string,
-		addCollision: boolean = true
+		addCollision: boolean = true,
+		saveToTransform: boolean = true
 	) {
 		this.modelPath = modelPath;
 		this.diffuseTexturePath = diffuseTexturePath;
 		this.specularTexturePath = specularTexturePath;
 		this.addCollision = addCollision;
+		this.saveToTransforms = saveToTransform;
 	}
 }
 
@@ -44,14 +52,16 @@ export default class ObjectPlacer {
 	private scene: Scene;
 	private ecsManager: ECSManager;
 	private meshStore: MeshStore;
+	private textureStore: TextureStore;
 	private downloadNeeded: boolean;
 
 	currentlyEditingEntityId: number;
 
 	game: Game;
 
-	constructor(meshStore: MeshStore) {
+	constructor(meshStore: MeshStore, textureStore: TextureStore) {
 		this.meshStore = meshStore;
+		this.textureStore = textureStore;
 		this.placements = new Map<string, Placement>();
 		this.entityPlacements = new Map<number, string>();
 		this.downloadNeeded = false;
@@ -101,7 +111,8 @@ export default class ObjectPlacer {
 							currentPlacementType,
 							new Vec3(p.split(",").map((n) => parseFloat(n))),
 							new Vec3(s.split(",").map((n) => parseFloat(n))),
-							new Vec3(r.split(",").map((n) => parseFloat(n)))
+							new Vec3(r.split(",").map((n) => parseFloat(n))),
+							false
 						);
 					}
 				}
@@ -127,11 +138,95 @@ export default class ObjectPlacer {
 		return objectName;
 	}
 
+	private placePlayer(
+		placement: Placement,
+		position: Vec3,
+		size: Vec3,
+		rotation: Vec3
+	): Entity {
+		let bodyMesh = this.scene.getNewMesh(
+			placement.modelPath,
+			placement.diffuseTexturePath,
+			placement.specularTexturePath
+		);
+		bodyMesh.emission = this.textureStore.getTexture(
+			"Assets/textures/characterTextureEmission.jpg"
+		);
+		bodyMesh.emissionColor.setValues(0.0, 1.0, 0.3);
+
+		let groupPositionComp = new PositionParentComponent();
+
+		groupPositionComp.position.deepAssign(position);
+		groupPositionComp.scale.deepAssign(size);
+		groupPositionComp.rotation.deepAssign(rotation);
+
+		let bodyEntity = this.ecsManager.createEntity();
+		this.ecsManager.addComponent(bodyEntity, new GraphicsComponent(bodyMesh));
+		let posComp = new PositionComponent();
+		posComp.rotation.y = 90.0;
+		this.ecsManager.addComponent(bodyEntity, posComp);
+		this.ecsManager.addComponent(bodyEntity, groupPositionComp);
+
+		let boundingBoxComp = new BoundingBoxComponent();
+		boundingBoxComp.setup(bodyMesh.graphicsObject);
+		boundingBoxComp.updateTransformMatrix(groupPositionComp.matrix);
+		this.ecsManager.addComponent(bodyEntity, boundingBoxComp);
+		this.ecsManager.addComponent(bodyEntity, new CollisionComponent());
+		let movComp = new MovementComponent();
+		movComp.acceleration = 20.0;
+		movComp.drag = 10.0;
+		this.ecsManager.addComponent(bodyEntity, movComp);
+
+		// Fire
+		let fireEntity = this.ecsManager.createEntity();
+		let nrOfFireParticles = 3;
+		let fireParticles = this.scene.getNewParticleSpawner(
+			"Assets/textures/fire.png",
+			nrOfFireParticles
+		);
+		for (let i = 0; i < nrOfFireParticles; i++) {
+			let dir = new Vec3([
+				Math.random() * 2.0 - 1.0,
+				1.0,
+				Math.random() * 2.0 - 1.0,
+			]);
+			fireParticles.setParticleData(
+				i,
+				new Vec3(),
+				0.15,
+				dir,
+				new Vec3(dir)
+					.flip()
+					.multiply(0.65)
+					.setValues(null, 0.0, null)
+					.add(new Vec3([0.0, 0.5, 0.0]))
+			);
+		}
+		fireParticles.sizeChangePerSecond = -0.3;
+		fireParticles.fadePerSecond = 0.7;
+
+		let fireParticleComp = new ParticleSpawnerComponent(fireParticles);
+		fireParticleComp.lifeTime = 0.5;
+		fireEntity.addComponent(fireParticleComp);
+
+		let firePosComp = new PositionComponent();
+		firePosComp.origin.y = -1.15 * 4.0;
+		fireEntity.addComponent(firePosComp);
+		fireEntity.addComponent(groupPositionComp);
+
+		let pointLightComp = new PointLightComponent(this.scene.getNewPointLight());
+		pointLightComp.pointLight.colour.setValues(0.2, 0.06, 0.0);
+		fireEntity.addComponent(pointLightComp);
+
+		return bodyEntity;
+	}
+
 	placeObject(
 		type: string,
 		position: Vec3,
 		size: Vec3,
-		rotation: Vec3
+		rotation: Vec3,
+		triggerDownloadNeeded: boolean = true
 	): Entity {
 		let placement = this.placements.get(type);
 		if (placement == undefined) {
@@ -139,7 +234,16 @@ export default class ObjectPlacer {
 		}
 
 		// Mark that we have changed something
-		this.downloadNeeded = true;
+		if (triggerDownloadNeeded && placement.saveToTransforms) {
+			this.downloadNeeded = true;
+		}
+
+		if (type == "Ghost Character") {
+			let entity = this.placePlayer(placement, position, size, rotation);
+			this.currentlyEditingEntityId = entity.id;
+			this.entityPlacements.set(entity.id, type);
+			return entity;
+		}
 
 		let entity = this.ecsManager.createEntity();
 		this.currentlyEditingEntityId = entity.id;
@@ -397,6 +501,9 @@ export default class ObjectPlacer {
 
 		for (let [placementString, placement] of this.placements) {
 			transformsData += "Placement:" + placementString + "\n";
+			if (!placement.saveToTransforms) {
+				continue;
+			}
 			for (let ep of this.entityPlacements) {
 				if (ep[1] == placementString) {
 					let entity = this.ecsManager.getEntity(ep[0]);

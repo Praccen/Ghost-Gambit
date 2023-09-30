@@ -79,7 +79,9 @@ this.placements.set(
 	"Ghost Character",
 	new Placement(
 		"Assets/objs/CharacterGhost.obj",
-		"Assets/textures/white.png",
-		"Assets/textures/black.png"
+		"Assets/textures/characterTextureAlbedo.jpg",
+		"Assets/textures/black.png",
+		true,
+		false
 	)
 )

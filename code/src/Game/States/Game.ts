@@ -54,7 +54,10 @@ export default class Game extends State {
 	private constructor(sa: StateAccessible) {
 		super();
 		this.stateAccessible = sa;
-		this.objectPlacer = new ObjectPlacer(this.stateAccessible.meshStore);
+		this.objectPlacer = new ObjectPlacer(
+			this.stateAccessible.meshStore,
+			this.stateAccessible.textureStore
+		);
 		this.oWasPressed = true;
 	}
 
@@ -78,11 +81,9 @@ export default class Game extends State {
 		dirLight.colour.setValues(0.1, 0.1, 0.4);
 
 		this.playerCharacter = new PlayerCharacter(
-			this.scene,
 			this.rendering,
 			this.ecsManager,
-			this.stateAccessible.audioPlayer,
-			this.stateAccessible.textureStore
+			this.stateAccessible.audioPlayer
 		);
 
 		this.menuButton = this.overlayRendering.getNewButton();
