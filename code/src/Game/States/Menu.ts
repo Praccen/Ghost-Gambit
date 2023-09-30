@@ -5,9 +5,11 @@ import { StateAccessible } from "../GameMachine";
 
 export default class Menu extends State {
 	private overlayRendering: OverlayRendering;
+	private sa: StateAccessible;
 
 	constructor(sa: StateAccessible) {
 		super();
+		this.sa = sa;
 		this.overlayRendering = new OverlayRendering();
 
 		let startButton = this.overlayRendering.getNewButton();

@@ -5,6 +5,9 @@ export default class AudioPlayer {
 	constructor() {
 		this.sounds = {
 			// bell: new Audio("Assets/Audio/Effects/bell.m4a"), //https://opengameart.org/content/100-cc0-sfx
+			theme: new Audio("Assets/Audio/Songs/theme_1.mp3"), //https://pixabay.com/music/scary-childrens-tunes-dark-ambient-horror-cinematic-halloween-atmosphere-scary-118585/
+			failure: new Audio("Assets/Audio/Effects/failure_1.mp3"), //https://pixabay.com/sound-effects/piano-suspense-shock-95515/
+			ghost_sound: new Audio("Assets/Audio/Effects/ghost_sound_1.mp3"), //https://pixabay.com/sound-effects/classic-ghost-sound-95773/
 		};
 		this.active = false;
 
@@ -13,6 +16,9 @@ export default class AudioPlayer {
 		}
 
 		// this.setVolume("bell", 0.3);
+		this.setVolume("theme", 0.5);
+		this.setVolume("failure", 0.3);
+		this.setVolume("ghost_sound", 0.3);
 	}
 
 	playSound(key, loop) {

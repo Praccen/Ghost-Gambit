@@ -204,6 +204,12 @@ export default class Game extends State {
 			this.gotoState = StatesEnum.DEBUGMODE;
 		}
 		this.oWasPressed = true;
+		// Activate audio
+		this.stateAccessible.audioPlayer.active = true;
+
+		// Play theme music
+		console.info("SOUND INIT");
+		this.stateAccessible.audioPlayer.playSound("theme", true);
 	}
 
 	reset() {
