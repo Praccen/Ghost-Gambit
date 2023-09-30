@@ -278,14 +278,9 @@ export default class PlayerCharacter {
 
 		let currentTime = Date.now() * 0.001;
 		this.bodyMesh.emissionColor.setValues(
-			Math.cos(currentTime),
-			Math.sin(currentTime * 0.66),
-			Math.sin(currentTime * 0.33)
-		);
-		this.bodyMesh.emissionColor.setValues(
-			Math.cos(currentTime),
-			Math.sin(currentTime * 0.66),
-			Math.sin(currentTime * 0.33)
+			Math.max(Math.cos(currentTime), 0.0),
+			Math.max(Math.sin(currentTime * 0.66), 0.0),
+			Math.max(Math.sin(currentTime * 0.33), 0.0)
 		);
 
 		// let animations = [
