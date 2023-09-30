@@ -222,12 +222,11 @@ export default class Game extends State {
 		let vertices = heightmap.getVertices();
 
 		for (let i = 0; i < heightmap.xResolution * heightmap.zResolution; i++) {
-			if (vertices[i * 8 + 4] > 0.999999999) {
-				// Normal is pointing upwards and height is not 0 (ditches)
-				// Set uvs to be grass
+			if (vertices[i * 8 + 4] > 0.999995) {
+				// Set uvs to be mud
 				vertices[i * 8 + 6] = 0.25;
 			} else {
-				// Set uvs to be tarmac
+				// Set uvs to be gravel
 				vertices[i * 8 + 6] = 0.75;
 			}
 		}
