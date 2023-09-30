@@ -77,7 +77,7 @@ export default class OptionsMenu extends State {
 		this.musicVolume.getInputElement().style.accentColor = "red";
 		this.musicVolume.getInputElement().min = "0";
 		this.musicVolume.getInputElement().max = "100";
-		this.musicVolume.getInputElement().value = options.volume * 1000 + "";
+		this.musicVolume.getInputElement().value = options.musicVolume * 250 + "";
 
 		this.effectVolume = this.overlayRendering.getNewSlider();
 		this.effectVolume.position.x = 0.4;
@@ -87,7 +87,7 @@ export default class OptionsMenu extends State {
 		this.effectVolume.getInputElement().style.accentColor = "red";
 		this.effectVolume.getInputElement().min = "0";
 		this.effectVolume.getInputElement().max = "100";
-		this.effectVolume.getInputElement().value = options.volume * 1000 + "";
+		this.effectVolume.getInputElement().value = options.effectVolume * 250 + "";
 	}
 
 	async init() {
@@ -104,9 +104,9 @@ export default class OptionsMenu extends State {
 		options.useCrt = this.crtCB.getChecked();
 		options.useBloom = this.bloomCB.getChecked();
 		options.showFps = this.fpsDisplayCB.getChecked();
-		options.volume = this.musicVolume.getValue() * 0.001;
-		this.state.audioPlayer.setMusicVolume(options.volume);
-		options.effectVolume = this.effectVolume.getValue() * 0.001;
+		options.musicVolume = this.musicVolume.getValue() * 0.004;
+		this.state.audioPlayer.setMusicVolume(options.musicVolume);
+		options.effectVolume = this.effectVolume.getValue() * 0.004;
 		this.state.audioPlayer.setSoundEffectVolume(options.effectVolume);
 	}
 

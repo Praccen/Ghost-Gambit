@@ -21,7 +21,7 @@ export let options = {
 	useCrt: false,
 	useBloom: false,
 	showFps: true,
-	volume: 0.05,
+	musicVolume: 0.05,
 	effectVolume: 0.05,
 };
 
@@ -53,6 +53,8 @@ export default class GameMachine extends StateMachine {
 			audioPlayer: new AudioPlayer(),
 			restartGame: false,
 		};
+		this.stateAccessible.audioPlayer.setMusicVolume(options.musicVolume);
+		this.stateAccessible.audioPlayer.setSoundEffectVolume(options.effectVolume);
 
 		this.client = new Client();
 		this.client.createRoom("TEST1");
@@ -108,7 +110,8 @@ export default class GameMachine extends StateMachine {
 		WebUtils.SetCookie("showFps", options.showFps.valueOf().toString());
 		WebUtils.SetCookie("useCrt", options.useCrt.valueOf().toString());
 		WebUtils.SetCookie("useBloom", options.useBloom.valueOf().toString());
-		WebUtils.SetCookie("volume", options.volume.toString());
+		WebUtils.SetCookie("volume", options.musicVolume.toString());
+		WebUtils.SetCookie("effectVolume", options.effectVolume.toString());
 
 		for (let s of this.states) {
 			s[1].state.onExit(e);
@@ -121,7 +124,11 @@ export default class GameMachine extends StateMachine {
 		options.useBloom = WebUtils.GetCookie("useBloom") == "true";
 		let volumeCookie = WebUtils.GetCookie("volume");
 		if (volumeCookie != "") {
-			options.volume = parseFloat(volumeCookie);
+			options.musicVolume = parseFloat(volumeCookie);
+		}
+		let effectVolumeCookie = WebUtils.GetCookie("effectVolume");
+		if (effectVolumeCookie != "") {
+			options.effectVolume = parseFloat(effectVolumeCookie);
 		}
 	}
 
