@@ -68,6 +68,20 @@ wss.on("connection", (ws) => {
 					}
 				}
 				break;
+			case "GET":
+				var roomList = [];
+
+				console.log(rooms.keys());
+				for (const room of rooms.keys()) {
+					roomList.push(room);
+				}
+				ws.send(
+					JSON.stringify({
+						type: "GET",
+						rooms: roomList,
+					})
+				);
+				break;
 		}
 	});
 

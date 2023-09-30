@@ -54,7 +54,8 @@ export default class GameMachine extends StateMachine {
 		};
 
 		this.client = new Client();
-		this.client.joinRoom("TEST1");
+		this.client.createRoom("TEST1");
+		this.client.send(JSON.stringify({ type: "GET" }), 5);
 
 		// Add states
 		this.addState(
