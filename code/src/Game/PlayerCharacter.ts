@@ -1,4 +1,5 @@
 import TextureStore from "../Engine/AssetHandling/TextureStore";
+import AudioPlayer from "../Engine/Audio/AudioPlayer";
 import BoundingBoxComponent from "../Engine/ECS/Components/BoundingBoxComponent";
 import CameraFocusComponent from "../Engine/ECS/Components/CameraFocusCompontent";
 import CollisionComponent from "../Engine/ECS/Components/CollisionComponent";
@@ -36,10 +37,19 @@ export default class PlayerCharacter {
 	private offGroundTimer;
 
 	private timer: number;
-	constructor(scene: Scene, rendering: Rendering, ecsManager: ECSManager, textureStore: TextureStore) {
+	private audioPlayer: AudioPlayer;
+
+	constructor(
+		scene: Scene,
+		rendering: Rendering,
+		ecsManager: ECSManager,
+		audioPlayer: AudioPlayer, 
+		textureStore: TextureStore
+	) {
 		this.scene = scene;
 		this.rendering = rendering;
 		this.ecsManager = ecsManager;
+		this.audioPlayer = audioPlayer;
 		this.textureStore = textureStore;
 
 		this.timer = 0.0;
@@ -223,6 +233,8 @@ export default class PlayerCharacter {
 		if (input.keys[" "] || input.buttons.get("A")) {
 			this.movComp.jumpRequested = true;
 			this.offGroundTimer = 0.5;
+			this.audioPlayer.stopSound("ghost_sound_2");
+			this.audioPlayer.playSound("ghost_sound_2", false);
 		} else {
 			this.movComp.jumpRequested = false;
 		}

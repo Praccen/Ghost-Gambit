@@ -7,7 +7,8 @@ export default class AudioPlayer {
 			// bell: new Audio("Assets/Audio/Effects/bell.m4a"), //https://opengameart.org/content/100-cc0-sfx
 			theme: new Audio("Assets/Audio/Songs/theme_1.mp3"), //https://pixabay.com/music/scary-childrens-tunes-dark-ambient-horror-cinematic-halloween-atmosphere-scary-118585/
 			failure: new Audio("Assets/Audio/Effects/failure_1.mp3"), //https://pixabay.com/sound-effects/piano-suspense-shock-95515/
-			ghost_sound: new Audio("Assets/Audio/Effects/ghost_sound_1.mp3"), //https://pixabay.com/sound-effects/classic-ghost-sound-95773/
+			ghost_sound_1: new Audio("Assets/Audio/Effects/ghost_sound_1.mp3"), //https://pixabay.com/sound-effects/classic-ghost-sound-95773/
+			ghost_sound_2: new Audio("Assets/Audio/Effects/ghost_sound_2.mp3"), //https://pixabay.com/sound-effects/classic-ghost-sound-95773/
 		};
 		this.active = false;
 
@@ -17,13 +18,21 @@ export default class AudioPlayer {
 
 		// this.setVolume("bell", 0.3);
 		this.setVolume("theme", 0.5);
-		this.setVolume("failure", 0.3);
-		this.setVolume("ghost_sound", 0.3);
+		this.setVolume("failure", 0.5);
+		this.setVolume("ghost_sound_1", 0.5);
+		this.setVolume("ghost_sound_2", 0.5);
 	}
 
 	playSound(key, loop) {
 		this.sounds[key].loop = loop;
 		this.active && this.sounds[key].play();
+	}
+
+	stopSound(key) {
+		if (this.sounds[key].paused === false) {
+			this.sounds[key].pause();
+			this.sounds[key].currentTime = 0;
+		}
 	}
 
 	setVolume(key, volume) {

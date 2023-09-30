@@ -80,7 +80,8 @@ export default class Game extends State {
 		this.playerCharacter = new PlayerCharacter(
 			this.scene,
 			this.rendering,
-			this.ecsManager,
+			this.ecsManager, 
+			this.stateAccessible.audioPlayer,
 			this.stateAccessible.textureStore
 		);
 
