@@ -165,7 +165,7 @@ export default class Game extends State {
 			);
 		}
 		fireParticles.sizeChangePerSecond = 0.2;
-		fireParticles.fadePerSecond = 0.2;
+		fireParticles.fadePerSecond = 0.3;
 
 		let fireParticleComp = new ParticleSpawnerComponent(fireParticles);
 		fireParticleComp.lifeTime = 2;
