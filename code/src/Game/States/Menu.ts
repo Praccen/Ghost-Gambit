@@ -58,6 +58,7 @@ export default class Menu extends State {
 	async init() {
 		super.init();
 		this.overlayRendering.show();
+		
 	}
 
 	reset() {

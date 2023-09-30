@@ -4,12 +4,14 @@ black.png
 Bricks.png
 BushTexture.png
 DZ.png
+fancy_house.png
+fancy_house_marble.png
+fancy_house_red.png
 fire.png
 GrassStraw.png
 GrassStraw_Spec.png
 HeightmapTexture.png
 houseTex.pdn
-fancy_house.png
 houseTex.png
 houseTex_bright.png
 knight.png

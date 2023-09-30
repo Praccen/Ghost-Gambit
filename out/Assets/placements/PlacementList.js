@@ -1,14 +1,6 @@
 // This file is evaluated in Game/ObjectPlacer, see the context there code/src/Game/ObjectPlacer.ts
 
 this.placements.set(
-	"Mailbox",
-	new Placement(
-		"Assets/objs/mailbox.obj",
-		"Assets/textures/mailbox.png",
-		"Assets/textures/mailbox.png"
-	)
-);
-this.placements.set(
 	"Tree 1",
 	new Placement(
 		"Assets/objs/tree_1.obj",
@@ -39,15 +31,6 @@ this.placements.set(
 		"Assets/objs/fancy_house.obj",
 		"Assets/textures/fancy_house.png",
 		"Assets/textures/fancy_house.png"
-	)
-);
-this.placements.set(
-	"Newspaper",
-	new Placement(
-		"Assets/objs/newspaper.obj",
-		"Assets/textures/news.png",
-		"Assets/textures/news.png",
-		false
 	)
 );
 this.placements.set(
@@ -92,13 +75,11 @@ this.placements.set(
 		false
 	)
 );
-
 this.placements.set(
-	"Delivery zone",
+	"Ghost Character",
 	new Placement(
-		"Assets/objs/DeliveryZone.obj",
-		"Assets/textures/DZ.png",
-		"Assets/textures/DZ.png",
-		false
+		"Assets/objs/CharacterGhost.obj",
+		"Assets/textures/white.png",
+		"Assets/textures/black.png"
 	)
-);
+)

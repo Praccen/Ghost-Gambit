@@ -37,6 +37,7 @@ export default class CameraFocusSystem extends System {
 					camPosVector.elements[1],
 					camPosVector.elements[2]
 				)
+				.add(camFocusComp.focusPoint)
 				.add(camFocusComp.offset);
 
 			this.camera.setPosition(camPos.x, camPos.y, camPos.z);

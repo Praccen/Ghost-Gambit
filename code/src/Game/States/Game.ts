@@ -18,10 +18,10 @@ import { gl } from "../../main";
 import Scene from "../../Engine/Rendering/Scene";
 import ObjectPlacer from "../ObjectPlacer";
 import { WebUtils } from "../../Engine/Utils/WebUtils";
-import Doggo from "../Doggo";
 import ParticleSpawnerComponent from "../../Engine/ECS/Components/ParticleSpawnerComponent";
 import Vec3 from "../../Engine/Maths/Vec3";
 import PointLightComponent from "../../Engine/ECS/Components/PointLightComponent";
+import PlayerCharacter from "../PlayerCharacter";
 
 export default class Game extends State {
 	rendering: Rendering;
@@ -36,7 +36,7 @@ export default class Game extends State {
 	private scene: Scene;
 	private static instance: Game;
 
-	private doggo: Doggo;
+	private playerCharacter: PlayerCharacter;
 
 	private oWasPressed: boolean;
 
@@ -77,7 +77,7 @@ export default class Game extends State {
 		dirLight.direction.setValues(0.2, -0.4, -0.7);
 		dirLight.colour.setValues(0.1, 0.1, 0.4);
 
-		this.doggo = new Doggo(this.scene, this.rendering, this.ecsManager);
+		this.playerCharacter = new PlayerCharacter(this.scene, this.rendering, this.ecsManager);
 
 		this.menuButton = this.overlayRendering.getNewButton();
 		this.menuButton.position.x = 0.9;
@@ -138,33 +138,26 @@ export default class Game extends State {
 		fireflies.addComponent(particleComp);
 
 		let fire = this.ecsManager.createEntity();
-		let nrOfFireParticles = 1000;
+		let nrOfFireParticles = 500;
 		let fireParticles = this.scene.getNewParticleSpawner(
 			"Assets/textures/fire.png",
 			nrOfFireParticles
 		);
 		for (let i = 0; i < nrOfFireParticles; i++) {
-			let dir = new Vec3([
-				Math.random() * 2.0 - 1.0,
-				0.0,
-				Math.random() * 2.0 - 1.0,
-			]);
+			let dir = new Vec3([Math.random() * 8.0 - 4.0, 2.5, Math.random() * 8.0 - 4.0]);
 			fireParticles.setParticleData(
 				i,
 				new Vec3(),
 				0.1,
 				dir,
-				new Vec3(dir)
-					.flip()
-					.multiply(0.5)
-					.add(new Vec3([0.0, 0.5, 0.0]))
+				new Vec3(dir).flip().multiply(2.3).setValues(null, 0.0, null).add(new Vec3([0.0, 1.5, 0.0]))
 			);
 		}
-		fireParticles.sizeChangePerSecond = 0.2;
-		fireParticles.fadePerSecond = 0.3;
+		fireParticles.sizeChangePerSecond = -0.05;
+		fireParticles.fadePerSecond = 2.5;
 
 		let fireParticleComp = new ParticleSpawnerComponent(fireParticles);
-		fireParticleComp.lifeTime = 2;
+		fireParticleComp.lifeTime = 0.5;
 		fire.addComponent(fireParticleComp);
 
 		let firePosComp = new PositionComponent();
@@ -172,12 +165,13 @@ export default class Game extends State {
 		fire.addComponent(firePosComp);
 
 		let pointLightComp = new PointLightComponent(this.scene.getNewPointLight());
-		pointLightComp.pointLight.colour.setValues(1.0, 0.3, 0.0);
+		pointLightComp.posOffset.y = 0.1;
+		pointLightComp.pointLight.colour.setValues(0.5, 0.15, 0.0);
 		fire.addComponent(pointLightComp);
 
 		await this.objectPlacer.load(this.scene, this.ecsManager);
 
-		await this.doggo.init();
+		await this.playerCharacter.init();
 	}
 
 	async init() {
@@ -276,10 +270,10 @@ export default class Game extends State {
 	}
 
 	update(dt: number) {
-		this.doggo.update(dt);
+		this.playerCharacter.update(dt);
 
 		if (input.keys["P"]) {
-			this.doggo.respawn();
+			this.playerCharacter.respawn();
 		}
 
 		if (input.keys["O"]) {

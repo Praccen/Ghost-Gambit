@@ -4,6 +4,7 @@ import { ComponentTypeEnum } from "../Components/Component";
 import PositionComponent from "../Components/PositionComponent";
 import PointLightComponent from "../Components/PointLightComponent";
 import PositionParentComponent from "../Components/PositionParentComponent";
+import { ECSUtils } from "../../Utils/ESCUtils";
 
 export default class GraphicsSystem extends System {
 	constructor() {
@@ -40,14 +41,10 @@ export default class GraphicsSystem extends System {
 				e.getComponent(ComponentTypeEnum.POINTLIGHT)
 			);
 
-			if (pointLightComp && posComp) {
+			if (pointLightComp && (posComp || posParentComp)) {
 				pointLightComp.pointLight.position
-					.deepAssign(posComp.position)
+					.deepAssign(ECSUtils.CalculatePosition(e))
 					.add(pointLightComp.posOffset);
-
-				if (posParentComp) {
-					pointLightComp.pointLight.position.add(posParentComp.position);
-				}
 			}
 		}
 	}
