@@ -172,7 +172,7 @@ export default class Game extends State {
 		fire.addComponent(fireParticleComp);
 
 		let firePosComp = new PositionComponent();
-		firePosComp.position.setValues(16, -1.35, 11);
+		firePosComp.position.setValues(16, -3.8, 11);
 		fire.addComponent(firePosComp);
 
 		let pointLightComp = new PointLightComponent(this.scene.getNewPointLight());
@@ -247,8 +247,8 @@ export default class Game extends State {
 
 		this.ecsManager.addComponent(entity, new GraphicsComponent(this.mapBundle));
 		let posComp = new PositionComponent();
-		posComp.position.setValues(-10.0, -4.0, -10.0);
-		posComp.scale.setValues(0.5, 15.0, 0.5);
+		posComp.position.setValues(-50.0, -4.0, -50.0);
+		posComp.scale.setValues(0.5, 25.0, 0.5);
 		this.ecsManager.addComponent(entity, posComp);
 
 		// Collision stuff

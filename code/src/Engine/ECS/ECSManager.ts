@@ -77,9 +77,11 @@ export default class ECSManager {
 		this.systems.get("COLLISION").update(dt);
 	}
 
-	updateRenderingSystems(dt: number) {
+	updateRenderingSystems(dt: number, updateCameraFocus: boolean = true) {
 		this.systems.get("PARTICLE").update(dt);
-		this.systems.get("CAMERAFOCUS").update(dt);
+		if (updateCameraFocus) {
+			this.systems.get("CAMERAFOCUS").update(dt);
+		}
 	}
 
 	createEntity(): Entity {

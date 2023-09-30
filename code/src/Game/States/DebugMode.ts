@@ -261,6 +261,7 @@ export default class DebugMode extends State {
 		this.debugMenu.update(dt);
 
 		this.game.ecsManager.update(0.0);
+		this.game.ecsManager.updateRenderingSystems(dt, false);
 
 		if (this.checkpointNeeded && !checkpointTriggeredThisFrame) {
 			this.game.objectPlacer.makeCheckpoint();
