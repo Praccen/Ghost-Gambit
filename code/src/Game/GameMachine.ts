@@ -13,6 +13,7 @@ import Menu from "./States/Menu";
 import OptionsMenu from "./States/OptionsMenu";
 import { WebUtils } from "../Engine/Utils/WebUtils";
 import { OverlayRendering } from "../Engine/Rendering/OverlayRendering";
+import { Client } from "../Engine/Client/client";
 
 // Globals
 export let input = new Input();
@@ -39,6 +40,7 @@ export default class GameMachine extends StateMachine {
 
 	private overlayRendering: OverlayRendering;
 	private fpsDisplay: TextObject2D;
+	private client: Client;
 
 	constructor() {
 		super(StatesEnum.LOADINGSCREEN);
@@ -50,6 +52,9 @@ export default class GameMachine extends StateMachine {
 			audioPlayer: new AudioPlayer(),
 			restartGame: false,
 		};
+
+		this.client = new Client();
+		this.client.joinRoom("TEST1");
 
 		// Add states
 		this.addState(
