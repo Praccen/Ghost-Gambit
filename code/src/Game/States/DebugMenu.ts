@@ -152,27 +152,6 @@ export default class DebugMenu {
 		}
 	}
 
-	// updateEntityBoxComponents(entityId: number) {
-	// 	for (let i = 1; i < this.entitiesBox.children.length; i += 2) {
-	// 		if (this.entitiesBox.children[i].textString == entityId.toString()) {
-	// 			let hiddenProps: boolean[] = []; // keep track of what was hidden and not
-	// 			for (let child of (<Div>this.entitiesBox.children[i+1]).children) {
-	// 				hiddenProps.push(child.getHidden()); // store hidden state
-	// 				child.remove();
-	// 			}
-	// 			(<Div>this.entitiesBox.children[i+1]).children.length = 0;
-	// 			const entity = this.game.ecsManager.getEntity(entityId);
-
-	// 			this.addComponentButtons(entity, (<Div>this.entitiesBox.children[i+1]));
-
-	// 			// Reapply hidden states
-	// 			for (let child of (<Div>this.entitiesBox.children[i+1]).children) {
-	// 				child.setHidden(hiddenProps.shift());
-	// 			}
-	// 		}
-	// 	}
-	// }
-
 	update(dt: number) {
 		// Moving of boxes
 		if (!input.mouseClicked) {
