@@ -6,6 +6,7 @@ fence.obj
 front_leg.obj
 hind_leg.obj
 house.obj
+fancy_house.obj
 mailbox.obj
 newspaper.obj
 objs.txt

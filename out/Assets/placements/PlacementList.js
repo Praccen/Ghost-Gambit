@@ -36,9 +36,9 @@ this.placements.set(
 this.placements.set(
 	"House",
 	new Placement(
-		"Assets/objs/house.obj",
-		"Assets/textures/houseTex_bright.png",
-		"Assets/textures/houseTex_bright.png"
+		"Assets/objs/fancy_house.obj",
+		"Assets/textures/fancy_house.png",
+		"Assets/textures/fancy_house.png"
 	)
 );
 this.placements.set(

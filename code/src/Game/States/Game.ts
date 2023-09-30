@@ -144,13 +144,20 @@ export default class Game extends State {
 			nrOfFireParticles
 		);
 		for (let i = 0; i < nrOfFireParticles; i++) {
-			let dir = new Vec3([Math.random() * 2.0 - 1.0, 0.0, Math.random() * 2.0 - 1.0]);
+			let dir = new Vec3([
+				Math.random() * 2.0 - 1.0,
+				0.0,
+				Math.random() * 2.0 - 1.0,
+			]);
 			fireParticles.setParticleData(
 				i,
 				new Vec3(),
 				0.1,
 				dir,
-				new Vec3(dir).flip().multiply(0.5).add(new Vec3([0.0, 0.5, 0.0]))
+				new Vec3(dir)
+					.flip()
+					.multiply(0.5)
+					.add(new Vec3([0.0, 0.5, 0.0]))
 			);
 		}
 		fireParticles.sizeChangePerSecond = 0.2;

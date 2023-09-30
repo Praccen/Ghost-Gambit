@@ -103,6 +103,7 @@ export default class LoadingScreen extends State {
 		this.octreesToLoad = [
 			["Assets/heightmaps/heightmap.png", 0.01, 10],
 			["Assets/objs/house.obj", 0.1, 20],
+			["Assets/objs/fancy_house.obj", 0.1, 20],
 			["Assets/objs/mailbox.obj", 0.1, 20],
 			["Assets/objs/BigBuske.obj", 0.1, 20],
 			["Assets/objs/Solros.obj", 0.1, 20],

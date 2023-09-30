@@ -9,6 +9,7 @@ GrassStraw.png
 GrassStraw_Spec.png
 HeightmapTexture.png
 houseTex.pdn
+fancy_house.png
 houseTex.png
 houseTex_bright.png
 knight.png
