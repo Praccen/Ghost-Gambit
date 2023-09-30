@@ -204,8 +204,8 @@ export default class PlayerCharacter {
 		if (input.keys[" "] || input.buttons.get("A")) {
 			this.movComp.jumpRequested = true;
 			this.offGroundTimer = 0.5;
-			this.audioPlayer.stopSound("ghost_sound_2");
-			this.audioPlayer.playSound("ghost_sound_2", false);
+			this.audioPlayer.pauseAudio("ghost_sound_2");
+			this.audioPlayer.playAudio("ghost_sound_2", false);
 		} else {
 			this.movComp.jumpRequested = false;
 		}

@@ -22,6 +22,7 @@ export let options = {
 	useBloom: false,
 	showFps: true,
 	volume: 0.05,
+	effectVolume: 0.05,
 };
 
 /**

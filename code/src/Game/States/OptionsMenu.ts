@@ -14,9 +14,13 @@ export default class OptionsMenu extends State {
 	private bloomCB: Checkbox;
 	private fpsDisplayCB: Checkbox;
 	private controlsButton: Button;
+	private musicVolume: Slider;
+	private effectVolume: Slider;
+	private state: StateAccessible;
 
 	constructor(sa: StateAccessible) {
 		super();
+		this.state = sa;
 		this.overlayRendering = new OverlayRendering();
 
 		this.crtCB = this.overlayRendering.getNewCheckbox();
@@ -64,6 +68,26 @@ export default class OptionsMenu extends State {
 		this.backButton.onClick(function () {
 			self.gotoState = StatesEnum.MAINMENU;
 		});
+
+		this.musicVolume = this.overlayRendering.getNewSlider();
+		this.musicVolume.position.x = 0.4;
+		this.musicVolume.position.y = 0.4;
+		this.musicVolume.textString = "Music volume";
+		this.musicVolume.getElement().style.color = "cyan";
+		this.musicVolume.getInputElement().style.accentColor = "red";
+		this.musicVolume.getInputElement().min = "0";
+		this.musicVolume.getInputElement().max = "100";
+		this.musicVolume.getInputElement().value = options.volume * 1000 + "";
+
+		this.effectVolume = this.overlayRendering.getNewSlider();
+		this.effectVolume.position.x = 0.4;
+		this.effectVolume.position.y = 0.45;
+		this.effectVolume.textString = "Effects volume";
+		this.effectVolume.getElement().style.color = "cyan";
+		this.effectVolume.getInputElement().style.accentColor = "red";
+		this.effectVolume.getInputElement().min = "0";
+		this.effectVolume.getInputElement().max = "100";
+		this.effectVolume.getInputElement().value = options.volume * 1000 + "";
 	}
 
 	async init() {
@@ -80,6 +104,10 @@ export default class OptionsMenu extends State {
 		options.useCrt = this.crtCB.getChecked();
 		options.useBloom = this.bloomCB.getChecked();
 		options.showFps = this.fpsDisplayCB.getChecked();
+		options.volume = this.musicVolume.getValue() * 0.001;
+		this.state.audioPlayer.setMusicVolume(options.volume);
+		options.effectVolume = this.effectVolume.getValue() * 0.001;
+		this.state.audioPlayer.setSoundEffectVolume(options.effectVolume);
 	}
 
 	draw() {

@@ -211,7 +211,7 @@ export default class Game extends State {
 
 		// Play theme music
 		console.info("SOUND INIT");
-		this.stateAccessible.audioPlayer.playSound("theme", true);
+		this.stateAccessible.audioPlayer.playAudio("theme_1", true);
 	}
 
 	reset() {

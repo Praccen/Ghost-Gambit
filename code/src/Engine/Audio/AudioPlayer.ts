@@ -1,59 +1,133 @@
 export default class AudioPlayer {
-	sounds: object;
+	sound_effects: object;
+	sound_effects_volume_multilpliers: object;
+	songs: object;
+	songs_volume_multilpliers: object;
 	active: boolean; //set to true when user has interacted with document
+	sound_effects_dir: string;
+	songs_dir: string;
 
 	constructor() {
-		this.sounds = {
-			// bell: new Audio("Assets/Audio/Effects/bell.m4a"), //https://opengameart.org/content/100-cc0-sfx
-			theme: new Audio("Assets/Audio/Songs/theme_1.mp3"), //https://pixabay.com/music/scary-childrens-tunes-dark-ambient-horror-cinematic-halloween-atmosphere-scary-118585/
-			failure: new Audio("Assets/Audio/Effects/failure_1.mp3"), //https://pixabay.com/sound-effects/piano-suspense-shock-95515/
-			ghost_sound_1: new Audio("Assets/Audio/Effects/ghost_sound_1.mp3"), //https://pixabay.com/sound-effects/classic-ghost-sound-95773/
-			ghost_sound_2: new Audio("Assets/Audio/Effects/ghost_sound_2.mp3"), //https://pixabay.com/sound-effects/classic-ghost-sound-95773/
-		};
+		this.sound_effects_dir = "Assets/Audio/Effects";
+		this.songs_dir = "Assets/Audio/Music";
+
+		this.sound_effects = {};
+		this.songs = {};
+		this.sound_effects_volume_multilpliers = {};
+		this.songs_volume_multilpliers = {};
+
 		this.active = false;
 
-		for (let sound in this.sounds) {
-			this.sounds[sound].preload = "auto";
+		const sound_effect_files = [
+			"failure_1.mp3",
+			"ghost_sound_1.mp3",
+			"ghost_sound_2.mp3",
+		];
+		const sound_effect_volume_multilpliers_list = [0.5, 0.5, 0.71];
+		let count = 0;
+		for (const file of sound_effect_files) {
+			this.sound_effects[file.split(".")[0]] = new Audio(
+				this.sound_effects_dir + "/" + file
+			);
+			this.sound_effects_volume_multilpliers[file.split(".")[0]] =
+				sound_effect_volume_multilpliers_list[count];
+			count++;
 		}
 
-		// this.setVolume("bell", 0.3);
-		this.setVolume("theme", 0.5);
-		this.setVolume("failure", 0.5);
-		this.setVolume("ghost_sound_1", 0.5);
-		this.setVolume("ghost_sound_2", 0.7);
+		const song_files = ["theme_1.mp3"];
+		const song_files_volume_multilpliers_list = [0.5];
+		count = 0;
+		for (const file of song_files) {
+			this.songs[file.split(".")[0]] = new Audio(this.songs_dir + "/" + file);
+			this.songs_volume_multilpliers[file.split(".")[0]] =
+				song_files_volume_multilpliers_list[count];
+			count++;
+		}
+
+		for (let sound in this.sound_effects) {
+			this.sound_effects[sound].preload = "auto";
+		}
+		for (let sound in this.songs) {
+			this.songs[sound].preload = "auto";
+		}
+
+		this.setMusicVolume(1.0);
+		this.setSoundEffectVolume(1.0);
 	}
 
-	playSound(key, loop) {
-		this.sounds[key].loop = loop;
-		this.active && this.sounds[key].play();
-	}
-
-	stopSound(key) {
-		if (this.sounds[key].paused === false) {
-			this.sounds[key].pause();
-			this.sounds[key].currentTime = 0;
+	playAudio(key, loop, volumeMultiplier?) {
+		if (!volumeMultiplier) {
+			volumeMultiplier = 1;
+		}
+		if (this.sound_effects[key]) {
+			this.sound_effects[key].loop = loop;
+			this.active && this.sound_effects[key].play();
+		} else if (this.songs[key]) {
+			this.songs[key].loop = loop;
+			this.active && this.songs[key].play();
 		}
 	}
 
-	setVolume(key, volume) {
-		this.sounds[key].volume = volume;
+	setAudioVolume(key, volume) {
+		if (
+			this.sound_effects[key] &&
+			this.sound_effects_volume_multilpliers[key]
+		) {
+			this.sound_effects[key].volume = Math.min(
+				volume * this.sound_effects_volume_multilpliers[key],
+				1
+			);
+		} else if (this.songs[key] && this.songs_volume_multilpliers[key]) {
+			this.songs[key].volume = Math.min(
+				volume * this.songs_volume_multilpliers[key],
+				1
+			);
+		}
 	}
 
-	setTime(key, time) {
-		this.sounds[key].currentTime = time;
+	setMusicVolume(volume: number) {
+		Object.keys(this.songs).forEach((key) => {
+			this.songs[key].volume = Math.min(
+				volume * this.songs_volume_multilpliers[key],
+				1
+			);
+		});
 	}
 
-	pauseSound(key) {
-		this.sounds[key].pause();
+	setSoundEffectVolume(volume: number) {
+		Object.keys(this.sound_effects).forEach((key) => {
+			this.sound_effects[key].volume = Math.min(
+				volume * this.sound_effects_volume_multilpliers[key],
+				1
+			);
+		});
+	}
+
+	setAudioTime(key, time) {
+		if (this.sound_effects[key]) {
+			this.sound_effects[key].currentTime = time;
+		} else if (this.songs[key]) {
+			this.songs[key].currentTime = time;
+		}
+	}
+
+	pauseAudio(key) {
+		if (this.sound_effects[key]) {
+			this.sound_effects[key].pause();
+		} else if (this.songs[key]) {
+			this.songs[key].pause();
+		}
 	}
 
 	stopAll() {
-		// for(const s of Object.values(this.sounds)) {
-		//     const playPromise = s.play();
-		//     playPromise.then(() => {
-		//         s.pause();
-		//         s.currentTime = 0.0;
-		//     })
-		// }
+		Object.keys(this.songs).forEach((key) => {
+			this.songs[key].pause();
+			this.songs[key].currentTime = 0;
+		});
+
+		Object.keys(this.sound_effects).forEach((key) => {
+			this.sound_effects[key].pause();
+			this.sound_effects[key].currentTime = 0;
+		});
 	}
 }
