@@ -56,7 +56,10 @@ export default class PlayerCharacter {
 		this.groupPositionComp.scale.setValues(0.25, 0.25, 0.25);
 
 		this.bodyEntity = this.ecsManager.createEntity();
-		this.ecsManager.addComponent(this.bodyEntity, new GraphicsComponent(bodyMesh));
+		this.ecsManager.addComponent(
+			this.bodyEntity,
+			new GraphicsComponent(bodyMesh)
+		);
 		let posComp = new PositionComponent();
 		posComp.rotation.y = 90.0;
 		this.ecsManager.addComponent(this.bodyEntity, posComp);
@@ -84,13 +87,21 @@ export default class PlayerCharacter {
 			nrOfFireParticles
 		);
 		for (let i = 0; i < nrOfFireParticles; i++) {
-			let dir = new Vec3([Math.random() * 8.0 - 4.0, 7.0, Math.random() * 8.0 - 4.0]);
+			let dir = new Vec3([
+				Math.random() * 8.0 - 4.0,
+				7.0,
+				Math.random() * 8.0 - 4.0,
+			]);
 			fireParticles.setParticleData(
 				i,
 				new Vec3(),
 				0.1,
 				dir,
-				new Vec3(dir).flip().multiply(10.0).setValues(null, 0.0, null).add(new Vec3([0.0, -8.0, 0.0]))
+				new Vec3(dir)
+					.flip()
+					.multiply(10.0)
+					.setValues(null, 0.0, null)
+					.add(new Vec3([0.0, -8.0, 0.0]))
 			);
 		}
 		fireParticles.sizeChangePerSecond = -0.2;
@@ -170,7 +181,7 @@ export default class PlayerCharacter {
 			// Handle rotation
 			let targetRotation =
 				90 - Math.atan2(accVec.z, accVec.x) * (180 / Math.PI);
-			let diff = targetRotation - (this.groupPositionComp.rotation.y);
+			let diff = targetRotation - this.groupPositionComp.rotation.y;
 			if (diff > 180) {
 				diff -= 360;
 			} else if (diff < -180) {
@@ -230,10 +241,11 @@ export default class PlayerCharacter {
 			);
 		} else if (input.joystickRightDirection.length2() > 0.0) {
 			this.cameraFocusComp.offset.add(
-				new Vec3(this.rendering.camera.getRight()).multiply(dt * 8.0 * input.joystickRightDirection.x)
+				new Vec3(this.rendering.camera.getRight()).multiply(
+					dt * 8.0 * input.joystickRightDirection.x
+				)
 			);
-		}
-		else if (this.movComp) {
+		} else if (this.movComp) {
 			this.cameraFocusComp.offset.subtract(
 				new Vec3(this.movComp.velocity).multiply(dt * 3.0)
 			);
@@ -290,9 +302,7 @@ export default class PlayerCharacter {
 		// }
 	}
 
-	private resetAnimation() {
-		
-	}
+	private resetAnimation() {}
 
 	private walkAnimation(animationSpeed: number = 7.5) {
 		this.resetAnimation();

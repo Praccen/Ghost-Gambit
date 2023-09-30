@@ -77,7 +77,11 @@ export default class Game extends State {
 		dirLight.direction.setValues(0.2, -0.4, -0.7);
 		dirLight.colour.setValues(0.1, 0.1, 0.4);
 
-		this.playerCharacter = new PlayerCharacter(this.scene, this.rendering, this.ecsManager);
+		this.playerCharacter = new PlayerCharacter(
+			this.scene,
+			this.rendering,
+			this.ecsManager
+		);
 
 		this.menuButton = this.overlayRendering.getNewButton();
 		this.menuButton.position.x = 0.9;
@@ -144,13 +148,21 @@ export default class Game extends State {
 			nrOfFireParticles
 		);
 		for (let i = 0; i < nrOfFireParticles; i++) {
-			let dir = new Vec3([Math.random() * 8.0 - 4.0, 2.5, Math.random() * 8.0 - 4.0]);
+			let dir = new Vec3([
+				Math.random() * 8.0 - 4.0,
+				2.5,
+				Math.random() * 8.0 - 4.0,
+			]);
 			fireParticles.setParticleData(
 				i,
 				new Vec3(),
 				0.1,
 				dir,
-				new Vec3(dir).flip().multiply(2.3).setValues(null, 0.0, null).add(new Vec3([0.0, 1.5, 0.0]))
+				new Vec3(dir)
+					.flip()
+					.multiply(2.3)
+					.setValues(null, 0.0, null)
+					.add(new Vec3([0.0, 1.5, 0.0]))
 			);
 		}
 		fireParticles.sizeChangePerSecond = -0.05;

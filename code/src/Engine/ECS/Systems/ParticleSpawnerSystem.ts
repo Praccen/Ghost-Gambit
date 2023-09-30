@@ -19,9 +19,7 @@ export default class ParticleSpawnerSystem extends System {
 				e.getComponent(ComponentTypeEnum.POSITIONPARENT)
 			);
 			if (posComp == undefined) {
-				posComp = <PositionComponent>(
-					e.getComponent(ComponentTypeEnum.POSITION)
-				);
+				posComp = <PositionComponent>e.getComponent(ComponentTypeEnum.POSITION);
 			}
 
 			if (particleComp) {
