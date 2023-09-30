@@ -27,4 +27,5 @@ jobs:
           PATH=/run/wrappers/bin:/root/.nix-profile/bin:/etc/profiles/per-user/root/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin:$PATH
           npm install
           npm run build
+          rm -rf /var/www/develop.rlyeh.nu/*
           rsync -og -r out/* /var/www/develop.rlyeh.nu/
