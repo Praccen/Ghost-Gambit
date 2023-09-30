@@ -142,34 +142,34 @@ export default class Game extends State {
 		fireflies.addComponent(particleComp);
 
 		let fire = this.ecsManager.createEntity();
-		let nrOfFireParticles = 500;
+		let nrOfFireParticles = 6;
 		let fireParticles = this.scene.getNewParticleSpawner(
 			"Assets/textures/fire.png",
 			nrOfFireParticles
 		);
 		for (let i = 0; i < nrOfFireParticles; i++) {
 			let dir = new Vec3([
-				Math.random() * 8.0 - 4.0,
-				2.5,
-				Math.random() * 8.0 - 4.0,
+				Math.random() * 5.0 - 2.5,
+				1.0,
+				Math.random() * 5.0 - 2.5,
 			]);
 			fireParticles.setParticleData(
 				i,
 				new Vec3(),
-				0.1,
+				0.75,
 				dir,
 				new Vec3(dir)
 					.flip()
-					.multiply(2.3)
+					.multiply(0.65)
 					.setValues(null, 0.0, null)
-					.add(new Vec3([0.0, 1.5, 0.0]))
+					.add(new Vec3([0.0, 0.5, 0.0]))
 			);
 		}
-		fireParticles.sizeChangePerSecond = -0.05;
-		fireParticles.fadePerSecond = 2.5;
+		fireParticles.sizeChangePerSecond = -0.15;
+		fireParticles.fadePerSecond = 0.5;
 
 		let fireParticleComp = new ParticleSpawnerComponent(fireParticles);
-		fireParticleComp.lifeTime = 0.5;
+		fireParticleComp.lifeTime = 1.5;
 		fire.addComponent(fireParticleComp);
 
 		let firePosComp = new PositionComponent();

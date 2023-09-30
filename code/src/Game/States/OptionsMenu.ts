@@ -12,8 +12,6 @@ export default class OptionsMenu extends State {
 	private backButton: Button;
 	private crtCB: Checkbox;
 	private bloomCB: Checkbox;
-	private grassCB: Checkbox;
-	private grassDensitySlider: Slider;
 	private fpsDisplayCB: Checkbox;
 	private controlsButton: Button;
 
@@ -37,18 +35,9 @@ export default class OptionsMenu extends State {
 		this.bloomCB.getInputElement().style.accentColor = "red";
 		this.bloomCB.getInputElement().checked = options.useBloom;
 
-		this.grassDensitySlider = this.overlayRendering.getNewSlider();
-		this.grassDensitySlider.position.x = 0.4;
-		this.grassDensitySlider.position.y = 0.4;
-		this.grassDensitySlider.textString = "Grass density \r\n(requires restart)";
-		this.grassDensitySlider.getElement().style.color = "cyan";
-		this.grassDensitySlider.getInputElement().style.accentColor = "red";
-		this.grassDensitySlider.getInputElement().min = "1000";
-		this.grassDensitySlider.getInputElement().max = "100000";
-
 		this.fpsDisplayCB = this.overlayRendering.getNewCheckbox();
 		this.fpsDisplayCB.position.x = 0.4;
-		this.fpsDisplayCB.position.y = 0.5;
+		this.fpsDisplayCB.position.y = 0.35;
 		this.fpsDisplayCB.textString = "Fps counter ";
 		this.fpsDisplayCB.getElement().style.color = "cyan";
 		this.fpsDisplayCB.getInputElement().style.accentColor = "red";

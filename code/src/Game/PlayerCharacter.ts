@@ -81,34 +81,34 @@ export default class PlayerCharacter {
 
 		// Fire
 		this.fireEntity = this.ecsManager.createEntity();
-		let nrOfFireParticles = 100;
+		let nrOfFireParticles = 3;
 		let fireParticles = this.scene.getNewParticleSpawner(
 			"Assets/textures/fire.png",
 			nrOfFireParticles
 		);
 		for (let i = 0; i < nrOfFireParticles; i++) {
 			let dir = new Vec3([
-				Math.random() * 8.0 - 4.0,
-				7.0,
-				Math.random() * 8.0 - 4.0,
+				Math.random() * 2.0 - 1.0,
+				1.0,
+				Math.random() * 2.0 - 1.0,
 			]);
 			fireParticles.setParticleData(
 				i,
 				new Vec3(),
-				0.1,
+				0.15,
 				dir,
 				new Vec3(dir)
 					.flip()
-					.multiply(10.0)
+					.multiply(0.65)
 					.setValues(null, 0.0, null)
-					.add(new Vec3([0.0, -8.0, 0.0]))
+					.add(new Vec3([0.0, 0.5, 0.0]))
 			);
 		}
-		fireParticles.sizeChangePerSecond = -0.2;
-		fireParticles.fadePerSecond = 8.0;
+		fireParticles.sizeChangePerSecond = -0.3;
+		fireParticles.fadePerSecond = 0.7;
 
 		let fireParticleComp = new ParticleSpawnerComponent(fireParticles);
-		fireParticleComp.lifeTime = 0.2;
+		fireParticleComp.lifeTime = 0.5;
 		this.fireEntity.addComponent(fireParticleComp);
 
 		let firePosComp = new PositionComponent();

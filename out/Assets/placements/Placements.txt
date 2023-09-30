@@ -1,13 +1,10 @@
-Placement:Mailbox
 Placement:Tree 1
 Placement:Tree 2
 Placement:Tree 3
 Placement:House
-8.5,-3.5,15|0.3,0.3,0.3|0,0,0
-Placement:Newspaper
 Placement:Fence
 Placement:Big buske
 Placement:Small buske
 Placement:Solros
 Placement:Plant
-Placement:Delivery zone
+Placement:Ghost Character
