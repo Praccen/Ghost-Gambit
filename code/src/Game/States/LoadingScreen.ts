@@ -101,14 +101,7 @@ export default class LoadingScreen extends State {
 		// Octrees to create
 		this.octreesToLoad = [
 			["Assets/heightmaps/heightmap.png", 0.01, 10],
-			["Assets/objs/house.obj", 0.1, 20],
 			["Assets/objs/fancy_house.obj", 0.1, 20],
-			["Assets/objs/BigBuske.obj", 0.1, 20],
-			["Assets/objs/Solros.obj", 0.1, 20],
-			["Assets/objs/SmolBuske.obj", 0.1, 20],
-			["Assets/objs/tree_1.obj", 0.1, 20],
-			["Assets/objs/tree_2.obj", 0.1, 20],
-			["Assets/objs/tree_3.obj", 0.1, 20],
 		];
 		this.octreesRequested = this.octreesToLoad.length;
 		this.octreesLoaded = 0;

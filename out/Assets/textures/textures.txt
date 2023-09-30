@@ -21,6 +21,7 @@ LeafTexture.png
 mailbox.png
 medium_fur.png
 news.png
+rock.png
 Solros.png
 textures.txt
 tree_1.png
