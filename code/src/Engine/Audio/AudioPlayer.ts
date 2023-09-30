@@ -20,7 +20,7 @@ export default class AudioPlayer {
 		this.setVolume("theme", 0.5);
 		this.setVolume("failure", 0.5);
 		this.setVolume("ghost_sound_1", 0.5);
-		this.setVolume("ghost_sound_2", 0.5);
+		this.setVolume("ghost_sound_2", 0.7);
 	}
 
 	playSound(key, loop) {

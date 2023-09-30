@@ -43,7 +43,7 @@ export default class PlayerCharacter {
 		scene: Scene,
 		rendering: Rendering,
 		ecsManager: ECSManager,
-		audioPlayer: AudioPlayer, 
+		audioPlayer: AudioPlayer,
 		textureStore: TextureStore
 	) {
 		this.scene = scene;
@@ -64,7 +64,9 @@ export default class PlayerCharacter {
 			"Assets/textures/characterTextureAlbedo.jpg",
 			"Assets/textures/black.png"
 		);
-		this.bodyMesh.emission = this.textureStore.getTexture("Assets/textures/characterTextureEmission.jpg");
+		this.bodyMesh.emission = this.textureStore.getTexture(
+			"Assets/textures/characterTextureEmission.jpg"
+		);
 		this.bodyMesh.emissionColor.setValues(0.0, 1.0, 0.3);
 
 		this.groupPositionComp = new PositionParentComponent();
@@ -306,7 +308,11 @@ export default class PlayerCharacter {
 		this.lastAnimation = this.currentAnimation;
 
 		let currentTime = Date.now() * 0.001;
-		this.bodyMesh.emissionColor.setValues(Math.cos(currentTime), Math.sin(currentTime * 0.66), Math.sin(currentTime * 0.33));
+		this.bodyMesh.emissionColor.setValues(
+			Math.cos(currentTime),
+			Math.sin(currentTime * 0.66),
+			Math.sin(currentTime * 0.33)
+		);
 
 		// let animations = [
 		//     this.walkAnimation.bind(this),
