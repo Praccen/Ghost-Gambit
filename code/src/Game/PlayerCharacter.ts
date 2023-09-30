@@ -1,7 +1,7 @@
+import TextureStore from "../Engine/AssetHandling/TextureStore";
 import BoundingBoxComponent from "../Engine/ECS/Components/BoundingBoxComponent";
 import CameraFocusComponent from "../Engine/ECS/Components/CameraFocusCompontent";
 import CollisionComponent from "../Engine/ECS/Components/CollisionComponent";
-import { ComponentTypeEnum } from "../Engine/ECS/Components/Component";
 import GraphicsComponent from "../Engine/ECS/Components/GraphicsComponent";
 import MovementComponent from "../Engine/ECS/Components/MovementComponent";
 import ParticleSpawnerComponent from "../Engine/ECS/Components/ParticleSpawnerComponent";
@@ -11,6 +11,7 @@ import PositionParentComponent from "../Engine/ECS/Components/PositionParentComp
 import ECSManager from "../Engine/ECS/ECSManager";
 import Entity from "../Engine/ECS/Entity";
 import Vec3 from "../Engine/Maths/Vec3";
+import GraphicsBundle from "../Engine/Objects/GraphicsBundle";
 import Rendering from "../Engine/Rendering/Rendering";
 import Scene from "../Engine/Rendering/Scene";
 import { input } from "./GameMachine";
@@ -19,6 +20,7 @@ export default class PlayerCharacter {
 	private scene: Scene;
 	private rendering: Rendering;
 	private ecsManager: ECSManager;
+	private textureStore: TextureStore;
 
 	private bodyEntity: Entity;
 	private fireEntity: Entity;
@@ -26,6 +28,7 @@ export default class PlayerCharacter {
 	private groupPositionComp: PositionParentComponent;
 	private movComp: MovementComponent;
 	private cameraFocusComp: CameraFocusComponent;
+	private bodyMesh: GraphicsBundle;
 
 	private lastAnimation: Function;
 	private currentAnimation: Function;
@@ -33,10 +36,11 @@ export default class PlayerCharacter {
 	private offGroundTimer;
 
 	private timer: number;
-	constructor(scene: Scene, rendering: Rendering, ecsManager: ECSManager) {
+	constructor(scene: Scene, rendering: Rendering, ecsManager: ECSManager, textureStore: TextureStore) {
 		this.scene = scene;
 		this.rendering = rendering;
 		this.ecsManager = ecsManager;
+		this.textureStore = textureStore;
 
 		this.timer = 0.0;
 		this.lastAnimation = this.resetAnimation;
@@ -45,11 +49,13 @@ export default class PlayerCharacter {
 	}
 
 	async init() {
-		let bodyMesh = await this.scene.getNewMesh(
+		this.bodyMesh = await this.scene.getNewMesh(
 			"Assets/objs/CharacterGhost.obj",
-			"Assets/textures/white.png",
+			"Assets/textures/characterTextureAlbedo.jpg",
 			"Assets/textures/black.png"
 		);
+		this.bodyMesh.emission = this.textureStore.getTexture("Assets/textures/characterTextureEmission.jpg");
+		this.bodyMesh.emissionColor.setValues(0.0, 1.0, 0.3);
 
 		this.groupPositionComp = new PositionParentComponent();
 
@@ -58,7 +64,7 @@ export default class PlayerCharacter {
 		this.bodyEntity = this.ecsManager.createEntity();
 		this.ecsManager.addComponent(
 			this.bodyEntity,
-			new GraphicsComponent(bodyMesh)
+			new GraphicsComponent(this.bodyMesh)
 		);
 		let posComp = new PositionComponent();
 		posComp.rotation.y = 90.0;
@@ -70,7 +76,7 @@ export default class PlayerCharacter {
 		this.ecsManager.addComponent(this.bodyEntity, this.cameraFocusComp);
 
 		let boundingBoxComp = new BoundingBoxComponent();
-		boundingBoxComp.setup(bodyMesh.graphicsObject);
+		boundingBoxComp.setup(this.bodyMesh.graphicsObject);
 		boundingBoxComp.updateTransformMatrix(this.groupPositionComp.matrix);
 		this.ecsManager.addComponent(this.bodyEntity, boundingBoxComp);
 		this.ecsManager.addComponent(this.bodyEntity, new CollisionComponent());
@@ -286,6 +292,9 @@ export default class PlayerCharacter {
 		}
 		this.currentAnimation();
 		this.lastAnimation = this.currentAnimation;
+
+		let currentTime = Date.now() * 0.001;
+		this.bodyMesh.emissionColor.setValues(Math.cos(currentTime), Math.sin(currentTime * 0.66), Math.sin(currentTime * 0.33));
 
 		// let animations = [
 		//     this.walkAnimation.bind(this),

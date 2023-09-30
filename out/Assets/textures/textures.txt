@@ -3,6 +3,8 @@ AimingBlob.png
 black.png
 Bricks.png
 BushTexture.png
+characterTextureAlbedo.jpg
+characterTextureEmission.jpg
 DZ.png
 fancy_house.png
 fancy_house_marble.png

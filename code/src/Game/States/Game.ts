@@ -80,7 +80,8 @@ export default class Game extends State {
 		this.playerCharacter = new PlayerCharacter(
 			this.scene,
 			this.rendering,
-			this.ecsManager
+			this.ecsManager,
+			this.stateAccessible.textureStore
 		);
 
 		this.menuButton = this.overlayRendering.getNewButton();
@@ -223,7 +224,7 @@ export default class Game extends State {
 	createMapEntity() {
 		let texturePath = "Assets/heightmaps/heightmap.png";
 		let texturePathColour = "Assets/textures/HeightmapTexture.png";
-		let texturePathSpec = "Assets/textures/HeightmapTexture.png";
+		let texturePathSpec = "Assets/textures/black.png";
 		let entity = this.ecsManager.createEntity();
 		this.mapBundle = this.scene.getNewHeightMap(
 			texturePath,
