@@ -51,7 +51,8 @@ in float alpha;
 
 uniform sampler2D texture0;
 
-out vec4 FragColor;
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out float FragOpacity;
 
 mat4 thresholdMatrix = mat4(
     1.0, 9.0, 3.0, 11.0,
@@ -70,6 +71,8 @@ void main()
     if (threshold >= FragColor.a) {
         discard;
     }
+
+	FragOpacity = FragColor.a;
 
     FragColor.a = 1.0f; // Since we use screen door transparency, do not use alpha value
 }`;

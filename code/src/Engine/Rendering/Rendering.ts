@@ -30,6 +30,7 @@ export default class Rendering {
 	private resolutionHeight: number;
 
 	// ---- Particles ----
+	private particleFramebuffer: Framebuffer;
 	private particleRenderPass: ParticleRenderPass;
 	// -------------------
 
@@ -89,7 +90,15 @@ export default class Rendering {
 		// ----------------------------
 
 		// ---- Particles ----
-		this.particleRenderPass = new ParticleRenderPass();
+		this.particleFramebuffer = new Framebuffer(
+			this.resolutionWidth,
+			this.resolutionHeight,
+			[new Texture(false), new Texture(false, gl.R32F, gl.RED, gl.FLOAT)],
+			null
+		);
+		this.particleRenderPass = new ParticleRenderPass(
+			this.particleFramebuffer.textures
+		);
 		// -------------------
 
 		// ---- Skybox ----
@@ -162,6 +171,7 @@ export default class Rendering {
 		this.resolutionWidth = x;
 		this.resolutionHeight = y;
 		this.geometryRenderPass.setResolution(x, y);
+		this.particleFramebuffer.setProportions(x, y);
 		this.crtFramebuffer.setProportions(x, y);
 		this.finishedFramebuffer.setProportions(x, y);
 
@@ -195,14 +205,8 @@ export default class Rendering {
 		this.geometryRenderPass.draw(this.scene, this.camera);
 		// -----------------------
 
-		// Geometry pass over, appropriate framebuffer for post processing or render directly to screen.
-		if (this.useBloom) {
-			this.bloomExtractionInputFramebuffer.bind(gl.DRAW_FRAMEBUFFER);
-		} else if (this.useCrt) {
-			this.crtFramebuffer.bind(gl.DRAW_FRAMEBUFFER);
-		} else {
-			this.finishedFramebuffer.bind(gl.DRAW_FRAMEBUFFER);
-		}
+		// Geometry pass over, start rendering to the particle framebuffer
+		this.particleFramebuffer.bind(gl.DRAW_FRAMEBUFFER);
 
 		// Clear the output with the actual clear colour we have set
 		gl.clearColor(
@@ -237,6 +241,16 @@ export default class Rendering {
 			this.skyboxRenderPass.draw(this.camera);
 		}
 		// ----------------
+
+		// Setup appropriate post processing framebuffer (or to finished directly)
+		if (this.useBloom) {
+			this.particleRenderPass.outputBuffer =
+				this.bloomExtractionInputFramebuffer;
+		} else if (this.useCrt) {
+			this.particleRenderPass.outputBuffer = this.crtFramebuffer;
+		} else {
+			this.particleRenderPass.outputBuffer = this.finishedFramebuffer;
+		}
 
 		// ---- Particles ----
 		this.particleRenderPass.draw(this.scene, this.camera);

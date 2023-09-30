@@ -10,7 +10,8 @@ precision highp float;
 
 in vec2 texCoords;
 
-out vec4 final_colour;
+layout (location = 0) out vec4 final_colour;
+layout (location = 1) out float FragOpacity;
 
 uniform sampler2D gPositionEmission;
 uniform sampler2D gNormal;
@@ -74,6 +75,7 @@ void main() {
 	}
 
 	final_colour = vec4(result * (1.0 - emission) + diffuse * emission, 1.0f); // Set colour of fragment. Since we use screen door transparency, do not use alpha value
+	FragOpacity = 0.0;
 }
 
 // Calculates the colour when using a directional light

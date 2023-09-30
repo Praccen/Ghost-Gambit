@@ -21,13 +21,16 @@ void main()
 const skyboxFragmentSrc: string = `#version 300 es
 precision highp float;
 
-out vec4 FragColor;
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out float FragOpacity;
+
 in vec3 texCoords;
 
 uniform samplerCube skybox;
 
 void main() {
     FragColor = texture(skybox, texCoords).rgba;
+	FragOpacity = 0.0;
 }
 `;
 

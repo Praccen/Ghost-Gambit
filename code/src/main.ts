@@ -14,6 +14,7 @@ import { createShadowPass } from "./Engine/ShaderPrograms/ShadowMapping/ShadowPa
 import { createSimpleShaderProgram } from "./Engine/ShaderPrograms/SimpleShaderProgram";
 import { createGrassShadowPass } from "./Engine/ShaderPrograms/ShadowMapping/GrassShadowPass";
 import { createSkyboxShaderProgram } from "./Engine/ShaderPrograms/Skybox/SkyboxShaderProgram";
+import { createBlurTransparency } from "./Engine/ShaderPrograms/PostProcessing/BlurTransparency";
 
 SAT.runUnitTests();
 
@@ -99,6 +100,7 @@ function createShaders() {
 	createBloomExtraction();
 	createCrtShaderProgram();
 	createGaussianBlur();
+	createBlurTransparency();
 	createShadowPass();
 	createGrassShadowPass();
 	createParticleShaderProgram();
