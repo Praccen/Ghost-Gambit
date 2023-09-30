@@ -22,6 +22,7 @@ import ParticleSpawnerComponent from "../../Engine/ECS/Components/ParticleSpawne
 import Vec3 from "../../Engine/Maths/Vec3";
 import PointLightComponent from "../../Engine/ECS/Components/PointLightComponent";
 import PlayerCharacter from "../PlayerCharacter";
+import { Client } from "../../Engine/Client/Client";
 
 export default class Game extends State {
 	rendering: Rendering;
@@ -39,6 +40,8 @@ export default class Game extends State {
 	private playerCharacter: PlayerCharacter;
 
 	private oWasPressed: boolean;
+
+	client: Client;
 
 	public static getInstance(sa: StateAccessible): Game {
 		if (!Game.instance) {
@@ -74,6 +77,10 @@ export default class Game extends State {
 		this.overlayRendering = new OverlayRendering(this.rendering.camera);
 
 		this.createMapEntity();
+
+		this.client = new Client();
+		this.client.joinRoom("TEST1");
+		this.client.send(JSON.stringify({ type: "GET" }), 5);
 
 		let dirLight = this.scene.getDirectionalLight();
 		dirLight.ambientMultiplier = 0.3;

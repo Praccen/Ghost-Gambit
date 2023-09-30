@@ -52,6 +52,7 @@ wss.on("connection", (ws) => {
 				if (rooms.has(msg.room_id)) {
 					console.log("Joining room: " + msg.room_id);
 					rooms.get(msg.room_id)!.push(ws);
+					clients.get(ws).room = msg.room_id;
 					for (const element of rooms.get(msg.room_id)) {
 						if (element != ws) {
 							element.send(
@@ -62,16 +63,18 @@ wss.on("connection", (ws) => {
 				}
 				break;
 			case "MOV":
-				for (const element of rooms.get(clients.get(ws).room)) {
-					if (element != ws) {
-						element.send(message);
+				const roomName = clients.get(ws).room;
+				if (roomName != "NOT_VALID") {
+					for (const element of rooms.get(roomName)) {
+						if (element != ws) {
+							element.send(message.toString());
+						}
 					}
 				}
 				break;
 			case "GET":
 				var roomList = [];
 
-				console.log(rooms.keys());
 				for (const room of rooms.keys()) {
 					roomList.push(room);
 				}

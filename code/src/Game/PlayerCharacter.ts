@@ -124,6 +124,19 @@ export default class PlayerCharacter {
 			return;
 		}
 
+		const client = Game.getInstanceNoSa().client;
+		if (true) {
+			client.send(
+				JSON.stringify({
+					type: "MOV",
+					x: this.groupPositionComp.position.x,
+					y: this.groupPositionComp.position.y,
+					z: this.groupPositionComp.position.z,
+				}),
+				0
+			);
+		}
+
 		this.timer += dt;
 
 		let accVec = new Vec3();

@@ -1,8 +1,15 @@
+import Game from "../../Game/States/Game";
+import { ComponentTypeEnum } from "../ECS/Components/Component";
+import PositionParentComponent from "../ECS/Components/PositionParentComponent";
+import Vec3 from "../Maths/Vec3";
+
 export class Client {
 	private socket: WebSocket;
+	private bodyEntity;
+	connected: boolean = false;
 
 	constructor() {
-		this.socket = new WebSocket("ws://localhost:8080");
+		this.socket = new WebSocket("ws://192.168.1.134:8080");
 		this.socket.addEventListener("open", (event) => {
 			console.log("Connected to server");
 		});
@@ -36,12 +43,31 @@ export class Client {
 			case "CRE":
 				switch (msg.msg) {
 					case "OK":
+						this.connected = true;
 						break;
 					case "ERR":
 						break;
 				}
 				break;
 			case "JOI":
+				this.bodyEntity = Game.getInstanceNoSa().objectPlacer.placeObject(
+					"Ghost Character",
+					new Vec3(),
+					new Vec3([0.25, 0.25, 0.25]),
+					new Vec3(),
+					false
+				);
+				break;
+			case "MOV":
+				let posComp = <PositionParentComponent>(
+					this.bodyEntity.getComponent(ComponentTypeEnum.POSITIONPARENT)
+				);
+				posComp.position.x = msg.x;
+				posComp.position.y = msg.y;
+				posComp.position.z = msg.z;
+
+				break;
+			case "DIS":
 				break;
 		}
 	}
