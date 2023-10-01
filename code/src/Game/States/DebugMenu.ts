@@ -201,7 +201,9 @@ export default class DebugMenu {
 						key,
 						new Vec3(),
 						new Vec3([1.0, 1.0, 1.0]),
-						new Vec3([0.0, 0.0, 0.0])
+						new Vec3([0.0, 0.0, 0.0]),
+						new Vec3(),
+						"XYZ"
 					);
 				});
 			});

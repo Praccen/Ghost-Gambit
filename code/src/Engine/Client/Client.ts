@@ -57,6 +57,8 @@ export class Client {
 					new Vec3(),
 					new Vec3([0.25, 0.25, 0.25]),
 					new Vec3(),
+					new Vec3(),
+					"XYZ",
 					false
 				)[0];
 				break;

@@ -107,12 +107,14 @@ export default class ObjectPlacer {
 					if (t.startsWith("Placement:")) {
 						currentPlacementType = t.substring("Placement:".length);
 					} else {
-						let [p, s, r] = t.split("|");
+						let [p, s, r, o, ro] = t.split("|");
 						this.placeObject(
 							currentPlacementType,
 							new Vec3(p.split(",").map((n) => parseFloat(n))),
 							new Vec3(s.split(",").map((n) => parseFloat(n))),
 							new Vec3(r.split(",").map((n) => parseFloat(n))),
+							new Vec3(o.split(",").map((n) => parseFloat(n))),
+							ro,
 							false
 						);
 					}
@@ -210,6 +212,8 @@ export default class ObjectPlacer {
 		position: Vec3,
 		size: Vec3,
 		rotation: Vec3,
+		origin: Vec3,
+		rotationOrder: string,
 		triggerDownloadNeeded: boolean = true
 	): Entity | [Entity, ParticleSpawner] {
 		let placement = this.placements.get(type);
@@ -250,6 +254,8 @@ export default class ObjectPlacer {
 		posComp.position.deepAssign(position);
 		posComp.scale.deepAssign(size);
 		posComp.rotation.deepAssign(rotation);
+		posComp.origin.deepAssign(origin);
+		posComp.rotationOrder = rotationOrder;
 		this.ecsManager.addComponent(entity, posComp);
 
 		let boundingBoxComp = new BoundingBoxComponent();
@@ -480,7 +486,9 @@ export default class ObjectPlacer {
 				entityPlacement,
 				new Vec3(posComp.position).add([0.0, 5.0, 0.0]),
 				new Vec3(posComp.scale),
-				new Vec3(posComp.rotation)
+				new Vec3(posComp.rotation),
+				new Vec3(posComp.origin),
+				posComp.rotationOrder
 			);
 		}
 	}
@@ -513,6 +521,10 @@ export default class ObjectPlacer {
 								posComp.scale +
 								"|" +
 								posComp.rotation +
+								"|" +
+								posComp.origin +
+								"|" +
+								posComp.rotationOrder +
 								"\n";
 						}
 					}

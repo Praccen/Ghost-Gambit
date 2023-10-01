@@ -1,5 +1,6 @@
 skyboxes
 black.png
+CandleTextureAlbedo.jpg
 characterTextureAlbedo.jpg
 characterTextureEmission.jpg
 fancy_house.png
@@ -8,7 +9,9 @@ fancy_house_red.png
 fire.png
 GrassStraw.png
 GrassStraw_Spec.png
+GravestoneTextureAlbedo.jpg
 HeightmapTexture.png
 rock.png
 textures.txt
+treeTextureAlbedo.png
 white.png

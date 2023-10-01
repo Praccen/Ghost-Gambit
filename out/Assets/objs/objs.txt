@@ -1,8 +1,19 @@
+Candle.obj
 CharacterGhost.obj
 cube.obj
 fancy_house.obj
+Gravestone1.obj
+Gravestone2.obj
+Gravestone3.obj
 LudumDare_Cross_Des01_V01.obj
 LudumDare_FirePlate_Des01_V01.obj
+LudumDare_Pillar_Des01_V01.obj
+LudumDare_StartingZone_Des01_V01.obj
+LudumDare_Wall_Des01_V01.obj
+LudumDare_Wall_FlatOneSide_Des01_V01.obj
+LudumDare_Wall_FlatSides_Des01_V01.obj
+LudumDare_Wall_LShapeLeft_Des01_V01.obj
+LudumDare_Wall_LShapeRight_Des01_V01.obj
 objs.txt
 Rock1.obj
 Rock2.obj
@@ -11,3 +22,5 @@ Rock4.obj
 Rock5.obj
 Rock6.obj
 Rock7.obj
+treeDead.obj
+treeLeaf.obj

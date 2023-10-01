@@ -1,0 +1,11 @@
+Placement:Ghost Character
+Placement:Rock 1
+Placement:Rock 2
+Placement:Rock 3
+0.93,-3.92,4.58|1.066,1.066,1.066|0,47,0|0,0,0|XYZ
+Placement:Rock 4
+Placement:Rock 5
+Placement:Rock 6
+Placement:Rock 7
+Placement:Cube
+2.66,-4,10.91|1,1,1|0,0,0|0,-1,0|XYZ
