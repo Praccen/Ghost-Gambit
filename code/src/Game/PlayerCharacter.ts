@@ -378,36 +378,22 @@ export default class PlayerCharacter {
 		// }
 	}
 
-	private resetAnimation() {}
+	private resetAnimation() {
+		(<PositionComponent>(this.bodyEntity.getComponent(ComponentTypeEnum.POSITION))).origin.setValues(0.0, 0.0, 0.0);
+		(<PositionComponent>(this.bodyEntity.getComponent(ComponentTypeEnum.POSITION))).rotation.setValues(0.0, 90.0, 0.0);
+	}
 
 	private walkAnimation(animationSpeed: number = 7.5) {
 		this.resetAnimation();
 
-		// let bodyPosComp = this.bodyEntity.getComponent(
-		// 	ComponentTypeEnum.POSITION
-		// ) as PositionComponent;
-		// if (bodyPosComp) {
-		// 	bodyPosComp.rotation.setValues(
-		// 		Math.sin(this.timer * animationSpeed * 2.0) * 1.0,
-		// 		0.0,
-		// 		Math.sin(this.timer * animationSpeed) * 6.0
-		// 	);
-		// }
+		(<PositionComponent>(this.bodyEntity.getComponent(ComponentTypeEnum.POSITION))).origin.setValues(null, Math.cos(this.timer * animationSpeed) * 0.15 + 0.3, null);
+		this.groupPositionComp.rotation.setValues(Math.cos(this.timer * animationSpeed) * 5.0, null, null);
 	}
 
 	private runAnimation(animationSpeed: number = 12.0) {
 		this.resetAnimation();
 
-		// let bodyPosComp = this.bodyEntity.getComponent(
-		// 	ComponentTypeEnum.POSITION
-		// ) as PositionComponent;
-		// if (bodyPosComp) {
-		// 	bodyPosComp.rotation.setValues(
-		// 		Math.sin(this.timer * animationSpeed) * 3.0,
-		// 		0.0,
-		// 		Math.sin(this.timer * animationSpeed) * 5.0
-		// 	);
-		// }
+		this.walkAnimation(animationSpeed);
 	}
 
 	private jumpAnimation(animationSpeed: number = 1.0) {

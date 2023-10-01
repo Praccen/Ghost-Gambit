@@ -1,6 +1,8 @@
 CharacterGhost.obj
 cube.obj
 fancy_house.obj
+LudumDare_Cross_Des01_V01.obj
+LudumDare_FirePlate_Des01_V01.obj
 objs.txt
 Rock1.obj
 Rock2.obj
