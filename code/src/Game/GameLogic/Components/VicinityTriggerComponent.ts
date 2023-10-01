@@ -7,9 +7,9 @@ export default class VicinityTriggerComponent extends Component {
 	range: number;
 	inVicinityOf: Array<Entity>;
 
-	constructor() {
+	constructor(range: number = 1.0) {
 		super(ComponentTypeEnum.VICINITYTRIGGER);
-		this.range = 1.0;
+		this.range = range;
 		this.inVicinityOf = new Array<Entity>();
 	}
 }

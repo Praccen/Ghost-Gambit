@@ -14,5 +14,5 @@ GravestoneTextureAlbedo.jpg
 HeightmapTexture.png
 rock.png
 textures.txt
-TreeTextureAlbedo.png
+treeTextureAlbedo.png
 white.png
