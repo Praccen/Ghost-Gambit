@@ -76,7 +76,7 @@ export default class Game extends State {
 			player: this.playerCharacter,
 			bots: this.botCharacterList,
 		};
-		this.num_bots = 3;
+		this.num_bots = 0;
 	}
 
 	async load() {
