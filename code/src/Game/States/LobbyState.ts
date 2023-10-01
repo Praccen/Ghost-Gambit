@@ -1,4 +1,5 @@
 import Entity from "../../Engine/ECS/Entity";
+import Button from "../../Engine/GUI/Button";
 import Div from "../../Engine/GUI/Div";
 import { OverlayRendering } from "../../Engine/Rendering/OverlayRendering";
 import State, { StatesEnum } from "../../Engine/State";
@@ -8,14 +9,10 @@ import Game from "./Game";
 export default class LobbyState extends State {
 	private overlay: OverlayRendering;
 	private sa: StateAccessible;
-
 	private participantsDiv: Div;
-
 	private botCounter: number;
-
 	private timePassed: number = 0;
-
-	private startButton;
+	private startButton: Button;
 
 	constructor(sa: StateAccessible) {
 		super();
@@ -32,10 +29,14 @@ export default class LobbyState extends State {
 
 		let self = this;
 		this.startButton.onClick(function () {
-			// Server is true by default so should be okay for local games too?
-			if (Game.getInstanceNoSa().client.isServer) {
-				Game.getInstanceNoSa().client.sendStart();
+			if (self.sa.localGame) {
+				Game.getInstanceNoSa().spawnBots();
 				self.gotoState = StatesEnum.GAME;
+			} else {
+				if (Game.getInstanceNoSa().client.isServer) {
+					Game.getInstanceNoSa().client.sendStart();
+					self.gotoState = StatesEnum.GAME;
+				}
 			}
 		});
 
@@ -64,14 +65,14 @@ export default class LobbyState extends State {
 		participantsDivTitle.getElement().style.width = "100%";
 		participantsDivTitle.getElement().style.borderRadius = "5px";
 
-		this.addParticipant("me");
+		this.addParticipant("You");
 
 		let addBotButton = this.overlay.getNewButton();
 		addBotButton.position.x = 0.55;
 		addBotButton.position.y = 0.7;
 		addBotButton.textString = "Add bot";
 		addBotButton.onClick(() => {
-			this.addParticipant("Bot " + this.botCounter++);
+			this.addParticipant("Bot " + Game.getInstanceNoSa().num_bots++);
 		});
 
 		let removeParticipantButton = this.overlay.getNewButton();
@@ -106,25 +107,28 @@ export default class LobbyState extends State {
 		this.timePassed += dt;
 		if (this.timePassed > 1) {
 			// Clear list
-			for (const div of this.participantsDiv.children) {
-				div.remove();
-			}
-			if (Game.getInstanceNoSa().client.connected) {
-				// Hide start if not server
-				if (!Game.getInstanceNoSa().client.isServer) {
-					this.startButton.setHidden(true);
+
+			if (this.sa.localGame) {
+			} else {
+				for (const div of this.participantsDiv.children) {
+					div.remove();
 				}
-				this.addParticipant("You");
-				Game.getInstanceNoSa().client.bodyEntities.forEach(
-					(value: Entity, key: string) => {
-						this.addParticipant("Player_" + key);
+				if (Game.getInstanceNoSa().client.connected) {
+					// Hide start if not server
+					if (!Game.getInstanceNoSa().client.isServer) {
+						this.startButton.setHidden(true);
 					}
-				);
-				if (Game.getInstanceNoSa().client.gameStarted) {
-					this.gotoState = StatesEnum.GAME;
+					this.addParticipant("You");
+					Game.getInstanceNoSa().client.bodyEntities.forEach(
+						(value: Entity, key: string) => {
+							this.addParticipant("Player_" + key);
+						}
+					);
+					if (Game.getInstanceNoSa().client.gameStarted) {
+						this.gotoState = StatesEnum.GAME;
+					}
 				}
 			}
-			// TODO: Add bots if local game
 		}
 	}
 

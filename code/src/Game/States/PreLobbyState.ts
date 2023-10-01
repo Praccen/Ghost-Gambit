@@ -33,6 +33,7 @@ export default class PreLobbyState extends State {
 				roomName.getInputElement().value
 			);
 			self.joinedGame(10);
+			self.sa.localGame = false;
 		});
 
 		let localButton = this.overlay.getNewButton();
@@ -41,10 +42,7 @@ export default class PreLobbyState extends State {
 		localButton.center = true;
 		localButton.textString = "Local game";
 		localButton.onClick(function () {
-			// Game.getInstanceNoSa().client.createRoom(
-			// roomName.getInputElement().value
-			// );
-			// self.joinedGame(10);
+			self.gotoState = StatesEnum.LOBBY;
 		});
 
 		let joinButton = this.overlay.getNewButton();

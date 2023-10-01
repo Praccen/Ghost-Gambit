@@ -24,7 +24,6 @@ import PointLightComponent from "../../Engine/ECS/Components/PointLightComponent
 import PlayerCharacter from "../PlayerCharacter";
 import { Client } from "../../Engine/Client/Client";
 import BotCharacter from "../BotCharacter";
-import Character from "../Character";
 
 export default class Game extends State {
 	rendering: Rendering;
@@ -42,7 +41,7 @@ export default class Game extends State {
 	private playerCharacter: PlayerCharacter;
 
 	private botCharacterList: Array<BotCharacter>;
-	private num_bots: number;
+	num_bots: number;
 
 	private allCharacterDict: { player: PlayerCharacter; bots: BotCharacter[] };
 
@@ -109,18 +108,6 @@ export default class Game extends State {
 		);
 
 		this.allCharacterDict.player = this.playerCharacter;
-
-		for (let i = 0; i < this.num_bots; i++) {
-			let bot = new BotCharacter(
-				this.rendering,
-				this.ecsManager,
-				this.stateAccessible.audioPlayer,
-				"Ghost Character",
-				this.allCharacterDict,
-				new Vec3([Math.random() * 20, 1.5, Math.random() * 20])
-			);
-			this.botCharacterList.push(bot);
-		}
 
 		this.menuButton = this.overlayRendering.getNewButton();
 		this.menuButton.position.x = 0.9;
@@ -224,9 +211,6 @@ export default class Game extends State {
 
 		await this.playerCharacter.init();
 
-		for (const bot of this.botCharacterList) {
-			await bot.init();
-		}
 		self.gotoState = StatesEnum.PRELOBBY;
 	}
 
@@ -328,6 +312,23 @@ export default class Game extends State {
 			.getOctree("Assets/heightmaps/heightmap.png")
 			.getShapesForRayCast(ray, triangleArray);
 		return IntersectionTester.doRayCast(ray, triangleArray);
+	}
+
+	async spawnBots() {
+		for (let i = 0; i < this.num_bots; i++) {
+			let bot = new BotCharacter(
+				this.rendering,
+				this.ecsManager,
+				this.stateAccessible.audioPlayer,
+				"Ghost Character",
+				this.allCharacterDict,
+				new Vec3([Math.random() * 20, 1.5, Math.random() * 20])
+			);
+			this.botCharacterList.push(bot);
+		}
+		for (const bot of this.botCharacterList) {
+			await bot.init();
+		}
 	}
 
 	update(dt: number) {

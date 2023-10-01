@@ -35,6 +35,7 @@ export class StateAccessible {
 	meshStore: MeshStore;
 	audioPlayer: AudioPlayer;
 	restartGame: boolean;
+	localGame: boolean;
 }
 
 export default class GameMachine extends StateMachine {
@@ -52,6 +53,7 @@ export default class GameMachine extends StateMachine {
 			// fpsDisplay: null,
 			audioPlayer: new AudioPlayer(),
 			restartGame: false,
+			localGame: true,
 		};
 		this.stateAccessible.audioPlayer.setMusicVolume(options.musicVolume);
 		this.stateAccessible.audioPlayer.setSoundEffectVolume(options.effectVolume);
