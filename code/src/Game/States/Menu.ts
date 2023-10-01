@@ -21,6 +21,7 @@ export default class Menu extends State {
 		let self = this;
 		startButton.onClick(function () {
 			self.gotoState = StatesEnum.GAME;
+			sa.restartGame = true;
 		});
 
 		let restartButton = this.overlayRendering.getNewButton();

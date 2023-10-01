@@ -172,7 +172,11 @@ export default class Game extends State {
 
 		await this.playerCharacter.init();
 
+		this.botCharacterList.length = 0;
+		this.num_bots = 0;
+
 		this.unlockedGraves = false;
+		
 
 		self.gotoState = StatesEnum.PRELOBBY;
 	}
