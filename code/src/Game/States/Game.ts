@@ -124,7 +124,8 @@ export default class Game extends State {
 
 		this.rendering.setSkybox("Assets/textures/skyboxes/NightSky");
 
-		let nrOfFireflies = 1000;
+		let fireflies = this.ecsManager.createEntity();
+		let nrOfFireflies = 3000;
 		let firefliesParticles = this.scene.getNewParticleSpawner(
 			"Assets/textures/fire.png",
 			nrOfFireflies
@@ -160,6 +161,10 @@ export default class Game extends State {
 		}
 		firefliesParticles.sizeChangePerSecond = 0;
 		firefliesParticles.fadePerSecond = 0.05;
+
+		let particleComp = new ParticleSpawnerComponent(firefliesParticles);
+		particleComp.lifeTime = 10;
+		this.ecsManager.addComponent(fireflies, particleComp);
 
 		await this.objectPlacer.load(this.scene, this.ecsManager);
 

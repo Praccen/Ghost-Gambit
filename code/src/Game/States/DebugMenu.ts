@@ -232,9 +232,10 @@ export default class DebugMenu {
 				componentsDiv.getElement().style.paddingLeft = "10px";
 				componentsDiv.setHidden(true);
 
-				this.addComponentButtons(e, componentsDiv);
-
 				entityBtn.onClick(() => {
+					if (componentsDiv.children.length == 0) {
+						this.addComponentButtons(e, componentsDiv);
+					}
 					componentsDiv.toggleHidden();
 					this.game.objectPlacer.selectNewObjectFromEntityId(e.id);
 				});
