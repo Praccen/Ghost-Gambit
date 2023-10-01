@@ -38,7 +38,7 @@ export default class Button extends GuiObject {
 	remove(): void {
 		if (this.onClickFunction != undefined) {
 			this.inputNode.removeEventListener("click", this.onClickFunction);
-		} 
+		}
 		super.remove();
 	}
 

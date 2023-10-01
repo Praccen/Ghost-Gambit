@@ -117,7 +117,7 @@ export default class LoadingScreen extends State {
 			["Assets/objs/Rock4.obj", 0.1, 20],
 			["Assets/objs/Rock5.obj", 0.1, 20],
 			["Assets/objs/Rock6.obj", 0.1, 20],
-			["Assets/objs/Rock7.obj", 0.1, 20],			
+			["Assets/objs/Rock7.obj", 0.1, 20],
 			["Assets/objs/treeDead.obj", 0.1, 20],
 			["Assets/objs/treeLeaf.obj", 0.1, 20],
 		];
