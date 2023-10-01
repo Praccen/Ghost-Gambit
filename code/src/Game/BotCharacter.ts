@@ -1,8 +1,13 @@
+import { random } from "quaternion";
+import { ComponentTypeEnum } from "../Engine/ECS/Components/Component";
 import Vec3 from "../Engine/Maths/Vec3";
-import AStar from "./AStar"; // Assuming you have an AStar implementation
+import { ECSUtils } from "../Engine/Utils/ESCUtils";
+import AStar from "./AStar";
 import Character from "./Character";
 
 export default class BotCharacter extends Character {
+	audioThreshholdDist: number = 50;
+
 	async init() {
 		super.init();
 
@@ -12,18 +17,36 @@ export default class BotCharacter extends Character {
 		// this.ecsManager.addComponent(this.bodyEntity, this.cameraFocusComp);
 	}
 
+	get_dist_to_player(): number {
+		return this.get_player_relational_vec().len();
+	}
+
+	get_player_relational_vec(): Vec3 {
+		let player_pos = ECSUtils.CalculatePosition(
+			this.allCharacterDict["player"].bodyEntity
+		);
+		let bot_pos = ECSUtils.CalculatePosition(this.bodyEntity);
+		return new Vec3(player_pos.subtract(bot_pos.clone()));
+	}
+
 	extinguish_audio_operations() {
-		// this.audioPlayer.playAudio("extinguish", false);
-		// this.audioPlayer.pauseAudio("fire");
+		let dist = this.get_dist_to_player();
+		if (dist < this.audioThreshholdDist) {
+			let audio_level = dist / this.audioThreshholdDist;
+			this.audioPlayer.playAudio("extinguish", false, audio_level);
+		}
 	}
 
 	light_up_audio_operations() {
-		// this.audioPlayer.playAudio("light_up", false);
-		// this.audioPlayer.playAudio("fire", true);
+		let dist = this.get_dist_to_player();
+		if (dist < this.audioThreshholdDist) {
+			let audio_level = dist / this.audioThreshholdDist;
+			this.audioPlayer.playAudio("light_up", false, audio_level);
+		}
 	}
 
 	get_forward_and_right(): [Vec3, Vec3] {
-		// let forward = new Vec3(this.rendering.camera.getDir());
+		// let forward = new Vec3(this.bodyEntity.getComponent(ComponentTypeEnum.POSITION).rotation ,0);
 		// forward.y = 0.0;
 		// forward.normalize();
 
@@ -49,7 +72,11 @@ export default class BotCharacter extends Character {
 		// }
 	}
 
-	modify_acc_vec(accVec: Vec3): Vec3 {
+	modify_acc_vec(accVec: Vec3) {
+		let dir_vec = this.get_player_relational_vec();
+		dir_vec.y = 0;
+		accVec.add(dir_vec);
+
 		// // Movement input
 		// let [forward, right] = this.get_forward_and_right()
 
@@ -79,18 +106,20 @@ export default class BotCharacter extends Character {
 		//         accVec.add(right);
 		//     }
 		// }
-		return accVec;
 	}
 
 	jump_controll() {
-		// if (input.keys[" "] || input.buttons.get("A")) {
-		//     this.movComp.jumpRequested = true;
-		//     this.offGroundTimer = 0.5;
-		//     this.audioPlayer.pauseAudio("ghost_sound_2");
-		//     this.audioPlayer.playAudio("ghost_sound_2", false);
-		// } else {
-		//     this.movComp.jumpRequested = false;
-		// }
+		if (Math.random() > 0.9) {
+			this.movComp.jumpRequested = true;
+			this.offGroundTimer = 0.5;
+			let dist = this.get_dist_to_player();
+			if (dist < this.audioThreshholdDist) {
+				let audio_level = dist / this.audioThreshholdDist;
+				this.audioPlayer.playAudio("ghost_sound_2", false, audio_level);
+			}
+		} else {
+			this.movComp.jumpRequested = false;
+		}
 	}
 
 	character_specific_controll() {

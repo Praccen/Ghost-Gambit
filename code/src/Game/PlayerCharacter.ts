@@ -43,7 +43,7 @@ export default class PlayerCharacter extends Character {
 		);
 	}
 
-	modify_acc_vec(accVec: Vec3): Vec3 {
+	modify_acc_vec(accVec: Vec3) {
 		// Movement input
 		let [forward, right] = this.get_forward_and_right();
 
@@ -73,7 +73,6 @@ export default class PlayerCharacter extends Character {
 				accVec.add(right);
 			}
 		}
-		return accVec;
 	}
 
 	jump_controll() {

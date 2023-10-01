@@ -42,10 +42,11 @@ export default abstract class Character {
 	protected start_origin: Vec3;
 	protected start_rotation_order: string;
 	protected trigger_download_needed: boolean;
+	protected allCharacterDict: object;
 
 	abstract get_forward_and_right(): [Vec3, Vec3];
 	abstract update_client();
-	abstract modify_acc_vec(Vec3): Vec3;
+	abstract modify_acc_vec(Vec3);
 	abstract jump_controll();
 	abstract character_specific_controll();
 	abstract camera_operations(number);
@@ -57,6 +58,7 @@ export default abstract class Character {
 		ecsManager: ECSManager,
 		audioPlayer: AudioPlayer,
 		character_string: string,
+		allCharacterDict: object,
 		start_position: Vec3 = new Vec3(),
 		start_size: Vec3 = new Vec3([0.25, 0.25, 0.25]),
 		start_rotation: Vec3 = new Vec3(),
@@ -67,6 +69,7 @@ export default abstract class Character {
 		this.rendering = rendering;
 		this.ecsManager = ecsManager;
 		this.audioPlayer = audioPlayer;
+		this.allCharacterDict = allCharacterDict;
 
 		this.character_string = character_string;
 		this.start_position = start_position;
@@ -206,7 +209,7 @@ export default abstract class Character {
 
 		let accVec = new Vec3();
 
-		accVec = this.modify_acc_vec(accVec);
+		this.modify_acc_vec(accVec);
 
 		if (accVec.length2() > 0.001) {
 			// Handle rotation
