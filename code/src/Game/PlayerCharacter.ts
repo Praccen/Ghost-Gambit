@@ -184,7 +184,7 @@ export default class PlayerCharacter {
 		}
 
 		const client = Game.getInstanceNoSa().client;
-		if (true) {
+		if (client.connected) {
 			client.send(
 				JSON.stringify({
 					type: "MOV",

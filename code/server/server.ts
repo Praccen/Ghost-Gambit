@@ -31,17 +31,17 @@ wss.on("connection", (ws) => {
 					// Add client to room
 					rooms.set(msg.room_id, new Array());
 					rooms.get(msg.room_id)!.push(ws);
-					// Send ACK msg to client
+					// Send CON msg to client
 					ws.send(
 						JSON.stringify({
-							type: "CRE",
+							type: "CON",
 							msg: "OK",
 						})
 					);
 				} else {
 					ws.send(
 						JSON.stringify({
-							type: "CRE",
+							type: "CON",
 							msg: "ERR",
 						})
 					);
@@ -53,10 +53,21 @@ wss.on("connection", (ws) => {
 					console.log("Joining room: " + msg.room_id);
 					rooms.get(msg.room_id)!.push(ws);
 					clients.get(ws).room = msg.room_id;
+					ws.send(
+						JSON.stringify({
+							type: "CON",
+							msg: "OK",
+						})
+					);
 					for (const element of rooms.get(msg.room_id)) {
 						if (element != ws) {
+							// Add client to all others in room
 							element.send(
 								JSON.stringify({ type: "JOI", id: clients.get(ws).id })
+							);
+							// Add all others in room to client
+							ws.send(
+								JSON.stringify({ type: "JOI", id: clients.get(element).id })
 							);
 						}
 					}

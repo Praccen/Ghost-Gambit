@@ -29,7 +29,7 @@ export class Client {
 		return false;
 	}
 
-	joinRoom(roomId): boolean {
+	joinRoom(roomId: string): boolean {
 		this.send(JSON.stringify({ type: "JOI", room_id: roomId }), 100);
 		return false;
 	}
@@ -40,7 +40,7 @@ export class Client {
 		console.log(message);
 		const msg = JSON.parse(message);
 		switch (msg.type) {
-			case "CRE":
+			case "CON":
 				switch (msg.msg) {
 					case "OK":
 						this.connected = true;
