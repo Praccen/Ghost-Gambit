@@ -185,7 +185,7 @@ export default class ObjectPlacer {
 		movComp.drag = 10.0;
 		this.ecsManager.addComponent(bodyEntity, movComp);
 		this.ecsManager.addComponent(bodyEntity, new VicinityTriggerComponent());
-		this.ecsManager.addComponent(bodyEntity, new SentientComponent(null));
+		this.ecsManager.addComponent(bodyEntity, new SentientComponent(character));
 
 		// Fire
 		let fireEntity = this.ecsManager.createEntity();
