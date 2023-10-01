@@ -13,10 +13,12 @@ const clients = new Map<
 >();
 let uid = 0;
 
+console.log("Server started!");
+
 wss.on("connection", (ws) => {
+	console.log("Someone connected! " + uid);
 	clients.set(ws, { room: "NOT_VALID", id: uid++ });
 	// const index = clients.indexOf(ws);
-	console.log("Someone connected!");
 
 	ws.on("message", (message) => {
 		// Broadcast received messages to all clients
@@ -101,6 +103,7 @@ wss.on("connection", (ws) => {
 
 	ws.on("close", () => {
 		// Remove the disconnected client from the clients map and clear up room if empty
+		console.log("Someone disconnected! " + clients.get(ws).id);
 		const roomName = clients.get(ws).room;
 		if (roomName != "NOT_VALID" && rooms.get(roomName)!.length <= 1) {
 			rooms.delete(roomName);

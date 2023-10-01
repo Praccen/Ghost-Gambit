@@ -1,11 +1,12 @@
 import Game from "../../Game/States/Game";
 import { ComponentTypeEnum } from "../ECS/Components/Component";
 import PositionParentComponent from "../ECS/Components/PositionParentComponent";
+import Entity from "../ECS/Entity";
 import Vec3 from "../Maths/Vec3";
 
 export class Client {
 	private socket: WebSocket;
-	private bodyEntity;
+	private bodyEntity: Entity;
 	connected: boolean = false;
 
 	constructor() {
@@ -50,22 +51,24 @@ export class Client {
 				}
 				break;
 			case "JOI":
+				console.log("Client connected: " + msg.id);
 				this.bodyEntity = Game.getInstanceNoSa().objectPlacer.placeObject(
 					"Ghost Character",
 					new Vec3(),
 					new Vec3([0.25, 0.25, 0.25]),
 					new Vec3(),
 					false
-				);
+				)[0];
 				break;
 			case "MOV":
-				let posComp = <PositionParentComponent>(
-					this.bodyEntity.getComponent(ComponentTypeEnum.POSITIONPARENT)
-				);
-				posComp.position.x = msg.x;
-				posComp.position.y = msg.y;
-				posComp.position.z = msg.z;
-
+				if (this.bodyEntity != undefined) {
+					let posComp = <PositionParentComponent>(
+						this.bodyEntity.getComponent(ComponentTypeEnum.POSITIONPARENT)
+					);
+					posComp.position.x = msg.x;
+					posComp.position.y = msg.y;
+					posComp.position.z = msg.z;
+				}
 				break;
 			case "DIS":
 				break;
