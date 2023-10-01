@@ -1,7 +1,9 @@
+import Entity from "../../Engine/ECS/Entity";
 import Div from "../../Engine/GUI/Div";
 import { OverlayRendering } from "../../Engine/Rendering/OverlayRendering";
 import State, { StatesEnum } from "../../Engine/State";
 import { StateAccessible } from "../GameMachine";
+import Game from "./Game";
 
 export default class LobbyState extends State {
 	private overlay: OverlayRendering;
@@ -11,6 +13,10 @@ export default class LobbyState extends State {
 
 	private botCounter: number;
 
+	private timePassed: number = 0;
+
+	private startButton;
+
 	constructor(sa: StateAccessible) {
 		super();
 		this.sa = sa;
@@ -18,16 +24,19 @@ export default class LobbyState extends State {
 
 		this.botCounter = 0;
 
-		let startButton = this.overlay.getNewButton();
-		startButton.position.x = 0.8;
-		startButton.position.y = 0.8;
-		startButton.center = true;
-		startButton.textString = "Start";
+		this.startButton = this.overlay.getNewButton();
+		this.startButton.position.x = 0.8;
+		this.startButton.position.y = 0.8;
+		this.startButton.center = true;
+		this.startButton.textString = "Start";
 
 		let self = this;
-		startButton.onClick(function () {
-			self.sa.restartGame = true;
-			self.gotoState = StatesEnum.GAME;
+		this.startButton.onClick(function () {
+			// Server is true by default so should be okay for local games too?
+			if (Game.getInstanceNoSa().client.isServer) {
+				Game.getInstanceNoSa().client.sendStart();
+				self.gotoState = StatesEnum.GAME;
+			}
 		});
 
 		let backButton = this.overlay.getNewButton();
@@ -93,7 +102,31 @@ export default class LobbyState extends State {
 		this.overlay.hide();
 	}
 
-	update(dt: number) {}
+	update(dt: number) {
+		this.timePassed += dt;
+		if (this.timePassed > 1) {
+			// Clear list
+			for (const div of this.participantsDiv.children) {
+				div.remove();
+			}
+			if (Game.getInstanceNoSa().client.connected) {
+				// Hide start if not server
+				if (!Game.getInstanceNoSa().client.isServer) {
+					this.startButton.setHidden(true);
+				}
+				this.addParticipant("You");
+				Game.getInstanceNoSa().client.bodyEntities.forEach(
+					(value: Entity, key: string) => {
+						this.addParticipant("Player_" + key);
+					}
+				);
+				if (Game.getInstanceNoSa().client.gameStarted) {
+					this.gotoState = StatesEnum.GAME;
+				}
+			}
+			// TODO: Add bots if local game
+		}
+	}
 
 	draw() {
 		this.overlay.draw();

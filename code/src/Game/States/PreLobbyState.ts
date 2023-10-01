@@ -26,13 +26,25 @@ export default class PreLobbyState extends State {
 		createButton.position.x = 0.6;
 		createButton.position.y = 0.6;
 		createButton.center = true;
-		createButton.textString = "Create";
+		createButton.textString = "Host game";
 		let self = this;
 		createButton.onClick(function () {
 			Game.getInstanceNoSa().client.createRoom(
 				roomName.getInputElement().value
 			);
 			self.joinedGame(10);
+		});
+
+		let localButton = this.overlay.getNewButton();
+		localButton.position.x = 0.6;
+		localButton.position.y = 0.68;
+		localButton.center = true;
+		localButton.textString = "Local game";
+		localButton.onClick(function () {
+			// Game.getInstanceNoSa().client.createRoom(
+			// roomName.getInputElement().value
+			// );
+			// self.joinedGame(10);
 		});
 
 		let joinButton = this.overlay.getNewButton();
@@ -61,7 +73,7 @@ export default class PreLobbyState extends State {
 		let self = this;
 		setTimeout(function () {
 			if (Game.getInstanceNoSa().client.connected) {
-				self.gotoState = StatesEnum.GAME;
+				self.gotoState = StatesEnum.LOBBY;
 			} else if (tries > 0) {
 				self.joinedGame(tries--);
 			}
@@ -86,6 +98,7 @@ export default class PreLobbyState extends State {
 	update(dt: number) {
 		this.timePassed += dt;
 		if (this.timePassed > 1) {
+			// Clear list
 			for (const div of this.roomDiv.children) {
 				div.remove();
 			}

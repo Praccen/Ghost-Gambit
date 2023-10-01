@@ -3,13 +3,16 @@ import { ComponentTypeEnum } from "../ECS/Components/Component";
 import PositionParentComponent from "../ECS/Components/PositionParentComponent";
 import Entity from "../ECS/Entity";
 import Vec3 from "../Maths/Vec3";
+import { StatesEnum } from "../State";
 
 export class Client {
 	private socket: WebSocket;
-	private bodyEntities: Map<string, Entity> = new Map<string, Entity>();
+	bodyEntities: Map<string, Entity> = new Map<string, Entity>();
 	connected: boolean = false;
 	private uid: string;
 	activeRooms: string[] = [];
+	isServer: boolean = true;
+	gameStarted: boolean = false;
 
 	constructor() {
 		this.socket = new WebSocket("wss://sever54.rlyeh.nu", "v1");
@@ -58,6 +61,7 @@ export class Client {
 					case "OK":
 						this.connected = true;
 						this.uid = msg.id;
+						this.isServer = msg.server;
 						break;
 					case "ERR":
 						break;
@@ -97,11 +101,20 @@ export class Client {
 			case "GET":
 				this.activeRooms = msg.rooms;
 				break;
+			case "STR":
+				console.log("Strating game!");
+				// Game.getInstanceNoSa().gotoState = StatesEnum.GAME;
+				this.gameStarted = true;
+				break;
 		}
 	}
 
 	getRooms(): void {
 		this.send(JSON.stringify({ type: "GET" }), 5);
+	}
+
+	sendStart(): void {
+		this.send(JSON.stringify({ type: "STR" }), 0);
 	}
 
 	// Send message, try {tries} numper of times with 3 sec intercal

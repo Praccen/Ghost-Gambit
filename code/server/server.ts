@@ -48,6 +48,7 @@ wss.on("connection", (ws) => {
 							type: "CON",
 							id: clients.get(ws).id.toString(),
 							msg: "OK",
+							server: true,
 						})
 					);
 				} else {
@@ -70,6 +71,7 @@ wss.on("connection", (ws) => {
 							type: "CON",
 							id: clients.get(ws).id.toString(),
 							msg: "OK",
+							server: false,
 						})
 					);
 					for (const element of rooms.get(msg.room_id)) {
@@ -114,6 +116,17 @@ wss.on("connection", (ws) => {
 						rooms: roomList,
 					})
 				);
+				break;
+			case "STR":
+				const roomNames = clients.get(ws).room;
+				if (roomNames != "NOT_VALID") {
+					for (const element of rooms.get(roomNames)) {
+						if (element != ws && element.OPEN) {
+							element.send(JSON.stringify({ type: "STR" }));
+						}
+					}
+				}
+
 				break;
 		}
 	});
