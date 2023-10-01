@@ -105,7 +105,6 @@ wss.on("connection", (ws) => {
 		if (roomName != "NOT_VALID" && rooms.get(roomName)!.length <= 1) {
 			rooms.delete(roomName);
 		}
-		rooms.delete(roomName);
 		clients.delete(ws);
 	});
 });
