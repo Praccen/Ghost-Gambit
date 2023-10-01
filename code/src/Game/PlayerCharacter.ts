@@ -116,7 +116,7 @@ export default class PlayerCharacter extends Character {
 				new Vec3(this.rendering.camera.getRight()).multiply(dt * 8.0)
 			);
 		} else if (input.joystickRightDirection.length2() > 0.0) {
-			this.cameraFocusComp.offset.add(
+			this.cameraFocusComp.offset.subtract(
 				new Vec3(this.rendering.camera.getRight()).multiply(
 					dt * 8.0 * input.joystickRightDirection.x
 				)
