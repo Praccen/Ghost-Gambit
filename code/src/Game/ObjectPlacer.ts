@@ -218,7 +218,7 @@ export default class ObjectPlacer {
 		rotation: Vec3,
 		triggerDownloadNeeded: boolean = true
 	): [Entity, ParticleSpawner] {
-		let placement = this.placements.get(type);
+		let placement = this.placements.get("Ghost Character");
 		if (placement == undefined) {
 			return null;
 		}
@@ -235,7 +235,7 @@ export default class ObjectPlacer {
 			rotation
 		);
 		this.currentlyEditingEntityId = entity.id;
-		this.entityPlacements.set(entity.id, type);
+		this.entityPlacements.set(entity.id, "Ghost Character");
 		return [entity, particleSpawner];
 	}
 
@@ -267,7 +267,7 @@ export default class ObjectPlacer {
 			);
 			this.currentlyEditingEntityId = entity.id;
 			this.entityPlacements.set(entity.id, type);
-			return [entity, particleSpawner];
+			return entity;
 		}
 
 		let entity = this.ecsManager.createEntity();
