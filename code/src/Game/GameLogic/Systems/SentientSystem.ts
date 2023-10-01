@@ -16,6 +16,9 @@ export default class SentientSystem extends System {
         for (let e of this.entities) {
             let vicinityTriggerComponent = e.getComponent(ComponentTypeEnum.VICINITYTRIGGER) as VicinityTriggerComponent;
             let sentientComponent = e.getComponent(ComponentTypeEnum.SENTIENT) as SentientComponent;
+            if (sentientComponent.character == undefined) {
+                continue;
+            }
             for (let vicinityEntity of vicinityTriggerComponent.inVicinityOf) {
                 if (!sentientComponent.character.is_lit && vicinityEntity.hasComponent(ComponentTypeEnum.CANDLE)) {
                     this.ecsManager.removeEntity(vicinityEntity.id);
@@ -24,7 +27,6 @@ export default class SentientSystem extends System {
                 }
                 if (sentientComponent.character.is_lit && vicinityEntity.hasComponent(ComponentTypeEnum.GRAVESTONE)) {
                     this.ecsManager.removeEntity(vicinityEntity.id);
-                    // sentientComponent.character
                     break;
                 }
             }
