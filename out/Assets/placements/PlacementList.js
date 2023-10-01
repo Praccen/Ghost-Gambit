@@ -16,8 +16,6 @@ this.placements.set(
 		"Assets/objs/Rock1.obj",
 		"Assets/textures/rock.png",
 		"Assets/textures/black.png",
-		false,
-		false
 	)
 );
 this.placements.set(
@@ -25,8 +23,7 @@ this.placements.set(
 	new Placement(
 		"Assets/objs/Rock2.obj",
 		"Assets/textures/rock.png",
-		"Assets/textures/black.png",
-		false
+		"Assets/textures/black.png"
 	)
 );
 this.placements.set(
@@ -34,8 +31,7 @@ this.placements.set(
 	new Placement(
 		"Assets/objs/Rock3.obj",
 		"Assets/textures/rock.png",
-		"Assets/textures/black.png",
-		false
+		"Assets/textures/black.png"
 	)
 );
 this.placements.set(
@@ -43,8 +39,7 @@ this.placements.set(
 	new Placement(
 		"Assets/objs/Rock4.obj",
 		"Assets/textures/rock.png",
-		"Assets/textures/black.png",
-		false
+		"Assets/textures/black.png"
 	)
 );
 this.placements.set(
@@ -52,8 +47,7 @@ this.placements.set(
 	new Placement(
 		"Assets/objs/Rock5.obj",
 		"Assets/textures/rock.png",
-		"Assets/textures/black.png",
-		false
+		"Assets/textures/black.png"
 	)
 );
 this.placements.set(
@@ -61,8 +55,7 @@ this.placements.set(
 	new Placement(
 		"Assets/objs/Rock6.obj",
 		"Assets/textures/rock.png",
-		"Assets/textures/black.png",
-		false
+		"Assets/textures/black.png"
 	)
 );
 this.placements.set(
@@ -70,8 +63,7 @@ this.placements.set(
 	new Placement(
 		"Assets/objs/Rock7.obj",
 		"Assets/textures/rock.png",
-		"Assets/textures/black.png",
-		false
+		"Assets/textures/black.png"
 	)
 );
 this.placements.set(
@@ -86,7 +78,7 @@ this.placements.set(
 	"Candle",
 	new Placement(
 		"Assets/objs/Candle.obj",
-		"Assets/textures/white.png",
+		"Assets/textures/CandleTextureAlbedo.jpg",
 		"Assets/textures/black.png"
 	)
 );
@@ -94,7 +86,7 @@ this.placements.set(
 	"Gravestone 1",
 	new Placement(
 		"Assets/objs/Gravestone1.obj",
-		"Assets/textures/white.png",
+		"Assets/textures/GravestoneTextureAlbedo.jpg",
 		"Assets/textures/black.png"
 	)
 );
@@ -102,7 +94,7 @@ this.placements.set(
 	"Gravestone 2",
 	new Placement(
 		"Assets/objs/Gravestone2.obj",
-		"Assets/textures/white.png",
+		"Assets/textures/GravestoneTextureAlbedo.jpg",
 		"Assets/textures/black.png"
 	)
 );
@@ -110,7 +102,7 @@ this.placements.set(
 	"Gravestone 3",
 	new Placement(
 		"Assets/objs/Gravestone3.obj",
-		"Assets/textures/white.png",
+		"Assets/textures/GravestoneTextureAlbedo.jpg",
 		"Assets/textures/black.png"
 	)
 );
@@ -190,7 +182,7 @@ this.placements.set(
 	"treeDead.obj",
 	new Placement(
 		"Assets/objs/treeDead.obj",
-		"Assets/textures/white.png",
+		"Assets/textures/treeTextureAlbedo.png",
 		"Assets/textures/black.png"
 	)
 );
@@ -198,7 +190,7 @@ this.placements.set(
 	"treeLeaf.obj",
 	new Placement(
 		"Assets/objs/treeLeaf.obj",
-		"Assets/textures/white.png",
+		"Assets/textures/treeTextureAlbedo.png",
 		"Assets/textures/black.png"
 	)
 );

@@ -2,10 +2,40 @@ Placement:Ghost Character
 Placement:Rock 1
 Placement:Rock 2
 Placement:Rock 3
-0.93,-3.92,4.58|1.066,1.066,1.066|0,47,0|0,0,0|XYZ
+-7.69,-3.83,2.81|1.066,1.066,1.066|0,47,0|0,0,0|XYZ
+7.11,-3.77,17.44|0.926,0.926,0.926|0,25,0|0,0,0|XYZ
 Placement:Rock 4
+7.19,-3.61,16.29|1,1,1|0,-64,0|0,0,0|XYZ
 Placement:Rock 5
 Placement:Rock 6
 Placement:Rock 7
+6.14,-3.97,17.58|0.708,0.708,0.708|0,-25,0|0,0,0|XYZ
 Placement:Cube
-2.66,-4,10.91|1,1,1|0,0,0|0,-1,0|XYZ
+2.43,-3.79,-8.13|1,1,1|0,0,0|0,-1,0|XYZ
+Placement:Candle
+-13.14,-0.97,-1.48|0.211,0.211,0.211|0,-65,0|0,0,0|XYZ
+Placement:Gravestone 1
+-9.26,-3.22,-1.53|0.378,0.378,0.378|0,56,0|0,0,0|XYZ
+Placement:Gravestone 2
+-11.48,-3.31,0.03|0.368,0.368,0.368|0,-36,0|0,0,0|XYZ
+Placement:Gravestone 3
+-13.08,-3.31,-1.5|0.463,0.463,0.463|0,-65,0|0,0,0|XYZ
+Placement:LudumDare_Cross_Des01_V01.obj
+Placement:LudumDare_FirePlate_Des01_V01.obj
+-10.86,-3.35,-2.67|0.887,0.887,0.887|0,0,0|0,0,0|XYZ
+Placement:LudumDare_Pillar_Des01_V01.obj
+2.26,-3.72,5.31|0.2,0.2,0.2|0,0,0|0,0,0|XYZ
+6.45,-4,10.56|0.2,0.2,0.2|0,-80,0|0,0,0|XYZ
+1.33,-3.77,15.41|0.2,0.2,0.2|0,-100,0|0,0,0|XYZ
+-3.93,-4,10.52|0.2,0.2,0.2|0,-183,0|0,0,0|XYZ
+Placement:LudumDare_StartingZone_Des01_V01.obj
+1.63,-4,10.44|0.685,0.685,0.685|0,-48,0|0,0,0|XYZ
+Placement:LudumDare_Wall_Des01_V01.obj
+Placement:LudumDare_Wall_FlatOneSide_Des01_V01.obj
+Placement:LudumDare_Wall_FlatSides_Des01_V01.obj
+Placement:LudumDare_Wall_LShapeLeft_Des01_V01.obj
+Placement:LudumDare_Wall_LShapeRight_Des01_V01.obj
+Placement:treeDead.obj
+-12.37,-3.9,3.47|0.37,0.37,0.37|0,140,0|0,0,0|XYZ
+Placement:treeLeaf.obj
+-17.76,-3.74,0.18|0.335,0.335,0.335|0,55,0|0,0,0|XYZ
