@@ -91,7 +91,8 @@ export default class Game extends State {
 		this.playerCharacter = new PlayerCharacter(
 			this.rendering,
 			this.ecsManager,
-			this.stateAccessible.audioPlayer
+			this.stateAccessible.audioPlayer,
+			"Ghost Character"
 		);
 
 		this.menuButton = this.overlayRendering.getNewButton();
