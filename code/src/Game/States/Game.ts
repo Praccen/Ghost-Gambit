@@ -48,6 +48,7 @@ export default class Game extends State {
 	private oWasPressed: boolean;
 
 	client: Client;
+	unlockedGraves: boolean;
 
 	public static getInstance(sa: StateAccessible): Game {
 		if (!Game.instance) {
@@ -76,6 +77,7 @@ export default class Game extends State {
 			bots: this.botCharacterList,
 		};
 		this.num_bots = 0;
+		this.unlockedGraves = false;
 	}
 
 	async load() {
@@ -169,6 +171,8 @@ export default class Game extends State {
 		await this.objectPlacer.load(this.scene, this.ecsManager);
 
 		await this.playerCharacter.init();
+		
+		this.unlockedGraves = false;
 
 		self.gotoState = StatesEnum.PRELOBBY;
 	}

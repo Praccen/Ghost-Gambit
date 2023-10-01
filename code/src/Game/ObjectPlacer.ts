@@ -302,7 +302,34 @@ export default class ObjectPlacer {
 
 		if (type == "Gravestone 1" || type == "Gravestone 2") {
 			this.ecsManager.addComponent(entity, new VicinityTriggerComponent());
-			this.ecsManager.addComponent(entity, new GravestoneComponent());
+			this.ecsManager.addComponent(entity, new GravestoneComponent(entity));
+
+			let nrOfParticles = 10;
+			let graveParticles = this.scene.getNewParticleSpawner(
+				"Assets/textures/gravestoneParticle.png",
+				nrOfParticles
+			);
+			for (let i = 0; i < nrOfParticles; i++) {
+				let dir = new Vec3([
+					Math.random() * 4.0 - 2.0,
+					1.0,
+					Math.random() * 4.0 - 2.0,
+				]);
+				graveParticles.setParticleData(
+					i,
+					new Vec3(),
+					0.35,
+					dir,
+					new Vec3([0.0, 0.5, 0.0])
+				);
+			}
+			graveParticles.sizeChangePerSecond = -0.1;
+			graveParticles.fadePerSecond = 100000.0;
+
+			let particleComp = new ParticleSpawnerComponent(graveParticles);
+			particleComp.offset.setValues(0.0, 0.3, 0.0);
+			particleComp.lifeTime = 2.0;
+			this.ecsManager.addComponent(entity, particleComp);
 		}
 
 		if (type == "Fire place") {

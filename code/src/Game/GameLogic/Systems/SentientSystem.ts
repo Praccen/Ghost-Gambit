@@ -1,6 +1,7 @@
 import { ComponentTypeEnum } from "../../../Engine/ECS/Components/Component";
 import ECSManager from "../../../Engine/ECS/ECSManager";
 import System from "../../../Engine/ECS/Systems/System";
+import Game from "../../States/Game";
 import SentientComponent from "../Components/SentientComponent";
 import VicinityTriggerComponent from "../Components/VicinityTriggerComponent";
 
@@ -23,6 +24,7 @@ export default class SentientSystem extends System {
                 if (!sentientComponent.character.is_lit && vicinityEntity.hasComponent(ComponentTypeEnum.CANDLE)) {
                     this.ecsManager.removeEntity(vicinityEntity.id);
                     sentientComponent.character.light_up();
+                    Game.getInstanceNoSa().unlockedGraves = true;
                     break;
                 }
                 if (sentientComponent.character.is_lit && vicinityEntity.hasComponent(ComponentTypeEnum.GRAVESTONE)) {

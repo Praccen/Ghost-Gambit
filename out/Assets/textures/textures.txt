@@ -10,6 +10,7 @@ fancy_house_red.png
 fire.png
 GrassStraw.png
 GrassStraw_Spec.png
+gravestoneParticle.png
 GravestoneTextureAlbedo.jpg
 HeightmapTexture.png
 rock.png

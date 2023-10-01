@@ -11,6 +11,7 @@ import CameraFocusSystem from "./Systems/CameraFocusSystem";
 import PositionMatrixUpdateSystem from "./Systems/PositionMatrixUpdateSystem";
 import VicinityTriggerSystem from "../../Game/GameLogic/Systems/VicinityTriggerSystem";
 import SentientSystem from "../../Game/GameLogic/Systems/SentientSystem";
+import GravestoneSystem from "../../Game/GameLogic/Systems/GravestoneSystem";
 
 export default class ECSManager {
 	private systems: Map<String, System>;
@@ -65,6 +66,7 @@ export default class ECSManager {
 		// Game logic systems
 		this.systems.set("VICINITYTRIGGER", new VicinityTriggerSystem);
 		this.systems.set("SENTIENT", new SentientSystem(this));
+		this.systems.set("GRAVESTONE", new GravestoneSystem());
 	}
 
 	update(dt: number) {
@@ -85,6 +87,7 @@ export default class ECSManager {
 		// Game logic systems
 		this.systems.get("VICINITYTRIGGER").update(dt);
 		this.systems.get("SENTIENT").update(dt);
+		this.systems.get("GRAVESTONE").update(dt);
 	}
 
 	updateRenderingSystems(dt: number, updateCameraFocus: boolean = true) {
