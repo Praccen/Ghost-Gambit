@@ -120,6 +120,11 @@ export default class LoadingScreen extends State {
 			["Assets/objs/Rock7.obj", 0.1, 20],
 			["Assets/objs/treeDead.obj", 0.1, 20],
 			["Assets/objs/treeLeaf.obj", 0.1, 20],
+			["Assets/objs/TreeLeaf3.obj", 0.1, 20],
+			["Assets/objs/TreeLeaf4.obj", 0.1, 20],
+			["Assets/objs/TreePine1.obj", 0.1, 20],
+			["Assets/objs/TreePine2.obj", 0.1, 20],
+			["Assets/objs/TreePine3.obj", 0.1, 20],
 		];
 		this.octreesRequested = this.octreesToLoad.length;
 		this.octreesLoaded = 0;

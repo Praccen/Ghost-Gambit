@@ -300,9 +300,47 @@ export default class ObjectPlacer {
 			this.ecsManager.addComponent(entity, pointLightComp);
 		}
 
-		if (type == "Gravestone 1") {
+		if (type == "Gravestone 1" || type == "Gravestone 2") {
 			this.ecsManager.addComponent(entity, new VicinityTriggerComponent());
 			this.ecsManager.addComponent(entity, new GravestoneComponent());
+		}
+
+		if (type == "Fire place") {
+			let nrOfFireParticles = 6;
+			let fireParticles = this.scene.getNewParticleSpawner(
+				"Assets/textures/fire.png",
+				nrOfFireParticles
+			);
+			for (let i = 0; i < nrOfFireParticles; i++) {
+				let dir = new Vec3([
+					Math.random() * 5.0 - 2.5,
+					1.0,
+					Math.random() * 5.0 - 2.5,
+				]);
+				fireParticles.setParticleData(
+					i,
+					new Vec3(),
+					0.75,
+					dir,
+					new Vec3(dir)
+						.flip()
+						.multiply(0.65)
+						.setValues(null, 0.0, null)
+						.add(new Vec3([0.0, 0.5, 0.0]))
+				);
+			}
+			fireParticles.sizeChangePerSecond = -0.15;
+			fireParticles.fadePerSecond = 0.5;
+
+			let fireParticleComp = new ParticleSpawnerComponent(fireParticles);
+			fireParticleComp.lifeTime = 1.5;
+			fireParticleComp.offset.y = 0.6;
+			this.ecsManager.addComponent(entity, fireParticleComp);
+
+			let pointLightComp = new PointLightComponent(this.scene.getNewPointLight());
+			pointLightComp.posOffset.y = 0.7;
+			pointLightComp.pointLight.colour.setValues(0.5, 0.15, 0.0);
+			this.ecsManager.addComponent(entity, pointLightComp);
 		}
 
 		if (!placement.addCollision) {

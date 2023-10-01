@@ -57,6 +57,105 @@ this.placements.set(
 	)
 );
 this.placements.set(
+	"cobble1",
+	new Placement(
+		"Assets/objs/cubble1.obj",
+		"Assets/textures/CobbleAlbedo.png",
+		"Assets/textures/black.png",
+		false
+	)
+);
+this.placements.set(
+	"cobble2",
+	new Placement(
+		"Assets/objs/cubble2.obj",
+		"Assets/textures/CobbleAlbedo.png",
+		"Assets/textures/black.png",
+		false
+	)
+);
+this.placements.set(
+	"cobble3",
+	new Placement(
+		"Assets/objs/cubble3.obj",
+		"Assets/textures/CobbleAlbedo.png",
+		"Assets/textures/black.png",
+		false
+	)
+);
+this.placements.set(
+	"cobble4",
+	new Placement(
+		"Assets/objs/cubble4.obj",
+		"Assets/textures/CobbleAlbedo.png",
+		"Assets/textures/black.png",
+		false
+	)
+);
+this.placements.set(
+	"cobble5",
+	new Placement(
+		"Assets/objs/cubble5.obj",
+		"Assets/textures/CobbleAlbedo.png",
+		"Assets/textures/black.png",
+		false
+	)
+);
+this.placements.set(
+	"cobble6",
+	new Placement(
+		"Assets/objs/cubble6.obj",
+		"Assets/textures/CobbleAlbedo.png",
+		"Assets/textures/black.png",
+		false
+	)
+);
+this.placements.set(
+	"cobble7",
+	new Placement(
+		"Assets/objs/cubble7.obj",
+		"Assets/textures/CobbleAlbedo.png",
+		"Assets/textures/black.png",
+		false
+	)
+);
+this.placements.set(
+	"cobble8",
+	new Placement(
+		"Assets/objs/cubble8.obj",
+		"Assets/textures/CobbleAlbedo.png",
+		"Assets/textures/black.png",
+		false
+	)
+);
+this.placements.set(
+	"cobbleBundle1",
+	new Placement(
+		"Assets/objs/cubbleBundle1.obj",
+		"Assets/textures/CobbleAlbedo.png",
+		"Assets/textures/black.png",
+		false
+	)
+);
+this.placements.set(
+	"cobbleBundle2",
+	new Placement(
+		"Assets/objs/cubbleBundle2.obj",
+		"Assets/textures/CobbleAlbedo.png",
+		"Assets/textures/black.png",
+		false
+	)
+);
+this.placements.set(
+	"cobbleBundle3",
+	new Placement(
+		"Assets/objs/cubbleBundle3.obj",
+		"Assets/textures/CobbleAlbedo.png",
+		"Assets/textures/black.png",
+		false
+	)
+);
+this.placements.set(
 	"Cube",
 	new Placement(
 		"Assets/objs/cube.obj",
@@ -97,7 +196,7 @@ this.placements.set(
 	)
 );
 this.placements.set(
-	"LudumDare_Cross_Des01_V01.obj",
+	"Cross",
 	new Placement(
 		"Assets/objs/LudumDare_Cross_Des01_V01.obj",
 		"Assets/textures/white.png",
@@ -105,7 +204,7 @@ this.placements.set(
 	)
 );
 this.placements.set(
-	"LudumDare_FirePlate_Des01_V01.obj",
+	"Fire place",
 	new Placement(
 		"Assets/objs/LudumDare_FirePlate_Des01_V01.obj",
 		"Assets/textures/white.png",
@@ -113,7 +212,7 @@ this.placements.set(
 	)
 );
 this.placements.set(
-	"LudumDare_Pillar_Des01_V01.obj",
+	"Pillar",
 	new Placement(
 		"Assets/objs/LudumDare_Pillar_Des01_V01.obj",
 		"Assets/textures/white.png",
@@ -121,7 +220,7 @@ this.placements.set(
 	)
 );
 this.placements.set(
-	"LudumDare_StartingZone_Des01_V01.obj",
+	"Starting zone",
 	new Placement(
 		"Assets/objs/LudumDare_StartingZone_Des01_V01.obj",
 		"Assets/textures/white.png",
@@ -169,7 +268,7 @@ this.placements.set(
 	)
 );
 this.placements.set(
-	"treeDead.obj",
+	"treeDead",
 	new Placement(
 		"Assets/objs/treeDead.obj",
 		"Assets/textures/treeTextureAlbedo.png",
@@ -177,9 +276,49 @@ this.placements.set(
 	)
 );
 this.placements.set(
-	"treeLeaf.obj",
+	"treeLeaf",
 	new Placement(
 		"Assets/objs/treeLeaf.obj",
+		"Assets/textures/treeTextureAlbedo.png",
+		"Assets/textures/black.png"
+	)
+);
+this.placements.set(
+	"TreeLeaf3",
+	new Placement(
+		"Assets/objs/TreeLeaf3.obj",
+		"Assets/textures/treeTextureAlbedo.png",
+		"Assets/textures/black.png"
+	)
+);
+this.placements.set(
+	"TreeLeaf4",
+	new Placement(
+		"Assets/objs/TreeLeaf4.obj",
+		"Assets/textures/treeTextureAlbedo.png",
+		"Assets/textures/black.png"
+	)
+);
+this.placements.set(
+	"TreePine1",
+	new Placement(
+		"Assets/objs/TreePine1.obj",
+		"Assets/textures/treeTextureAlbedo.png",
+		"Assets/textures/black.png"
+	)
+);
+this.placements.set(
+	"TreePine2",
+	new Placement(
+		"Assets/objs/TreePine2.obj",
+		"Assets/textures/treeTextureAlbedo.png",
+		"Assets/textures/black.png"
+	)
+);
+this.placements.set(
+	"TreePine3",
+	new Placement(
+		"Assets/objs/TreePine3.obj",
 		"Assets/textures/treeTextureAlbedo.png",
 		"Assets/textures/black.png"
 	)

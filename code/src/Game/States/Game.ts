@@ -124,9 +124,7 @@ export default class Game extends State {
 
 		this.rendering.setSkybox("Assets/textures/skyboxes/NightSky");
 
-		let fireflies = this.ecsManager.createEntity();
-
-		let nrOfFireflies = 10000;
+		let nrOfFireflies = 1000;
 		let firefliesParticles = this.scene.getNewParticleSpawner(
 			"Assets/textures/fire.png",
 			nrOfFireflies
@@ -135,9 +133,9 @@ export default class Game extends State {
 
 		for (let i = 0; i < nrOfFireflies; i++) {
 			let tempPos = new Vec3([
-				Math.random() * 200.0 - 10.0,
+				Math.random() * 100.0 - 50.0,
 				-5.0,
-				Math.random() * 200.0 - 10.0,
+				Math.random() * 100.0 - 50.0,
 			]);
 			// Get the height of the heightmap at the corresponding position
 			let height = (<Heightmap>(
@@ -162,50 +160,6 @@ export default class Game extends State {
 		}
 		firefliesParticles.sizeChangePerSecond = 0;
 		firefliesParticles.fadePerSecond = 0.05;
-
-		let particleComp = new ParticleSpawnerComponent(firefliesParticles);
-		particleComp.lifeTime = 10;
-		fireflies.addComponent(particleComp);
-
-		let fire = this.ecsManager.createEntity();
-		let nrOfFireParticles = 6;
-		let fireParticles = this.scene.getNewParticleSpawner(
-			"Assets/textures/fire.png",
-			nrOfFireParticles
-		);
-		for (let i = 0; i < nrOfFireParticles; i++) {
-			let dir = new Vec3([
-				Math.random() * 5.0 - 2.5,
-				1.0,
-				Math.random() * 5.0 - 2.5,
-			]);
-			fireParticles.setParticleData(
-				i,
-				new Vec3(),
-				0.75,
-				dir,
-				new Vec3(dir)
-					.flip()
-					.multiply(0.65)
-					.setValues(null, 0.0, null)
-					.add(new Vec3([0.0, 0.5, 0.0]))
-			);
-		}
-		fireParticles.sizeChangePerSecond = -0.15;
-		fireParticles.fadePerSecond = 0.5;
-
-		let fireParticleComp = new ParticleSpawnerComponent(fireParticles);
-		fireParticleComp.lifeTime = 1.5;
-		fire.addComponent(fireParticleComp);
-
-		let firePosComp = new PositionComponent();
-		firePosComp.position.setValues(16, -3.8, 11);
-		fire.addComponent(firePosComp);
-
-		let pointLightComp = new PointLightComponent(this.scene.getNewPointLight());
-		pointLightComp.posOffset.y = 0.1;
-		pointLightComp.pointLight.colour.setValues(0.5, 0.15, 0.0);
-		fire.addComponent(pointLightComp);
 
 		await this.objectPlacer.load(this.scene, this.ecsManager);
 

@@ -35,5 +35,9 @@ export default class PointLightComponent extends Component {
 		addTextEdit("R", this.pointLight.colour, 0);
 		addTextEdit("G", this.pointLight.colour, 1);
 		addTextEdit("B", this.pointLight.colour, 2);
+
+		addTextEdit("PosOffsetX", this.posOffset, 0);
+		addTextEdit("PosOffsetY", this.posOffset, 1);
+		addTextEdit("PosOffsetZ", this.posOffset, 2);
 	}
 }

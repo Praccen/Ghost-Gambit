@@ -3,6 +3,7 @@ black.png
 CandleTextureAlbedo.jpg
 characterTextureAlbedo.jpg
 characterTextureEmission.jpg
+CobbleAlbedo.png
 fancy_house.png
 fancy_house_marble.png
 fancy_house_red.png
@@ -13,5 +14,5 @@ GravestoneTextureAlbedo.jpg
 HeightmapTexture.png
 rock.png
 textures.txt
-treeTextureAlbedo.png
+TreeTextureAlbedo.png
 white.png

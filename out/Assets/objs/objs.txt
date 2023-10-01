@@ -1,5 +1,16 @@
 Candle.obj
 CharacterGhost.obj
+cubble1.obj
+cubble2.obj
+cubble3.obj
+cubble4.obj
+cubble5.obj
+cubble6.obj
+cubble7.obj
+cubble8.obj
+cubbleBundle1.obj
+cubbleBundle2.obj
+cubbleBundle3.obj
 cube.obj
 fancy_house.obj
 Gravestone1.obj
@@ -24,3 +35,8 @@ Rock6.obj
 Rock7.obj
 treeDead.obj
 treeLeaf.obj
+TreeLeaf3.obj
+TreeLeaf4.obj
+TreePine1.obj
+TreePine2.obj
+TreePine3.obj
