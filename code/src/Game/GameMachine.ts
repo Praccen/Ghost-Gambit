@@ -14,6 +14,7 @@ import OptionsMenu from "./States/OptionsMenu";
 import { WebUtils } from "../Engine/Utils/WebUtils";
 import { OverlayRendering } from "../Engine/Rendering/OverlayRendering";
 import { Client } from "../Engine/Client/Client";
+import LobbyState from "./States/LobbyState";
 
 // Globals
 export let input = new Input();
@@ -31,7 +32,6 @@ export let options = {
 export class StateAccessible {
 	textureStore: TextureStore;
 	meshStore: MeshStore;
-	// fpsDisplay: TextObject2D;
 	audioPlayer: AudioPlayer;
 	restartGame: boolean;
 }
@@ -67,6 +67,12 @@ export default class GameMachine extends StateMachine {
 			Menu,
 			1.0 / 60.0,
 			new Menu(this.stateAccessible)
+		);
+		this.addState(
+			StatesEnum.LOBBY,
+			LobbyState,
+			1.0 / 60.0,
+			new LobbyState(this.stateAccessible)
 		);
 		this.addState(
 			StatesEnum.OPTIONS,

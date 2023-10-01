@@ -26,9 +26,9 @@ export default class PointLightComponent extends Component {
 			propEditText.textSize = 20;
 			propEditText.scaleWithWindow = true;
 			propEditText.getInputElement().value = vec[index].toString();
-			propEditText.getInputElement().onchange = (ev) => {
+			propEditText.onChange((ev) => {
 				vec[index] = parseFloat(propEditText.getInputElement().value);
-			};
+			});
 			objectPlacer.makeCheckpoint();
 		};
 
