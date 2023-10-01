@@ -79,8 +79,7 @@ export default class Game extends State {
 		this.createMapEntity();
 
 		this.client = new Client();
-		// this.client.createRoom("TEST1");
-		this.client.joinRoom("TEST1");
+		this.client.createRoom("TEST1");
 		// this.client.send(JSON.stringify({ type: "GET" }), 5);
 
 		let dirLight = this.scene.getDirectionalLight();

@@ -37,18 +37,10 @@ export default class PlayerCharacter extends Character {
 	}
 
 	update_client() {
-		const client = Game.getInstanceNoSa().client;
-		if (client.connected) {
-			client.send(
-				JSON.stringify({
-					type: "MOV",
-					x: this.groupPositionComp.position.x,
-					y: this.groupPositionComp.position.y,
-					z: this.groupPositionComp.position.z,
-				}),
-				0
-			);
-		}
+		Game.getInstanceNoSa().client.sendMove(
+			this.groupPositionComp.position,
+			this.groupPositionComp.rotation
+		);
 	}
 
 	modify_acc_vec(accVec: Vec3): Vec3 {

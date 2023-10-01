@@ -6,11 +6,12 @@ import Vec3 from "../Maths/Vec3";
 
 export class Client {
 	private socket: WebSocket;
-	private bodyEntity: Entity;
+	private bodyEntities: Map<string, Entity> = new Map<string, Entity>();
 	connected: boolean = false;
+	private uid: string;
 
 	constructor() {
-		this.socket = new WebSocket("wss://sever54.rlyeh.nu");
+		this.socket = new WebSocket("wss://sever54.rlyeh.nu", "v1");
 		this.socket.addEventListener("open", (event) => {
 			console.log("Connected to server");
 		});
@@ -35,8 +36,20 @@ export class Client {
 		return false;
 	}
 
-	sendPosition(): void {}
-
+	sendMove(pos: Vec3, rot: Vec3): void {
+		if (this.connected) {
+			this.send(
+				JSON.stringify({
+					type: "MOV",
+					id: this.uid,
+					x: pos.x,
+					y: pos.y,
+					z: pos.z,
+				}),
+				0 // No retries
+			);
+		}
+	}
 	handleMessages(message: string): void {
 		console.log(message);
 		const msg = JSON.parse(message);
@@ -45,27 +58,34 @@ export class Client {
 				switch (msg.msg) {
 					case "OK":
 						this.connected = true;
+						this.uid = msg.id;
 						break;
 					case "ERR":
+						this.joinRoom("TEST1");
 						break;
 				}
 				break;
 			case "JOI":
 				console.log("Client connected: " + msg.id);
-				this.bodyEntity = Game.getInstanceNoSa().objectPlacer.placeObject(
-					"Ghost Character",
-					new Vec3(),
-					new Vec3([0.25, 0.25, 0.25]),
-					new Vec3(),
-					new Vec3(),
-					"XYZ",
-					false
-				)[0];
+				this.bodyEntities.set(
+					msg.id,
+					Game.getInstanceNoSa().objectPlacer.placeObject(
+						"Ghost Character",
+						new Vec3(),
+						new Vec3([0.25, 0.25, 0.25]),
+						new Vec3(),
+						new Vec3(),
+						"XYZ",
+						false
+					)[0]
+				);
 				break;
 			case "MOV":
-				if (this.bodyEntity != undefined) {
+				if (this.bodyEntities.get(msg.id) != undefined) {
 					let posComp = <PositionParentComponent>(
-						this.bodyEntity.getComponent(ComponentTypeEnum.POSITIONPARENT)
+						this.bodyEntities
+							.get(msg.id)
+							.getComponent(ComponentTypeEnum.POSITIONPARENT)
 					);
 					posComp.position.x = msg.x;
 					posComp.position.y = msg.y;
