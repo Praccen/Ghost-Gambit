@@ -43,6 +43,7 @@ export default abstract class Character {
 	protected start_rotation_order: string;
 	protected trigger_download_needed: boolean;
 	protected allCharacterDict: object;
+	protected drag_addition: number = 10;
 
 	abstract get_forward_and_right(): [Vec3, Vec3];
 	abstract update_client();
@@ -265,7 +266,7 @@ export default abstract class Character {
 		// Update drag based on velocity
 		let xzVelocity = new Vec3(this.movComp.velocity);
 		xzVelocity.y = 0.0;
-		this.movComp.drag = 10.0 + xzVelocity.len();
+		this.movComp.drag = this.drag_addition + xzVelocity.len();
 
 		// Reset animation timer if animation has changed since last frame
 		if (this.currentAnimation != this.lastAnimation) {

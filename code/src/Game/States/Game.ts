@@ -70,11 +70,13 @@ export default class Game extends State {
 		);
 		this.oWasPressed = true;
 
+		this.botCharacterList = [];
+
 		this.allCharacterDict = {
 			player: this.playerCharacter,
 			bots: this.botCharacterList,
 		};
-		this.num_bots = 0;
+		this.num_bots = 3;
 	}
 
 	async load() {
@@ -107,6 +109,8 @@ export default class Game extends State {
 			"Ghost Character",
 			this.allCharacterDict
 		);
+
+		this.allCharacterDict.player = this.playerCharacter;
 
 		for (let i = 0; i < this.num_bots; i++) {
 			let bot = new BotCharacter(
@@ -221,10 +225,10 @@ export default class Game extends State {
 		await this.objectPlacer.load(this.scene, this.ecsManager);
 
 		await this.playerCharacter.init();
-		for (let i = 0; i < this.num_bots; i++) {
-			await this.botCharacterList[i].init();
+
+		for (const bot of this.botCharacterList) {
+			await bot.init();
 		}
-		await this.playerCharacter.init();
 	}
 
 	async init() {
@@ -329,6 +333,10 @@ export default class Game extends State {
 
 	update(dt: number) {
 		this.playerCharacter.update(dt);
+
+		for (const bot of this.botCharacterList) {
+			bot.update(dt);
+		}
 
 		if (input.keys["P"]) {
 			this.playerCharacter.respawn();

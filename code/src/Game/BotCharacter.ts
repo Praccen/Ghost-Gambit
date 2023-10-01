@@ -7,6 +7,7 @@ import Character from "./Character";
 
 export default class BotCharacter extends Character {
 	audioThreshholdDist: number = 50;
+	drag_addition: number = 15;
 
 	async init() {
 		super.init();
@@ -109,13 +110,13 @@ export default class BotCharacter extends Character {
 	}
 
 	jump_controll() {
-		if (Math.random() > 0.9) {
+		if (Math.random() > 0.995) {
 			this.movComp.jumpRequested = true;
 			this.offGroundTimer = 0.5;
 			let dist = this.get_dist_to_player();
 			if (dist < this.audioThreshholdDist) {
 				let audio_level = dist / this.audioThreshholdDist;
-				this.audioPlayer.playAudio("ghost_sound_2", false, audio_level);
+				this.audioPlayer.playAudio("ghost_sound_3", false, audio_level);
 			}
 		} else {
 			this.movComp.jumpRequested = false;

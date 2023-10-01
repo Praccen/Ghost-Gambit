@@ -22,11 +22,12 @@ export default class AudioPlayer {
 			"failure_1.mp3", //https://pixabay.com/sound-effects/piano-suspense-shock-95515/
 			"ghost_sound_1.mp3", //https://pixabay.com/sound-effects/classic-ghost-sound-95773/
 			"ghost_sound_2.mp3", //https://pixabay.com/sound-effects/classic-ghost-sound-95773/
+			"ghost_sound_3.mp3", //https://pixabay.com/sound-effects/classic-ghost-sound-95773/
 			"extinguish.mp3", //https://pixabay.com/sound-effects/blowing-out-candlewav-14441/
 			"light_up.mp3", //https://pixabay.com/sound-effects/match-lighting-candle-81020/
 			"fire.mp3", //https://pixabay.com/sound-effects/small-artisanal-oven-at-night-23698/
 		];
-		const sound_effect_volume_multilpliers_list = [0.5, 0.5, 1, 0.5, 0.5, 1];
+		const sound_effect_volume_multilpliers_list = [0.5, 0.5, 1, 1, 0.5, 0.5, 1];
 		let count = 0;
 		for (const file of sound_effect_files) {
 			this.sound_effects[file.split(".")[0]] = new Audio(
