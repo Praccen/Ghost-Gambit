@@ -171,7 +171,7 @@ export default class Game extends State {
 		await this.objectPlacer.load(this.scene, this.ecsManager);
 
 		await this.playerCharacter.init();
-		
+
 		this.unlockedGraves = false;
 
 		self.gotoState = StatesEnum.PRELOBBY;
@@ -296,6 +296,9 @@ export default class Game extends State {
 
 	update(dt: number) {
 		this.playerCharacter.update(dt);
+		if (this.playerCharacter.is_lit) {
+			this.unlockedGraves = true;
+		}
 
 		for (const bot of this.botCharacterList) {
 			bot.update(dt);

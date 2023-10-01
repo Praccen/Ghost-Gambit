@@ -22,7 +22,11 @@ export default class GravestoneSystem extends System {
             
             let particleSpawnerComponent = gravestoneComponent.graveStoneEntity.getComponent(ComponentTypeEnum.PARTICLESPAWNER) as ParticleSpawnerComponent;
             if (particleSpawnerComponent != undefined) {
-                particleSpawnerComponent.particleSpawner.fadePerSecond = 0.5;
+                if (gravestoneComponent.claimed) {
+                    particleSpawnerComponent.particleSpawner.fadePerSecond = 100000.0;
+                } else {
+                    particleSpawnerComponent.particleSpawner.fadePerSecond = 0.5;
+                }
             }
         }
 	}

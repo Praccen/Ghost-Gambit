@@ -304,7 +304,7 @@ export default class ObjectPlacer {
 			this.ecsManager.addComponent(entity, new VicinityTriggerComponent());
 			this.ecsManager.addComponent(entity, new GravestoneComponent(entity));
 
-			let nrOfParticles = 10;
+			let nrOfParticles = 15;
 			let graveParticles = this.scene.getNewParticleSpawner(
 				"Assets/textures/gravestoneParticle.png",
 				nrOfParticles
