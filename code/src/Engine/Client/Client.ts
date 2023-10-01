@@ -9,7 +9,7 @@ export class Client {
 	connected: boolean = false;
 
 	constructor() {
-		this.socket = new WebSocket("ws://192.168.1.134:8080");
+		this.socket = new WebSocket("ws://192.168.10.89:8080");
 		this.socket.addEventListener("open", (event) => {
 			console.log("Connected to server");
 		});

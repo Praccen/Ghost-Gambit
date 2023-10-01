@@ -18,7 +18,7 @@ import Rendering from "../Engine/Rendering/Rendering";
 import Scene from "../Engine/Rendering/Scene";
 import { input } from "./GameMachine";
 import Game from "./States/Game";
-import ParticleSpawner from "d:/Repos/ldjam54/code/src/Engine/Objects/ParticleSpawner";
+import ParticleSpawner from "../Engine/Objects/ParticleSpawner";
 
 export default class PlayerCharacter {
 	private rendering: Rendering;
@@ -40,7 +40,7 @@ export default class PlayerCharacter {
 	private timer: number;
 
 	private is_lit: boolean;
-	private fireParticles: import("d:/Repos/ldjam54/code/src/Engine/Objects/ParticleSpawner").default;
+	private fireParticles: ParticleSpawner;
 
 	constructor(
 		rendering: Rendering,
