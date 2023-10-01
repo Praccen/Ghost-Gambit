@@ -53,6 +53,7 @@ export default class PreLobbyState extends State {
 		joinButton.onClick(function () {
 			Game.getInstanceNoSa().client.joinRoom(roomName.getInputElement().value);
 			self.joinedGame(10);
+			self.sa.localGame = false;
 		});
 
 		this.roomDiv = this.overlay.getNewDiv();
