@@ -4,6 +4,7 @@ import Vec3 from "../../Maths/Vec3";
 import GraphicsBundle from "../../Objects/GraphicsBundle";
 import { OverlayRendering } from "../../Rendering/OverlayRendering";
 import { Component, ComponentTypeEnum } from "./Component";
+import Game from "../../../Game/States/Game";
 
 export default class GraphicsComponent extends Component {
 	object: GraphicsBundle;
@@ -11,6 +12,10 @@ export default class GraphicsComponent extends Component {
 	constructor(object: GraphicsBundle) {
 		super(ComponentTypeEnum.GRAPHICS);
 		this.object = object;
+	}
+
+	destructor(): void {
+		Game.getInstanceNoSa().rendering.scene.deleteGraphicsBundle(this.object);
 	}
 
 	addToGui(

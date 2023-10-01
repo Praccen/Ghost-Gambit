@@ -25,6 +25,7 @@ export default class Entity {
 	removeComponent(type: ComponentTypeEnum) {
 		let index = this.components.findIndex((c) => c.type == type);
 		if (index != -1) {
+			this.components[index].destructor();
 			this.components.splice(index, 1);
 		}
 	}

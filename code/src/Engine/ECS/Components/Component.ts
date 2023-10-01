@@ -23,6 +23,8 @@ export class Component {
 		this._type = type;
 	}
 
+	destructor(): void {}
+
 	get type(): ComponentTypeEnum {
 		return this._type;
 	}

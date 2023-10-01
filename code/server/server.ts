@@ -124,9 +124,21 @@ wss.on("connection", (ws) => {
 			console.log("Someone disconnected! " + clients.get(ws).id);
 		}
 		const roomName = clients.get(ws).room;
-		if (roomName != "NOT_VALID" && rooms.get(roomName)!.length <= 1) {
-			rooms.delete(roomName);
+		if (roomName != "NOT_VALID") {
+			for (const element of rooms.get(roomName)) {
+				if (element != ws && element.OPEN) {
+					element.send(
+						JSON.stringify({ type: "DIS", id: clients.get(ws).id.toString() })
+					);
+				}
+			}
+
+			rooms.get(roomName).splice(rooms.get(roomName).indexOf(ws), 1);
+			if (rooms.get(roomName)!.length <= 0) {
+				rooms.delete(roomName);
+			}
 		}
+
 		clients.delete(ws);
 	});
 });

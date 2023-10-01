@@ -62,7 +62,7 @@ export default class Rendering {
 	private finishedFramebuffer: Framebuffer;
 	private finishedOutputRenderPass: FinishedOutputRenderPass;
 
-	private scene: Scene;
+	scene: Scene;
 
 	constructor(textureStore: TextureStore, scene: Scene) {
 		this.textureStore = textureStore;

@@ -51,7 +51,7 @@ export class Client {
 		}
 	}
 	handleMessages(message: string): void {
-		console.log(message);
+		// console.log(message);
 		const msg = JSON.parse(message);
 		switch (msg.type) {
 			case "CON":
@@ -71,7 +71,7 @@ export class Client {
 					msg.id,
 					Game.getInstanceNoSa().objectPlacer.placeObject(
 						"Ghost Character",
-						new Vec3(),
+						new Vec3([-10.0, -10.0, -10.0]),
 						new Vec3([0.25, 0.25, 0.25]),
 						new Vec3(),
 						new Vec3(),
@@ -87,12 +87,19 @@ export class Client {
 							.get(msg.id)
 							.getComponent(ComponentTypeEnum.POSITIONPARENT)
 					);
-					posComp.position.x = msg.x;
-					posComp.position.y = msg.y;
-					posComp.position.z = msg.z;
+					if (posComp) {
+						posComp.position.x = msg.x;
+						posComp.position.y = msg.y;
+						posComp.position.z = msg.z;
+					}
 				}
 				break;
 			case "DIS":
+				console.log("Client disconnected" + msg.id);
+				Game.getInstanceNoSa().ecsManager.removeEntity(
+					this.bodyEntities.get(msg.id).id
+				);
+				this.bodyEntities.delete(msg.id);
 				break;
 		}
 	}
