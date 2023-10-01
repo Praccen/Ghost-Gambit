@@ -222,7 +222,7 @@ export default class ObjectPlacer {
 		origin: Vec3,
 		rotationOrder: string,
 		triggerDownloadNeeded: boolean = true
-	): Entity | [Entity, ParticleSpawner] {
+	): Entity {
 		let placement = this.placements.get(type);
 		if (placement == undefined) {
 			return null;
@@ -261,6 +261,38 @@ export default class ObjectPlacer {
 		if (type == "Candle") {
 			this.ecsManager.addComponent(entity, new VicinityTriggerComponent());
 			this.ecsManager.addComponent(entity, new CandleComponent());
+
+			let nrOfFireParticles = 4;
+			let fireParticles = this.scene.getNewParticleSpawner("Assets/textures/fire.png", nrOfFireParticles);
+			for (let i = 0; i < nrOfFireParticles; i++) {
+				let dir = new Vec3([
+					Math.random() * 2.0 - 1.0,
+					1.0,
+					Math.random() * 2.0 - 1.0,
+				]);
+				fireParticles.setParticleData(
+					i,
+					new Vec3(),
+					0.15,
+					dir,
+					new Vec3(dir)
+						.flip()
+						.multiply(0.65)
+						.setValues(null, 0.0, null)
+						.add(new Vec3([0.0, 0.5, 0.0]))
+				);
+			}
+			fireParticles.sizeChangePerSecond = -0.3;
+			fireParticles.fadePerSecond = 0.7;
+
+			let fireParticleComp = new ParticleSpawnerComponent(fireParticles);
+			fireParticleComp.offset.setValues(0.0, 0.3, 0.0);
+			fireParticleComp.lifeTime = 0.4;
+			this.ecsManager.addComponent(entity, fireParticleComp);
+
+			let pointLightComp = new PointLightComponent(this.scene.getNewPointLight());
+			pointLightComp.pointLight.colour.setValues(0.2, 0.06, 0.0);
+			this.ecsManager.addComponent(entity, pointLightComp);
 		}
 
 		if (type == "Gravestone 1") {
