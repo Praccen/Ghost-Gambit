@@ -151,7 +151,7 @@ export default class ObjectPlacer {
 		size: Vec3,
 		rotation: Vec3,
 		character: Character
-	): [Entity, ParticleSpawner] {
+	): [Entity, Entity] {
 		let bodyMesh = this.scene.getNewMesh(
 			"Assets/objs/CharacterGhost.obj",
 			"Assets/textures/characterTextureAlbedo.jpg",
@@ -208,10 +208,10 @@ export default class ObjectPlacer {
 		this.ecsManager.addComponent(fireEntity, groupPositionComp);
 
 		let pointLightComp = new PointLightComponent(this.scene.getNewPointLight());
-		pointLightComp.pointLight.colour.setValues(0.2, 0.06, 0.0);
+		pointLightComp.pointLight.colour.setValues(0.0, 0.0, 0.0);
 		this.ecsManager.addComponent(fireEntity, pointLightComp);
 
-		return [bodyEntity, fireParticles];
+		return [bodyEntity, fireEntity];
 	}
 
 	placeObject(

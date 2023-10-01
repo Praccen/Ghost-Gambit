@@ -12,6 +12,8 @@ import Rendering from "../Engine/Rendering/Rendering";
 import Game from "./States/Game";
 import ParticleSpawner from "../Engine/Objects/ParticleSpawner";
 import PositionComponent from "../Engine/ECS/Components/PositionComponent";
+import ParticleSpawnerComponent from "../Engine/ECS/Components/ParticleSpawnerComponent";
+import PointLightComponent from "../Engine/ECS/Components/PointLightComponent";
 
 export default abstract class Character {
 	protected rendering: Rendering;
@@ -19,6 +21,7 @@ export default abstract class Character {
 	protected audioPlayer: AudioPlayer;
 
 	protected bodyEntity: Entity;
+	protected fireEntity: Entity;
 
 	protected groupPositionComp: PositionParentComponent;
 	protected movComp: MovementComponent;
@@ -33,7 +36,6 @@ export default abstract class Character {
 	protected timer: number;
 
 	is_lit: boolean;
-	protected fireParticles: ParticleSpawner;
 
 	protected character_string: string;
 	protected start_position: Vec3;
@@ -88,7 +90,7 @@ export default abstract class Character {
 	}
 
 	async init() {
-		let result: [Entity, ParticleSpawner] =
+		let result: [Entity, Entity] =
 			Game.getInstanceNoSa().objectPlacer.placePlayer(
 				this.start_position,
 				this.start_size,
@@ -96,19 +98,8 @@ export default abstract class Character {
 				this
 			);
 
-		let particleSpawner;
-		let entity;
-
-		if (Array.isArray(result)) {
-			let [_entity, _particleSpawner] = result;
-			particleSpawner = _particleSpawner;
-			entity = _entity;
-		} else {
-			throw new Error("placeObject did not return Entity, ParticleSpawner");
-		}
-
-		this.bodyEntity = entity;
-		this.fireParticles = particleSpawner;
+		this.bodyEntity = result[0];
+		this.fireEntity = result[1];
 	}
 
 	respawn() {
@@ -134,8 +125,12 @@ export default abstract class Character {
 
 	extinguish() {
 		if (this.is_lit) {
+			let particleSpawnerComp = this.fireEntity.getComponent(ComponentTypeEnum.PARTICLESPAWNER) as ParticleSpawnerComponent;
+			let pointLightComp = this.fireEntity.getComponent(ComponentTypeEnum.POINTLIGHT) as PointLightComponent;
+
 			this.extinguish_audio_operations();
-			this.fireParticles.setNumParticles(0);
+			particleSpawnerComp.particleSpawner.setNumParticles(0);
+			pointLightComp.pointLight.colour.setValues(0.0, 0.0, 0.0);
 			this.is_lit = false;
 		}
 	}
@@ -144,15 +139,18 @@ export default abstract class Character {
 		if (!this.is_lit) {
 			this.light_up_audio_operations();
 
+			let particleSpawnerComp = this.fireEntity.getComponent(ComponentTypeEnum.PARTICLESPAWNER) as ParticleSpawnerComponent;
+			let pointLightComp = this.fireEntity.getComponent(ComponentTypeEnum.POINTLIGHT) as PointLightComponent;
+
 			let nrOfFireParticles = 4;
-			this.fireParticles.setNumParticles(nrOfFireParticles);
+			particleSpawnerComp.particleSpawner.setNumParticles(nrOfFireParticles);
 			for (let i = 0; i < nrOfFireParticles; i++) {
 				let dir = new Vec3([
 					Math.random() * 2.0 - 1.0,
 					1.0,
 					Math.random() * 2.0 - 1.0,
 				]);
-				this.fireParticles.setParticleData(
+				particleSpawnerComp.particleSpawner.setParticleData(
 					i,
 					new Vec3(),
 					0.15,
@@ -164,6 +162,8 @@ export default abstract class Character {
 						.add(new Vec3([0.0, 0.5, 0.0]))
 				);
 			}
+
+			pointLightComp.pointLight.colour.setValues(0.2, 0.06, 0.0);
 			this.is_lit = true;
 		}
 	}
