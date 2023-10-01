@@ -9,6 +9,8 @@ import { Component, ComponentTypeEnum } from "./Components/Component";
 import Camera from "../Camera";
 import CameraFocusSystem from "./Systems/CameraFocusSystem";
 import PositionMatrixUpdateSystem from "./Systems/PositionMatrixUpdateSystem";
+import VicinityTriggerSystem from "../../Game/GameLogic/Systems/VicinityTriggerSystem";
+import SentientSystem from "../../Game/GameLogic/Systems/SentientSystem";
 
 export default class ECSManager {
 	private systems: Map<String, System>;
@@ -59,6 +61,10 @@ export default class ECSManager {
 			"CAMERAFOCUS",
 			new CameraFocusSystem(this.rendering.camera)
 		);
+
+		// Game logic systems
+		this.systems.set("VICINITYTRIGGER", new VicinityTriggerSystem);
+		this.systems.set("SENTIENT", new SentientSystem(this));
 	}
 
 	update(dt: number) {
@@ -75,6 +81,10 @@ export default class ECSManager {
 		this.systems.get("POSITIONMATRIXUPDATE").update(dt);
 		this.systems.get("GRAPHICS").update(dt);
 		this.systems.get("COLLISION").update(dt);
+		
+		// Game logic systems
+		this.systems.get("VICINITYTRIGGER").update(dt);
+		this.systems.get("SENTIENT").update(dt);
 	}
 
 	updateRenderingSystems(dt: number, updateCameraFocus: boolean = true) {

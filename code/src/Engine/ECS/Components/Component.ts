@@ -14,6 +14,11 @@ export enum ComponentTypeEnum {
 	POSITION,
 	POSITIONPARENT,
 	DELIVERYZONE,
+
+	// Game logic component types
+	VICINITYTRIGGER,
+	SENTIENT,
+	CANDLE
 }
 
 export class Component {

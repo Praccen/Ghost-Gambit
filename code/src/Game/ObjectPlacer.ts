@@ -22,6 +22,9 @@ import Ray from "../Engine/Physics/Shapes/Ray";
 import Triangle from "../Engine/Physics/Shapes/Triangle";
 import Scene from "../Engine/Rendering/Scene";
 import { WebUtils } from "../Engine/Utils/WebUtils";
+import CandleComponent from "./GameLogic/Components/CandleComponent";
+import SentientComponent from "./GameLogic/Components/SentientComponent";
+import VicinityTriggerComponent from "./GameLogic/Components/VicinityTriggerComponent";
 import Game from "./States/Game";
 
 class Placement {
@@ -179,6 +182,8 @@ export default class ObjectPlacer {
 		movComp.acceleration = 20.0;
 		movComp.drag = 10.0;
 		this.ecsManager.addComponent(bodyEntity, movComp);
+		this.ecsManager.addComponent(bodyEntity, new VicinityTriggerComponent());
+		this.ecsManager.addComponent(bodyEntity, new SentientComponent());
 
 		// Fire
 		let fireEntity = this.ecsManager.createEntity();
@@ -262,6 +267,11 @@ export default class ObjectPlacer {
 		boundingBoxComp.setup(mesh.graphicsObject);
 		boundingBoxComp.updateTransformMatrix(mesh.modelMatrix);
 		this.ecsManager.addComponent(entity, boundingBoxComp);
+
+		if (type == "Candle") {
+			this.ecsManager.addComponent(entity, new VicinityTriggerComponent());
+			this.ecsManager.addComponent(entity, new CandleComponent());
+		}
 
 		if (!placement.addCollision) {
 			return entity;
