@@ -35,11 +35,16 @@ export default class PositionComponent extends Component {
 	calculateMatrix(matrix: Matrix4) {
 		matrix.translate(this.position.x, this.position.y, this.position.z);
 		if (this.rotation.length2() > 0.0000001) {
-			let quat = Quaternion.fromEulerLogical(this.rotation.x * (Math.PI/180), this.rotation.y * (Math.PI/180), this.rotation.z * (Math.PI/180), this.rotationOrder);
+			let quat = Quaternion.fromEulerLogical(
+				this.rotation.x * (Math.PI / 180),
+				this.rotation.y * (Math.PI / 180),
+				this.rotation.z * (Math.PI / 180),
+				this.rotationOrder
+			);
 			let axisAngle = quat.toAxisAngle();
 
 			matrix.rotate(
-				axisAngle[1] * (180/Math.PI),
+				axisAngle[1] * (180 / Math.PI),
 				axisAngle[0][0],
 				axisAngle[0][1],
 				axisAngle[0][2]

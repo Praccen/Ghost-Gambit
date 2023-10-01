@@ -187,7 +187,10 @@ export default class DebugMode extends State {
 				edited = true;
 				this.actionString = "Rotating";
 			}
-			if ((input.keys["T"] || input.keys["G"]) && this.game.objectPlacer.currentlyEditingEntityId != 0) {
+			if (
+				(input.keys["T"] || input.keys["G"]) &&
+				this.game.objectPlacer.currentlyEditingEntityId != 0
+			) {
 				let ray = MousePicking.GetRay(this.game.rendering.camera);
 				let dist: number = Infinity;
 

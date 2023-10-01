@@ -264,8 +264,7 @@ export default class DebugMenu {
 		if (this.hidden) {
 			this.overlay.show();
 			this.hidden = false;
-		}
-		else {
+		} else {
 			this.overlay.hide();
 			this.hidden = true;
 		}

@@ -381,15 +381,29 @@ export default class PlayerCharacter {
 	}
 
 	private resetAnimation() {
-		(<PositionComponent>(this.bodyEntity.getComponent(ComponentTypeEnum.POSITION))).origin.setValues(0.0, 0.0, 0.0);
-		(<PositionComponent>(this.bodyEntity.getComponent(ComponentTypeEnum.POSITION))).rotation.setValues(0.0, 90.0, 0.0);
+		(<PositionComponent>(
+			this.bodyEntity.getComponent(ComponentTypeEnum.POSITION)
+		)).origin.setValues(0.0, 0.0, 0.0);
+		(<PositionComponent>(
+			this.bodyEntity.getComponent(ComponentTypeEnum.POSITION)
+		)).rotation.setValues(0.0, 90.0, 0.0);
 	}
 
 	private walkAnimation(animationSpeed: number = 7.5) {
 		this.resetAnimation();
 
-		(<PositionComponent>(this.bodyEntity.getComponent(ComponentTypeEnum.POSITION))).origin.setValues(null, Math.cos(this.timer * animationSpeed) * 0.15 + 0.3, null);
-		this.groupPositionComp.rotation.setValues(Math.cos(this.timer * animationSpeed) * 5.0, null, null);
+		(<PositionComponent>(
+			this.bodyEntity.getComponent(ComponentTypeEnum.POSITION)
+		)).origin.setValues(
+			null,
+			Math.cos(this.timer * animationSpeed) * 0.15 + 0.3,
+			null
+		);
+		this.groupPositionComp.rotation.setValues(
+			Math.cos(this.timer * animationSpeed) * 5.0,
+			null,
+			null
+		);
 	}
 
 	private runAnimation(animationSpeed: number = 12.0) {
