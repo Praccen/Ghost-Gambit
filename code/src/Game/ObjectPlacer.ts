@@ -190,7 +190,7 @@ export default class ObjectPlacer {
 		fireParticles.fadePerSecond = 0.7;
 
 		let fireParticleComp = new ParticleSpawnerComponent(fireParticles);
-		fireParticleComp.lifeTime = 0.5;
+		fireParticleComp.lifeTime = 0.4;
 		this.ecsManager.addComponent(fireEntity, fireParticleComp);
 
 		let firePosComp = new PositionComponent();

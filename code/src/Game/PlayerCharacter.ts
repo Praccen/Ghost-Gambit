@@ -123,7 +123,7 @@ export default class PlayerCharacter {
 			this.audioPlayer.playAudio("light_up", false);
 			this.audioPlayer.playAudio("fire", true);
 
-			let nrOfFireParticles = 5;
+			let nrOfFireParticles = 4;
 			this.fireParticles.setNumParticles(nrOfFireParticles);
 			for (let i = 0; i < nrOfFireParticles; i++) {
 				let dir = new Vec3([
