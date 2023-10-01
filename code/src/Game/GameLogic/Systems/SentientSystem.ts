@@ -19,7 +19,12 @@ export default class SentientSystem extends System {
             for (let vicinityEntity of vicinityTriggerComponent.inVicinityOf) {
                 if (vicinityEntity.hasComponent(ComponentTypeEnum.CANDLE)) {
                     this.ecsManager.removeEntity(vicinityEntity.id);
-                    sentientComponent.hasCandle = true;
+                    sentientComponent.character.light_up();
+                    break;
+                }
+                if (sentientComponent.character.is_lit && vicinityEntity.hasComponent(ComponentTypeEnum.GRAVESTONE)) {
+                    this.ecsManager.removeEntity(vicinityEntity.id);
+                    // sentientComponent.character
                     break;
                 }
             }

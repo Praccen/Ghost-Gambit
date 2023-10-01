@@ -22,7 +22,9 @@ import Ray from "../Engine/Physics/Shapes/Ray";
 import Triangle from "../Engine/Physics/Shapes/Triangle";
 import Scene from "../Engine/Rendering/Scene";
 import { WebUtils } from "../Engine/Utils/WebUtils";
+import Character from "./Character";
 import CandleComponent from "./GameLogic/Components/CandleComponent";
+import GravestoneComponent from "./GameLogic/Components/GravestoneComponent";
 import SentientComponent from "./GameLogic/Components/SentientComponent";
 import VicinityTriggerComponent from "./GameLogic/Components/VicinityTriggerComponent";
 import Game from "./States/Game";
@@ -144,16 +146,16 @@ export default class ObjectPlacer {
 		return objectName;
 	}
 
-	private placePlayer(
-		placement: Placement,
+	placePlayer(
 		position: Vec3,
 		size: Vec3,
-		rotation: Vec3
+		rotation: Vec3,
+		character: Character
 	): [Entity, ParticleSpawner] {
 		let bodyMesh = this.scene.getNewMesh(
-			placement.modelPath,
-			placement.diffuseTexturePath,
-			placement.specularTexturePath
+			"Assets/objs/CharacterGhost.obj",
+			"Assets/textures/characterTextureAlbedo.jpg",
+			"Assets/textures/black.png"
 		);
 		bodyMesh.emission = this.textureStore.getTexture(
 			"Assets/textures/characterTextureEmission.jpg"
@@ -183,7 +185,7 @@ export default class ObjectPlacer {
 		movComp.drag = 10.0;
 		this.ecsManager.addComponent(bodyEntity, movComp);
 		this.ecsManager.addComponent(bodyEntity, new VicinityTriggerComponent());
-		this.ecsManager.addComponent(bodyEntity, new SentientComponent());
+		this.ecsManager.addComponent(bodyEntity, new SentientComponent(character));
 
 		// Fire
 		let fireEntity = this.ecsManager.createEntity();
@@ -212,33 +214,6 @@ export default class ObjectPlacer {
 		return [bodyEntity, fireParticles];
 	}
 
-	placePlayerObject(
-		position: Vec3,
-		size: Vec3,
-		rotation: Vec3,
-		triggerDownloadNeeded: boolean = true
-	): [Entity, ParticleSpawner] {
-		let placement = this.placements.get("Ghost Character");
-		if (placement == undefined) {
-			return null;
-		}
-
-		// Mark that we have changed something
-		if (triggerDownloadNeeded && placement.saveToTransforms) {
-			this.downloadNeeded = true;
-		}
-
-		let [entity, particleSpawner] = this.placePlayer(
-			placement,
-			position,
-			size,
-			rotation
-		);
-		this.currentlyEditingEntityId = entity.id;
-		this.entityPlacements.set(entity.id, "Ghost Character");
-		return [entity, particleSpawner];
-	}
-
 	placeObject(
 		type: string,
 		position: Vec3,
@@ -256,18 +231,6 @@ export default class ObjectPlacer {
 		// Mark that we have changed something
 		if (triggerDownloadNeeded && placement.saveToTransforms) {
 			this.downloadNeeded = true;
-		}
-
-		if (type == "Ghost Character") {
-			let [entity, particleSpawner] = this.placePlayer(
-				placement,
-				position,
-				size,
-				rotation
-			);
-			this.currentlyEditingEntityId = entity.id;
-			this.entityPlacements.set(entity.id, type);
-			return entity;
 		}
 
 		let entity = this.ecsManager.createEntity();
@@ -298,6 +261,11 @@ export default class ObjectPlacer {
 		if (type == "Candle") {
 			this.ecsManager.addComponent(entity, new VicinityTriggerComponent());
 			this.ecsManager.addComponent(entity, new CandleComponent());
+		}
+
+		if (type == "Gravestone 1") {
+			this.ecsManager.addComponent(entity, new VicinityTriggerComponent());
+			this.ecsManager.addComponent(entity, new GravestoneComponent());
 		}
 
 		if (!placement.addCollision) {

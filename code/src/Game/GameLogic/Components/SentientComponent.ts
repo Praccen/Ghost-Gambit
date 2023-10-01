@@ -1,11 +1,11 @@
 import { Component, ComponentTypeEnum } from "../../../Engine/ECS/Components/Component";
+import Character from "../../Character";
 
 export default class SentientComponent extends Component {
-    hasCandle: boolean;
+	character: Character;
 
-	constructor() {
+	constructor(character: Character) {
 		super(ComponentTypeEnum.SENTIENT);
-
-        this.hasCandle = false;
+		this.character = character;
 	}
 }

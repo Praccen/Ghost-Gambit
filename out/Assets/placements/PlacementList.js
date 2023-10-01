@@ -1,16 +1,6 @@
 // This file is evaluated in Game/ObjectPlacer, see the context there code/src/Game/ObjectPlacer.ts
 
 this.placements.set(
-	"Ghost Character",
-	new Placement(
-		"Assets/objs/CharacterGhost.obj",
-		"Assets/textures/characterTextureAlbedo.jpg",
-		"Assets/textures/black.png",
-		true,
-		false
-	)
-);
-this.placements.set(
 	"Rock 1",
 	new Placement(
 		"Assets/objs/Rock1.obj",

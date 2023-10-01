@@ -32,7 +32,7 @@ export default abstract class Character {
 
 	protected timer: number;
 
-	protected is_lit: boolean;
+	is_lit: boolean;
 	protected fireParticles: ParticleSpawner;
 
 	protected character_string: string;
@@ -84,15 +84,12 @@ export default abstract class Character {
 	}
 
 	async init() {
-		let result: Entity | [Entity, ParticleSpawner] =
-			Game.getInstanceNoSa().objectPlacer.placeObject(
-				this.character_string,
+		let result: [Entity, ParticleSpawner] =
+			Game.getInstanceNoSa().objectPlacer.placePlayer(
 				this.start_position,
 				this.start_size,
 				this.start_rotation,
-				this.start_origin,
-				this.start_rotation_order,
-				this.trigger_download_needed
+				this
 			);
 
 		let particleSpawner;
