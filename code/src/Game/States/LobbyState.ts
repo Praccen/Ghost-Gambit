@@ -10,16 +10,15 @@ export default class LobbyState extends State {
 	private overlay: OverlayRendering;
 	private sa: StateAccessible;
 	private participantsDiv: Div;
-	private botCounter: number;
-	private timePassed: number = 0;
+	private timePassed: number = 2;
 	private startButton: Button;
+	private addBotButton: Button;
+	private removeParticipantButton: Button;
 
 	constructor(sa: StateAccessible) {
 		super();
 		this.sa = sa;
 		this.overlay = new OverlayRendering();
-
-		this.botCounter = 0;
 
 		this.startButton = this.overlay.getNewButton();
 		this.startButton.position.x = 0.8;
@@ -67,19 +66,19 @@ export default class LobbyState extends State {
 
 		this.addParticipant("You");
 
-		let addBotButton = this.overlay.getNewButton();
-		addBotButton.position.x = 0.55;
-		addBotButton.position.y = 0.7;
-		addBotButton.textString = "Add bot";
-		addBotButton.onClick(() => {
+		this.addBotButton = this.overlay.getNewButton();
+		this.addBotButton.position.x = 0.55;
+		this.addBotButton.position.y = 0.7;
+		this.addBotButton.textString = "Add bot";
+		this.addBotButton.onClick(() => {
 			this.addParticipant("Bot " + Game.getInstanceNoSa().num_bots++);
 		});
 
-		let removeParticipantButton = this.overlay.getNewButton();
-		removeParticipantButton.position.x = 0.55;
-		removeParticipantButton.position.y = 0.6;
-		removeParticipantButton.textString = "Remove";
-		removeParticipantButton.onClick(() => {
+		this.removeParticipantButton = this.overlay.getNewButton();
+		this.removeParticipantButton.position.x = 0.55;
+		this.removeParticipantButton.position.y = 0.6;
+		this.removeParticipantButton.textString = "Remove";
+		this.removeParticipantButton.onClick(() => {
 			let length = this.participantsDiv.children.length;
 			if (length > 2) {
 				this.participantsDiv.children[length - 1].remove();
@@ -110,6 +109,8 @@ export default class LobbyState extends State {
 
 			if (this.sa.localGame) {
 			} else {
+				this.addBotButton.setHidden(true);
+				this.removeParticipantButton.setHidden(true);
 				for (const div of this.participantsDiv.children) {
 					div.remove();
 				}

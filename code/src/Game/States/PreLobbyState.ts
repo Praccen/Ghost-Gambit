@@ -9,7 +9,7 @@ export default class PreLobbyState extends State {
 	private sa: StateAccessible;
 
 	private roomDiv: Div;
-	private timePassed: number = 0;
+	private timePassed: number = 1;
 
 	constructor(sa: StateAccessible) {
 		super();
