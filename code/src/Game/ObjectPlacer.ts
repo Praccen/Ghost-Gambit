@@ -212,6 +212,33 @@ export default class ObjectPlacer {
 		return [bodyEntity, fireParticles];
 	}
 
+	placePlayerObject(
+		position: Vec3,
+		size: Vec3,
+		rotation: Vec3,
+		triggerDownloadNeeded: boolean = true
+	): [Entity, ParticleSpawner] {
+		let placement = this.placements.get(type);
+		if (placement == undefined) {
+			return null;
+		}
+
+		// Mark that we have changed something
+		if (triggerDownloadNeeded && placement.saveToTransforms) {
+			this.downloadNeeded = true;
+		}
+
+		let [entity, particleSpawner] = this.placePlayer(
+			placement,
+			position,
+			size,
+			rotation
+		);
+		this.currentlyEditingEntityId = entity.id;
+		this.entityPlacements.set(entity.id, type);
+		return [entity, particleSpawner];
+	}
+
 	placeObject(
 		type: string,
 		position: Vec3,
