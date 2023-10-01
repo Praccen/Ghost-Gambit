@@ -9,6 +9,7 @@ export class Client {
 	private bodyEntities: Map<string, Entity> = new Map<string, Entity>();
 	connected: boolean = false;
 	private uid: string;
+	activeRooms: string[] = [];
 
 	constructor() {
 		this.socket = new WebSocket("wss://sever54.rlyeh.nu", "v1");
@@ -26,14 +27,12 @@ export class Client {
 	}
 
 	// Create room with {roomId}
-	createRoom(roomId: string): boolean {
+	createRoom(roomId: string): void {
 		this.send(JSON.stringify({ type: "CRE", room_id: roomId }), 100);
-		return false;
 	}
 
-	joinRoom(roomId: string): boolean {
+	joinRoom(roomId: string): void {
 		this.send(JSON.stringify({ type: "JOI", room_id: roomId }), 100);
-		return false;
 	}
 
 	sendMove(pos: Vec3, rot: Vec3): void {
@@ -61,24 +60,18 @@ export class Client {
 						this.uid = msg.id;
 						break;
 					case "ERR":
-						this.joinRoom("TEST1");
 						break;
 				}
 				break;
 			case "JOI":
 				console.log("Client connected: " + msg.id);
-				this.bodyEntities.set(
-					msg.id,
-					Game.getInstanceNoSa().objectPlacer.placeObject(
-						"Ghost Character",
-						new Vec3([-10.0, -10.0, -10.0]),
-						new Vec3([0.25, 0.25, 0.25]),
-						new Vec3(),
-						new Vec3(),
-						"XYZ",
-						false
-					)[0]
-				);
+				const newEnt = Game.getInstanceNoSa().objectPlacer.placePlayer(
+					new Vec3([-10.0, -10.0, -10.0]),
+					new Vec3([0.25, 0.25, 0.25]),
+					new Vec3(),
+					null
+				)[0];
+				this.bodyEntities.set(msg.id, newEnt);
 				break;
 			case "MOV":
 				if (this.bodyEntities.get(msg.id) != undefined) {
@@ -101,7 +94,14 @@ export class Client {
 				);
 				this.bodyEntities.delete(msg.id);
 				break;
+			case "GET":
+				this.activeRooms = msg.rooms;
+				break;
 		}
+	}
+
+	getRooms(): void {
+		this.send(JSON.stringify({ type: "GET" }), 5);
 	}
 
 	// Send message, try {tries} numper of times with 3 sec intercal
@@ -113,7 +113,7 @@ export class Client {
 			const that = this;
 			setTimeout(function () {
 				that.send(message, tries - 1);
-			}, 3);
+			}, 1000);
 		}
 
 		return false;

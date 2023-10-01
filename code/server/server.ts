@@ -11,7 +11,7 @@ const clients = new Map<
 		id: number;
 	}
 >();
-let uid: number = 0;
+let uid: number = 1;
 
 console.log("Server started!");
 
@@ -41,7 +41,7 @@ wss.on("connection", (ws) => {
 					clients.get(ws).room = msg.room_id;
 					// Add client to room
 					rooms.set(msg.room_id, new Array());
-					rooms.get(msg.room_id)!.push(ws);
+					rooms.get(msg.room_id).push(ws);
 					// Send CON msg to client
 					ws.send(
 						JSON.stringify({
@@ -63,7 +63,7 @@ wss.on("connection", (ws) => {
 				// Join room
 				if (rooms.has(msg.room_id)) {
 					console.log("Joining room: " + msg.room_id);
-					rooms.get(msg.room_id)!.push(ws);
+					rooms.get(msg.room_id).push(ws);
 					clients.get(ws).room = msg.room_id;
 					ws.send(
 						JSON.stringify({
@@ -134,11 +134,10 @@ wss.on("connection", (ws) => {
 			}
 
 			rooms.get(roomName).splice(rooms.get(roomName).indexOf(ws), 1);
-			if (rooms.get(roomName)!.length <= 0) {
+			if (rooms.get(roomName).length <= 0) {
 				rooms.delete(roomName);
 			}
 		}
-
 		clients.delete(ws);
 	});
 });

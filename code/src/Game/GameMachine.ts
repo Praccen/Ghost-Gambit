@@ -15,6 +15,7 @@ import { WebUtils } from "../Engine/Utils/WebUtils";
 import { OverlayRendering } from "../Engine/Rendering/OverlayRendering";
 import { Client } from "../Engine/Client/Client";
 import LobbyState from "./States/LobbyState";
+import PreLobbyState from "./States/PreLobbyState";
 
 // Globals
 export let input = new Input();
@@ -55,6 +56,8 @@ export default class GameMachine extends StateMachine {
 		this.stateAccessible.audioPlayer.setMusicVolume(options.musicVolume);
 		this.stateAccessible.audioPlayer.setSoundEffectVolume(options.effectVolume);
 
+		let game = Game.getInstance(this.stateAccessible);
+
 		// Add states
 		this.addState(
 			StatesEnum.LOADINGSCREEN,
@@ -67,6 +70,12 @@ export default class GameMachine extends StateMachine {
 			Menu,
 			1.0 / 60.0,
 			new Menu(this.stateAccessible)
+		);
+		this.addState(
+			StatesEnum.PRELOBBY,
+			PreLobbyState,
+			1.0 / 60.0,
+			new PreLobbyState(this.stateAccessible)
 		);
 		this.addState(
 			StatesEnum.LOBBY,
@@ -86,7 +95,6 @@ export default class GameMachine extends StateMachine {
 			1.0 / 60.0,
 			new ControlsMenu(this.stateAccessible)
 		);
-		let game = Game.getInstance(this.stateAccessible);
 		this.addState(StatesEnum.GAME, Game, 1.0 / 144.0, game);
 		this.stateAccessible.restartGame = true;
 

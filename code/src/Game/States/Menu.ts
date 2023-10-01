@@ -20,7 +20,7 @@ export default class Menu extends State {
 
 		let self = this;
 		startButton.onClick(function () {
-			self.gotoState = StatesEnum.LOBBY;
+			self.gotoState = StatesEnum.GAME;
 		});
 
 		let restartButton = this.overlayRendering.getNewButton();

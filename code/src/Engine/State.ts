@@ -2,6 +2,7 @@ export enum StatesEnum {
 	STAY,
 	LOADINGSCREEN,
 	MAINMENU,
+	PRELOBBY,
 	LOBBY,
 	OPTIONS,
 	CONTROLS,

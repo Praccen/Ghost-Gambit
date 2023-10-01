@@ -263,7 +263,10 @@ export default class ObjectPlacer {
 			this.ecsManager.addComponent(entity, new CandleComponent());
 
 			let nrOfFireParticles = 4;
-			let fireParticles = this.scene.getNewParticleSpawner("Assets/textures/fire.png", nrOfFireParticles);
+			let fireParticles = this.scene.getNewParticleSpawner(
+				"Assets/textures/fire.png",
+				nrOfFireParticles
+			);
 			for (let i = 0; i < nrOfFireParticles; i++) {
 				let dir = new Vec3([
 					Math.random() * 2.0 - 1.0,
@@ -290,7 +293,9 @@ export default class ObjectPlacer {
 			fireParticleComp.lifeTime = 0.4;
 			this.ecsManager.addComponent(entity, fireParticleComp);
 
-			let pointLightComp = new PointLightComponent(this.scene.getNewPointLight());
+			let pointLightComp = new PointLightComponent(
+				this.scene.getNewPointLight()
+			);
 			pointLightComp.pointLight.colour.setValues(0.2, 0.06, 0.0);
 			this.ecsManager.addComponent(entity, pointLightComp);
 		}
@@ -467,6 +472,19 @@ export default class ObjectPlacer {
 
 	deleteCurrentObject() {
 		if (this.currentlyEditingEntityId != undefined) {
+			let entity = this.ecsManager.getEntity(this.currentlyEditingEntityId);
+
+			if (entity != undefined) {
+				// Remove graphics bundle from scene
+				// TODO: Make this automatic when entity is removed
+				let graphicsComponent = entity.getComponent(
+					ComponentTypeEnum.GRAPHICS
+				) as GraphicsComponent;
+				if (graphicsComponent != undefined) {
+					this.scene.deleteGraphicsBundle(graphicsComponent.object);
+				}
+			}
+
 			this.ecsManager.removeEntity(this.currentlyEditingEntityId);
 			if (this.entityPlacements.delete(this.currentlyEditingEntityId)) {
 				// Mark that we have changed something
