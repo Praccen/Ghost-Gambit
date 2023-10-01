@@ -440,19 +440,6 @@ export default class ObjectPlacer {
 
 	deleteCurrentObject() {
 		if (this.currentlyEditingEntityId != undefined) {
-			let entity = this.ecsManager.getEntity(this.currentlyEditingEntityId);
-
-			if (entity != undefined) {
-				// Remove graphics bundle from scene
-				// TODO: Make this automatic when entity is removed
-				let graphicsComponent = entity.getComponent(
-					ComponentTypeEnum.GRAPHICS
-				) as GraphicsComponent;
-				if (graphicsComponent != undefined) {
-					this.scene.deleteGraphicsBundle(graphicsComponent.object);
-				}
-			}
-
 			this.ecsManager.removeEntity(this.currentlyEditingEntityId);
 			if (this.entityPlacements.delete(this.currentlyEditingEntityId)) {
 				// Mark that we have changed something
