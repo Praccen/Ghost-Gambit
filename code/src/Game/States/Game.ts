@@ -29,7 +29,7 @@ export default class Game extends State {
 	ecsManager: ECSManager;
 	stateAccessible: StateAccessible;
 
-	gameStartTime: Date;
+	gameStartTime: number;
 
 	private overlayRendering: OverlayRendering;
 	private menuButton: Button;
@@ -98,7 +98,7 @@ export default class Game extends State {
 
 		this.createMapEntity();
 
-		this.gameStartTime = new Date();
+		this.gameStartTime = Date.now();
 		if (this.client == undefined) {
 			this.client = new Client(this);
 		} else {

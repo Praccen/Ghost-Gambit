@@ -65,7 +65,7 @@ export default abstract class Character {
 	abstract accend();
 	abstract character_specific_accended_operations(number);
 
-	ascendTime: Date;
+	ascendTime: number;
 
 	constructor(
 		rendering: Rendering,

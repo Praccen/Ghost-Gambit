@@ -62,19 +62,19 @@ export default class LobbyState extends State {
 			div.remove();
 		}
 		let playersMap = new Map<string, number>();
-		let startTime = Game.getInstanceNoSa().allCharacterDict.player.ascendTime;
+		let startTime = Game.getInstanceNoSa().gameStartTime;
 
 		if (!this.sa.localGame) {
 			playersMap.set(
 				"Player_" + Game.getInstanceNoSa().client.uid + "(You)",
-				Game.getInstanceNoSa().allCharacterDict.player.ascendTime.getTime() -
-					startTime.getTime()
+				Game.getInstanceNoSa().allCharacterDict.player.ascendTime -
+					startTime
 			);
 			Game.getInstanceNoSa().client.bodyEntities.forEach(
 				(value: OpponentCharacter, key: string) => {
 					playersMap.set(
 						"Player_" + key,
-						value.ascendTime.getTime() - startTime.getTime()
+						value.ascendTime - startTime
 					);
 				}
 			);
@@ -82,7 +82,7 @@ export default class LobbyState extends State {
 				[...playersMap.entries()].sort((a, b) => a[1] - b[1])
 			);
 			mapSort.forEach((value: number, key: string) => {
-				this.addParticipant(key + " Time: " + value + " Seconds");
+				this.addParticipant(key + " Time: " + Math.round(value) * 0.001 + " Seconds");
 			});
 		}
 	}

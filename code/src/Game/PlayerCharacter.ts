@@ -17,7 +17,7 @@ export default class PlayerCharacter extends Character {
 	}
 
 	accend() {
-		this.ascendTime = new Date();
+		this.ascendTime = Date.now();
 		console.log("Player ascending!");
 		this.audioPlayer.stopAll();
 		this.audioPlayer.playAudio("success_1", false);

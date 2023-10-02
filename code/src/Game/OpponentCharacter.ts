@@ -53,7 +53,7 @@ export default class OpponentCharacter extends Character {
 
 	accend() {
 		this.is_accending = true;
-		this.ascendTime = new Date();
+		this.ascendTime = Date.now();
 		console.log("Player ascending!");
 		let dist = this.get_dist_to_player();
 		if (dist < this.audioThreshholdDist) {
