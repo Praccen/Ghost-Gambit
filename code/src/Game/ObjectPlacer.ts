@@ -297,6 +297,7 @@ export default class ObjectPlacer {
 				this.scene.getNewPointLight()
 			);
 			pointLightComp.pointLight.colour.setValues(0.2, 0.06, 0.0);
+			pointLightComp.posOffset.y = 0.2;
 			this.ecsManager.addComponent(entity, pointLightComp);
 		}
 
