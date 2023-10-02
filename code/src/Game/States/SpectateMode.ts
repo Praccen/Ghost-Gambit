@@ -1,14 +1,14 @@
 import State, { StatesEnum } from "../../Engine/State";
-import { input, options, StateAccessible } from "../GameMachine";
+import { input } from "../GameMachine";
 import Game from "./Game";
 import Vec2 from "../../Engine/Maths/Vec2";
 import Vec3 from "../../Engine/Maths/Vec3";
-import { MousePicking } from "../../Engine/Maths/MousePicking";
-import DebugMenu from "./DebugMenu";
-import { WebUtils } from "../../Engine/Utils/WebUtils";
+import { OverlayRendering } from "../../Engine/Rendering/OverlayRendering";
+import { gl } from "../../main";
 
 export default class SpectateMode extends State {
 	private game: Game;
+	private overlay: OverlayRendering;
 	private lastMousePos: Vec2;
 
 	constructor(game: Game) {
@@ -19,11 +19,35 @@ export default class SpectateMode extends State {
 			input.mousePosition.x,
 			input.mousePosition.y,
 		]);
+
+		this.overlay = new OverlayRendering();
+
+		let menubutton = this.overlay.getNewButton();
+		menubutton.position.x = 0.9;
+		menubutton.position.y = 0.0;
+		menubutton.textSize = 40;
+		menubutton.getInputElement().style.backgroundColor = "transparent";
+		menubutton.getInputElement().style.borderColor = "transparent";
+		menubutton.textString = "Menu";
+
+		let self = this;
+		menubutton.onClick(function () {
+			self.gotoState = StatesEnum.MAINMENU;
+		});
 	}
 
 	async init() {
 		super.init();
 		this.game.rendering.camera.setPosition(0, 0, 0);
+		this.overlay.show();
+	}
+
+	reset() {
+		this.overlay.hide();
+		gl.clearColor(0.0, 0.0, 0.0, 1.0);
+		gl.clear(gl.COLOR_BUFFER_BIT);
+		input.touchUsed = false;
+		input.drawTouchControls();
 	}
 
 	update(dt: number) {
@@ -119,6 +143,7 @@ export default class SpectateMode extends State {
 
 	draw() {
 		this.game.rendering.draw();
+		this.overlay.draw();
 		input.drawTouchControls();
 	}
 }
