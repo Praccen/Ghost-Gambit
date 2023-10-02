@@ -269,7 +269,7 @@ export default class ObjectPlacer {
 
 		if (type == "Candle") {
 			this.ecsManager.addComponent(entity, new VicinityTriggerComponent());
-			this.ecsManager.addComponent(entity, new CandleComponent());
+			this.ecsManager.addComponent(entity, new CandleComponent(true));
 
 			let nrOfFireParticles = 4;
 			let fireParticles = this.scene.getNewParticleSpawner(
@@ -377,6 +377,9 @@ export default class ObjectPlacer {
 			fireParticleComp.offset.y = 0.6;
 			this.ecsManager.addComponent(entity, fireParticleComp);
 
+			this.ecsManager.addComponent(entity, new CandleComponent(false));
+			this.ecsManager.addComponent(entity, new VicinityTriggerComponent());
+
 			let pointLightComp = new PointLightComponent(
 				this.scene.getNewPointLight()
 			);
@@ -384,6 +387,7 @@ export default class ObjectPlacer {
 			// TODO: Maybe change this to an icy blue color to not confuse with the candles
 			pointLightComp.pointLight.colour.setValues(0.5, 0.15, 0.0);
 			this.ecsManager.addComponent(entity, pointLightComp);
+			this.candlesList.push(entity);
 		}
 
 		if (!placement.addCollision) {

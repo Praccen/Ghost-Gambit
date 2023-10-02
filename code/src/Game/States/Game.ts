@@ -350,20 +350,6 @@ export default class Game extends State {
 			bot.update(dt);
 		}
 
-		if (input.keys["P"]) {
-			this.playerCharacter.respawn();
-		}
-
-		if (input.keys["O"]) {
-			if (!this.oWasPressed) {
-				this.gotoState = StatesEnum.DEBUGMODE;
-				WebUtils.SetCookie("debug", "true");
-			}
-			this.oWasPressed = true;
-		} else {
-			this.oWasPressed = false;
-		}
-
 		this.ecsManager.update(dt);
 	}
 

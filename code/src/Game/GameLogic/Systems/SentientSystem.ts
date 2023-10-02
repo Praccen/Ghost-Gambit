@@ -5,6 +5,7 @@ import GravestoneComponent from "../Components/GravestoneComponent";
 import PlayerCharacter from "../../PlayerCharacter";
 import SentientComponent from "../Components/SentientComponent";
 import VicinityTriggerComponent from "../Components/VicinityTriggerComponent";
+import CandleComponent from "../Components/CandleComponent";
 
 export default class SentientSystem extends System {
 	private ecsManager: ECSManager;
@@ -49,7 +50,9 @@ export default class SentientSystem extends System {
 					!sentientComponent.character.is_lit &&
 					vicinityEntity.hasComponent(ComponentTypeEnum.CANDLE)
 				) {
-					this.ecsManager.removeEntity(vicinityEntity.id);
+					if ((vicinityEntity.getComponent(ComponentTypeEnum.CANDLE) as CandleComponent).consumable) {
+						this.ecsManager.removeEntity(vicinityEntity.id);
+					}
 					sentientComponent.character.light_up();
 					break;
 				}

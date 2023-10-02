@@ -102,13 +102,7 @@ export default class PlayerCharacter extends Character {
 	}
 
 	character_specific_controll() {
-		if (input.keys["K"]) {
-			this.light_up();
-		}
-
-		if (input.keys["L"]) {
-			this.extinguish();
-		}
+		
 	}
 
 	character_specific_camera_operations(dt: number) {
