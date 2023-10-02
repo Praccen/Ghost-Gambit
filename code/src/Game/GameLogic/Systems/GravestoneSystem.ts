@@ -23,7 +23,10 @@ export default class GravestoneSystem extends System {
 					ComponentTypeEnum.PARTICLESPAWNER
 				) as ParticleSpawnerComponent;
 			if (particleSpawnerComponent != undefined) {
-				if (gravestoneComponent.claimed || !Game.getInstanceNoSa().unlockedGraves) {
+				if (
+					gravestoneComponent.claimed ||
+					!Game.getInstanceNoSa().unlockedGraves
+				) {
 					particleSpawnerComponent.particleSpawner.fadePerSecond = 100000.0;
 				} else if (Game.getInstanceNoSa().unlockedGraves) {
 					particleSpawnerComponent.particleSpawner.fadePerSecond = 0.5;

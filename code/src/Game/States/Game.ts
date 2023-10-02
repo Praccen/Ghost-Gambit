@@ -342,8 +342,7 @@ export default class Game extends State {
 		this.playerCharacter.update(dt);
 		if (this.playerCharacter.is_lit) {
 			this.unlockedGraves = true;
-		}
-		else {
+		} else {
 			this.unlockedGraves = false;
 		}
 

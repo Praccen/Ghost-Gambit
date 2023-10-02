@@ -112,11 +112,15 @@ export default class OpponentCharacter extends Character {
 			let itemEnt = item.bodyEntity;
 			if (itemEnt != null && !itemEnt.accended && !itemEnt.is_accending) {
 				let itemPos = ECSUtils.CalculatePosition(itemEnt);
-				let rVecToItem = new Vec3(itemPos.subtract(bot_pos.clone()));
-				let lenToItem = rVecToItem.len();
-				if (lenToItem < closest_dist && item.is_lit) {
-					closest_dist = lenToItem;
-					closestRVecToItem = rVecToItem;
+				if ((itemPos! = null)) {
+					let rVecToItem = new Vec3(itemPos.subtract(bot_pos.clone()));
+					let lenToItem = rVecToItem.len();
+					if (lenToItem < closest_dist && item.is_lit) {
+						closest_dist = lenToItem;
+						closestRVecToItem = rVecToItem;
+					}
+				} else {
+					return closestRVecToItem;
 				}
 			}
 		}
