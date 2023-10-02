@@ -40,8 +40,6 @@ export default class Game extends State {
 	private static instance: Game;
 
 	private playerCharacter: PlayerCharacter;
-
-	private opponentCharacterList: Array<OpponentCharacter>;
 	num_bots: number;
 
 	allCharacterDict: {
@@ -74,11 +72,9 @@ export default class Game extends State {
 		);
 		this.oWasPressed = true;
 
-		this.opponentCharacterList = [];
-
 		this.allCharacterDict = {
 			player: this.playerCharacter,
-			bots: this.opponentCharacterList,
+			bots: new Array<OpponentCharacter>(),
 		};
 		this.num_bots = 0;
 		this.unlockedGraves = false;
@@ -188,8 +184,7 @@ export default class Game extends State {
 		await this.objectPlacer.load(this.scene, this.ecsManager);
 
 		await this.playerCharacter.init();
-
-		this.opponentCharacterList.length = 0;
+		
 		this.num_bots = 0;
 
 		this.unlockedGraves = false;
@@ -308,9 +303,9 @@ export default class Game extends State {
 				true,
 				new Vec3([Math.random() * 20, 1.5, Math.random() * 20])
 			);
-			this.opponentCharacterList.push(bot);
+			this.allCharacterDict.bots.push(bot);
 		}
-		for (const bot of this.opponentCharacterList) {
+		for (const bot of this.allCharacterDict.bots) {
 			await bot.init();
 		}
 	}
@@ -319,7 +314,7 @@ export default class Game extends State {
 		if (this.playerCharacter.accended) {
 			this.gotoState = StatesEnum.SPECTATEMODE;
 			let allInHeaven = true;
-			for (const opponent of this.opponentCharacterList) {
+			for (const opponent of this.allCharacterDict.bots) {
 				if (!opponent.accended) {
 					allInHeaven = false;
 				}
@@ -333,7 +328,7 @@ export default class Game extends State {
 			this.unlockedGraves = true;
 		}
 
-		for (const bot of this.opponentCharacterList) {
+		for (const bot of this.allCharacterDict.bots) {
 			bot.update(dt);
 		}
 
