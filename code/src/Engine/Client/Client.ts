@@ -78,13 +78,22 @@ export class Client {
 				break;
 			case "JOI":
 				console.log("Client connected: " + msg.id);
+				// Send pos to joind clients
+				let posComp = <PositionParentComponent>(
+					this.game.allCharacterDict.player.bodyEntity.getComponent(
+						ComponentTypeEnum.POSITIONPARENT
+					)
+				);
+				if (posComp) {
+					this.sendMove(posComp.position, posComp.rotation);
+				}
 				const newEnt = new OpponentCharacter(
 					this.game.rendering,
 					this.game.ecsManager,
 					this.game.stateAccessible.audioPlayer,
 					"Ghost Character",
 					this.game.allCharacterDict,
-					new Vec3([Math.random() * 20, 1.5, Math.random() * 20])
+					new Vec3([0.0, -10.0, 0.0])
 				);
 				newEnt.init();
 				this.bodyEntities.set(msg.id, newEnt);

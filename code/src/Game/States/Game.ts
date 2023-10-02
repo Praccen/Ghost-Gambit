@@ -107,12 +107,20 @@ export default class Game extends State {
 		dirLight.direction.setValues(0.2, -0.4, -0.7);
 		dirLight.colour.setValues(0.1, 0.1, 0.4);
 
+		// 1.4, -3.8, 3
+		// -1.3, -3.9, -6
+		let start_pos = new Vec3([
+			Math.random() * 2 - 1,
+			1.5,
+			Math.random() * 9 - 6,
+		]);
 		this.playerCharacter = new PlayerCharacter(
 			this.rendering,
 			this.ecsManager,
 			this.stateAccessible.audioPlayer,
 			"Ghost Character",
-			this.allCharacterDict
+			this.allCharacterDict,
+			start_pos
 		);
 
 		this.allCharacterDict.player = this.playerCharacter;

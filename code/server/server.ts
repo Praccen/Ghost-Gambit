@@ -137,7 +137,7 @@ wss.on("connection", (ws) => {
 				if (clients.get(ws)) {
 					console.log("Someone left room! " + clients.get(ws).id);
 				}
-				if (roomLeaveName != "NOT_VALID") {
+				if (roomLeaveName != "NOT_VALID" && rooms.get(roomLeaveName)) {
 					// Remove player from room
 					rooms
 						.get(roomLeaveName)
