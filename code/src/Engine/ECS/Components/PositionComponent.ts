@@ -5,12 +5,14 @@ import { OverlayRendering } from "../../Rendering/OverlayRendering";
 import ObjectPlacer from "../../../Game/ObjectPlacer";
 import GuiObject from "../../GUI/GuiObject";
 import EditText from "../../GUI/Text/EditText";
+import Quaternion from "quaternion";
 
 export default class PositionComponent extends Component {
 	position: Vec3;
 	rotation: Vec3;
 	scale: Vec3;
 	origin: Vec3;
+	rotationOrder: string;
 
 	matrix: Matrix4;
 
@@ -23,6 +25,7 @@ export default class PositionComponent extends Component {
 		this.rotation = new Vec3();
 		this.scale = new Vec3([1.0, 1.0, 1.0]);
 		this.origin = new Vec3();
+		this.rotationOrder = "XYZ";
 
 		this.matrix = new Matrix4(null);
 
@@ -32,13 +35,19 @@ export default class PositionComponent extends Component {
 	calculateMatrix(matrix: Matrix4) {
 		matrix.translate(this.position.x, this.position.y, this.position.z);
 		if (this.rotation.length2() > 0.0000001) {
-			let normRotation = new Vec3(this.rotation);
-			normRotation.normalize();
+			let quat = Quaternion.fromEulerLogical(
+				this.rotation.x * (Math.PI / 180),
+				this.rotation.y * (Math.PI / 180),
+				this.rotation.z * (Math.PI / 180),
+				this.rotationOrder
+			);
+			let axisAngle = quat.toAxisAngle();
+
 			matrix.rotate(
-				this.rotation.len(),
-				normRotation.x,
-				normRotation.y,
-				normRotation.z
+				axisAngle[1] * (180 / Math.PI),
+				axisAngle[0][0],
+				axisAngle[0][1],
+				axisAngle[0][2]
 			);
 		}
 		matrix.scale(this.scale.x, this.scale.y, this.scale.z);
@@ -56,9 +65,9 @@ export default class PositionComponent extends Component {
 			propEditText.textSize = 20;
 			propEditText.scaleWithWindow = true;
 			propEditText.getInputElement().value = vec[index].toString();
-			propEditText.getInputElement().onchange = (ev) => {
+			propEditText.onChange((ev) => {
 				vec[index] = parseFloat(propEditText.getInputElement().value);
-			};
+			});
 			objectPlacer.makeCheckpoint();
 			this.guiObjects.set(label, propEditText);
 		};

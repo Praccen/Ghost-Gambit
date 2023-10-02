@@ -23,6 +23,8 @@ export default class DebugMenu {
 	private entitiesBox: Div;
 	private movingEntitiesBox: boolean;
 
+	private hidden: boolean;
+
 	mouseOverGuiElement: boolean;
 	actionText: TextObject2D;
 
@@ -120,10 +122,13 @@ export default class DebugMenu {
 		entitiesText.getElement().onmousedown = () => {
 			this.movingEntitiesBox = true;
 		};
+
+		this.hidden = true;
 	}
 
 	async init() {
 		this.overlay.show();
+		this.hidden = false;
 
 		// Force the entities box to reload.
 		let length = this.entitiesBox.children.length;
@@ -151,27 +156,6 @@ export default class DebugMenu {
 			compPropDiv.setHidden(true);
 		}
 	}
-
-	// updateEntityBoxComponents(entityId: number) {
-	// 	for (let i = 1; i < this.entitiesBox.children.length; i += 2) {
-	// 		if (this.entitiesBox.children[i].textString == entityId.toString()) {
-	// 			let hiddenProps: boolean[] = []; // keep track of what was hidden and not
-	// 			for (let child of (<Div>this.entitiesBox.children[i+1]).children) {
-	// 				hiddenProps.push(child.getHidden()); // store hidden state
-	// 				child.remove();
-	// 			}
-	// 			(<Div>this.entitiesBox.children[i+1]).children.length = 0;
-	// 			const entity = this.game.ecsManager.getEntity(entityId);
-
-	// 			this.addComponentButtons(entity, (<Div>this.entitiesBox.children[i+1]));
-
-	// 			// Reapply hidden states
-	// 			for (let child of (<Div>this.entitiesBox.children[i+1]).children) {
-	// 				child.setHidden(hiddenProps.shift());
-	// 			}
-	// 		}
-	// 	}
-	// }
 
 	update(dt: number) {
 		// Moving of boxes
@@ -217,7 +201,9 @@ export default class DebugMenu {
 						key,
 						new Vec3(),
 						new Vec3([1.0, 1.0, 1.0]),
-						new Vec3([0.0, 0.0, 0.0])
+						new Vec3([0.0, 0.0, 0.0]),
+						new Vec3(),
+						"XYZ"
 					);
 				});
 			});
@@ -246,9 +232,10 @@ export default class DebugMenu {
 				componentsDiv.getElement().style.paddingLeft = "10px";
 				componentsDiv.setHidden(true);
 
-				this.addComponentButtons(e, componentsDiv);
-
 				entityBtn.onClick(() => {
+					if (componentsDiv.children.length == 0) {
+						this.addComponentButtons(e, componentsDiv);
+					}
 					componentsDiv.toggleHidden();
 					this.game.objectPlacer.selectNewObjectFromEntityId(e.id);
 				});
@@ -271,6 +258,17 @@ export default class DebugMenu {
 
 	reset() {
 		this.overlay.hide();
+		this.hidden = true;
+	}
+
+	toggleHidden() {
+		if (this.hidden) {
+			this.overlay.show();
+			this.hidden = false;
+		} else {
+			this.overlay.hide();
+			this.hidden = true;
+		}
 	}
 
 	draw() {

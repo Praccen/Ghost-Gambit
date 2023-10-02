@@ -2,11 +2,15 @@ export enum StatesEnum {
 	STAY,
 	LOADINGSCREEN,
 	MAINMENU,
+	PRELOBBY,
+	LOBBY,
 	OPTIONS,
 	CONTROLS,
 	GAME,
 	ENDSCREEN,
 	DEBUGMODE,
+	SPECTATEMODE,
+	SCOREMODE,
 }
 
 export default class State {

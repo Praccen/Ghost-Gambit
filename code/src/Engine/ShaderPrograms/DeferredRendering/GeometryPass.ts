@@ -49,7 +49,7 @@ struct Material {
 };
 
 uniform Material material;
-uniform vec3 baseColor;
+uniform vec3 emissionColor;
 
 mat4 thresholdMatrix = mat4(
 	1.0, 9.0, 3.0, 11.0,
@@ -66,14 +66,16 @@ void main() {
         discard;
     }
 
+	float emissionValue = texture(material.emission, texCoords).r;
+	
 	gColourSpec.rgb = texture(material.diffuse, texCoords).rgb;
-	if (baseColor.r > 0.0 || baseColor.g > 0.0 || baseColor.b > 0.0) {
-		gColourSpec.rgb = baseColor;
+	if ((emissionColor.r > 0.0 || emissionColor.g > 0.0 || emissionColor.b > 0.0) && emissionValue > 0.0) {
+		gColourSpec.rgb = emissionColor;
 	}
     gColourSpec.a = texture(material.specular, texCoords).r;
 	
 	gPositionEmission.rgb = fragPos;
-	gPositionEmission.a = texture(material.emission, texCoords).r;
+	gPositionEmission.a = emissionValue;
 	gNormal = vec4(fragNormal, 1.0);
 }`;
 
@@ -91,7 +93,7 @@ class GeometryPass extends ShaderProgram {
 		this.setUniformLocation("material.specular");
 		this.setUniformLocation("material.emission");
 
-		this.setUniformLocation("baseColor");
+		this.setUniformLocation("emissionColor");
 
 		gl.uniform1i(this.getUniformLocation("material.diffuse")[0], 0);
 		gl.uniform1i(this.getUniformLocation("material.specular")[0], 1);

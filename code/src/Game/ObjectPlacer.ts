@@ -1,4 +1,5 @@
 import MeshStore from "../Engine/AssetHandling/MeshStore";
+import TextureStore from "../Engine/AssetHandling/TextureStore";
 import BoundingBoxComponent from "../Engine/ECS/Components/BoundingBoxComponent";
 import CollisionComponent from "../Engine/ECS/Components/CollisionComponent";
 import {
@@ -7,15 +8,25 @@ import {
 } from "../Engine/ECS/Components/Component";
 import GraphicsComponent from "../Engine/ECS/Components/GraphicsComponent";
 import MeshCollisionComponent from "../Engine/ECS/Components/MeshCollisionComponent";
+import MovementComponent from "../Engine/ECS/Components/MovementComponent";
+import ParticleSpawnerComponent from "../Engine/ECS/Components/ParticleSpawnerComponent";
+import PointLightComponent from "../Engine/ECS/Components/PointLightComponent";
 import PositionComponent from "../Engine/ECS/Components/PositionComponent";
+import PositionParentComponent from "../Engine/ECS/Components/PositionParentComponent";
 import ECSManager from "../Engine/ECS/ECSManager";
 import Entity from "../Engine/ECS/Entity";
 import Vec3 from "../Engine/Maths/Vec3";
+import ParticleSpawner from "../Engine/Objects/ParticleSpawner";
 import { IntersectionTester } from "../Engine/Physics/IntersectionTester";
 import Ray from "../Engine/Physics/Shapes/Ray";
 import Triangle from "../Engine/Physics/Shapes/Triangle";
 import Scene from "../Engine/Rendering/Scene";
 import { WebUtils } from "../Engine/Utils/WebUtils";
+import Character from "./Character";
+import CandleComponent from "./GameLogic/Components/CandleComponent";
+import GravestoneComponent from "./GameLogic/Components/GravestoneComponent";
+import SentientComponent from "./GameLogic/Components/SentientComponent";
+import VicinityTriggerComponent from "./GameLogic/Components/VicinityTriggerComponent";
 import Game from "./States/Game";
 
 class Placement {
@@ -24,17 +35,20 @@ class Placement {
 	specularTexturePath: string;
 	sizeMultiplier: number;
 	addCollision: boolean;
+	saveToTransforms: boolean;
 
 	constructor(
 		modelPath: string,
 		diffuseTexturePath: string,
 		specularTexturePath: string,
-		addCollision: boolean = true
+		addCollision: boolean = true,
+		saveToTransform: boolean = true
 	) {
 		this.modelPath = modelPath;
 		this.diffuseTexturePath = diffuseTexturePath;
 		this.specularTexturePath = specularTexturePath;
 		this.addCollision = addCollision;
+		this.saveToTransforms = saveToTransform;
 	}
 }
 
@@ -44,17 +58,28 @@ export default class ObjectPlacer {
 	private scene: Scene;
 	private ecsManager: ECSManager;
 	private meshStore: MeshStore;
+	private textureStore: TextureStore;
 	private downloadNeeded: boolean;
 
 	currentlyEditingEntityId: number;
 
 	game: Game;
+	candlesList: Entity[];
+	graveStoneList: Entity[];
 
-	constructor(meshStore: MeshStore) {
+	constructor(
+		meshStore: MeshStore,
+		textureStore: TextureStore,
+		candlesList: Array<Entity>,
+		graveStoneList: Array<Entity>
+	) {
 		this.meshStore = meshStore;
+		this.textureStore = textureStore;
 		this.placements = new Map<string, Placement>();
 		this.entityPlacements = new Map<number, string>();
 		this.downloadNeeded = false;
+		this.candlesList = candlesList;
+		this.graveStoneList = graveStoneList;
 	}
 
 	async load(scene: Scene, ecsManager: ECSManager) {
@@ -96,12 +121,15 @@ export default class ObjectPlacer {
 					if (t.startsWith("Placement:")) {
 						currentPlacementType = t.substring("Placement:".length);
 					} else {
-						let [p, s, r] = t.split("|");
+						let [p, s, r, o, ro] = t.split("|");
 						this.placeObject(
 							currentPlacementType,
 							new Vec3(p.split(",").map((n) => parseFloat(n))),
 							new Vec3(s.split(",").map((n) => parseFloat(n))),
-							new Vec3(r.split(",").map((n) => parseFloat(n)))
+							new Vec3(r.split(",").map((n) => parseFloat(n))),
+							new Vec3(o.split(",").map((n) => parseFloat(n))),
+							ro,
+							false
 						);
 					}
 				}
@@ -127,11 +155,82 @@ export default class ObjectPlacer {
 		return objectName;
 	}
 
+	placePlayer(
+		position: Vec3,
+		size: Vec3,
+		rotation: Vec3,
+		character: Character
+	): [Entity, Entity] {
+		let bodyMesh = this.scene.getNewMesh(
+			"Assets/objs/CharacterGhost.obj",
+			"Assets/textures/characterTextureAlbedo.jpg",
+			"Assets/textures/black.png"
+		);
+		bodyMesh.emission = this.textureStore.getTexture(
+			"Assets/textures/characterTextureEmission.jpg"
+		);
+		bodyMesh.emissionColor.setValues(0.0, 1.0, 0.3);
+
+		let groupPositionComp = new PositionParentComponent();
+
+		groupPositionComp.position.deepAssign(position);
+		groupPositionComp.scale.deepAssign(size);
+		groupPositionComp.rotation.deepAssign(rotation);
+
+		let bodyEntity = this.ecsManager.createEntity();
+		this.ecsManager.addComponent(bodyEntity, new GraphicsComponent(bodyMesh));
+		let posComp = new PositionComponent();
+		posComp.rotation.y = 90.0;
+		this.ecsManager.addComponent(bodyEntity, posComp);
+		this.ecsManager.addComponent(bodyEntity, groupPositionComp);
+
+		let boundingBoxComp = new BoundingBoxComponent();
+		boundingBoxComp.setup(bodyMesh.graphicsObject);
+		boundingBoxComp.updateTransformMatrix(groupPositionComp.matrix);
+		this.ecsManager.addComponent(bodyEntity, boundingBoxComp);
+		this.ecsManager.addComponent(bodyEntity, new CollisionComponent());
+		let movComp = new MovementComponent();
+		movComp.acceleration = 20.0;
+		movComp.drag = 10.0;
+		this.ecsManager.addComponent(bodyEntity, movComp);
+		this.ecsManager.addComponent(bodyEntity, new VicinityTriggerComponent(1.5));
+		this.ecsManager.addComponent(bodyEntity, new SentientComponent(character));
+
+		// Fire
+		let fireEntity = this.ecsManager.createEntity();
+
+		let nrOfFireParticles = 0;
+		let fireParticles = this.scene.getNewParticleSpawner(
+			"Assets/textures/fire.png",
+			nrOfFireParticles
+		);
+		fireParticles.sizeChangePerSecond = -0.3;
+		fireParticles.fadePerSecond = 0.7;
+
+		let fireParticleComp = new ParticleSpawnerComponent(fireParticles);
+		fireParticleComp.lifeTime = 0.4;
+		this.ecsManager.addComponent(fireEntity, fireParticleComp);
+
+		let firePosComp = new PositionComponent();
+		firePosComp.origin.y = -1.15 * 4.0;
+		this.ecsManager.addComponent(fireEntity, firePosComp);
+		this.ecsManager.addComponent(fireEntity, groupPositionComp);
+
+		let pointLightComp = new PointLightComponent(this.scene.getNewPointLight());
+		pointLightComp.pointLight.colour.setValues(0.0, 0.0, 0.0);
+		this.ecsManager.addComponent(fireEntity, pointLightComp);
+
+		return [bodyEntity, fireEntity];
+	}
+
 	placeObject(
 		type: string,
 		position: Vec3,
 		size: Vec3,
-		rotation: Vec3
+		rotation: Vec3,
+		origin: Vec3,
+		rotationOrder: string,
+		triggerDownloadNeeded: boolean = true
 	): Entity {
 		let placement = this.placements.get(type);
 		if (placement == undefined) {
@@ -139,7 +238,9 @@ export default class ObjectPlacer {
 		}
 
 		// Mark that we have changed something
-		this.downloadNeeded = true;
+		if (triggerDownloadNeeded && placement.saveToTransforms) {
+			this.downloadNeeded = true;
+		}
 
 		let entity = this.ecsManager.createEntity();
 		this.currentlyEditingEntityId = entity.id;
@@ -157,12 +258,137 @@ export default class ObjectPlacer {
 		posComp.position.deepAssign(position);
 		posComp.scale.deepAssign(size);
 		posComp.rotation.deepAssign(rotation);
+		posComp.origin.deepAssign(origin);
+		posComp.rotationOrder = rotationOrder;
 		this.ecsManager.addComponent(entity, posComp);
 
 		let boundingBoxComp = new BoundingBoxComponent();
 		boundingBoxComp.setup(mesh.graphicsObject);
 		boundingBoxComp.updateTransformMatrix(mesh.modelMatrix);
 		this.ecsManager.addComponent(entity, boundingBoxComp);
+
+		if (type == "Candle") {
+			this.ecsManager.addComponent(entity, new VicinityTriggerComponent());
+			this.ecsManager.addComponent(entity, new CandleComponent(true));
+
+			let nrOfFireParticles = 4;
+			let fireParticles = this.scene.getNewParticleSpawner(
+				"Assets/textures/fire.png",
+				nrOfFireParticles
+			);
+			for (let i = 0; i < nrOfFireParticles; i++) {
+				let dir = new Vec3([
+					Math.random() * 2.0 - 1.0,
+					1.0,
+					Math.random() * 2.0 - 1.0,
+				]);
+				fireParticles.setParticleData(
+					i,
+					new Vec3(),
+					0.15,
+					dir,
+					new Vec3(dir)
+						.flip()
+						.multiply(0.65)
+						.setValues(null, 0.0, null)
+						.add(new Vec3([0.0, 0.5, 0.0]))
+				);
+			}
+			fireParticles.sizeChangePerSecond = -0.3;
+			fireParticles.fadePerSecond = 0.7;
+
+			let fireParticleComp = new ParticleSpawnerComponent(fireParticles);
+			fireParticleComp.offset.setValues(0.0, 0.3, 0.0);
+			fireParticleComp.lifeTime = 0.4;
+			this.ecsManager.addComponent(entity, fireParticleComp);
+
+			let pointLightComp = new PointLightComponent(
+				this.scene.getNewPointLight()
+			);
+			pointLightComp.pointLight.colour.setValues(0.2, 0.06, 0.0);
+			pointLightComp.posOffset.y = 0.2;
+			this.ecsManager.addComponent(entity, pointLightComp);
+			this.candlesList.push(entity);
+		}
+
+		if (type == "Gravestone 1" || type == "Gravestone 2") {
+			this.ecsManager.addComponent(entity, new VicinityTriggerComponent());
+			this.ecsManager.addComponent(entity, new GravestoneComponent(entity));
+
+			let nrOfParticles = 15;
+			let graveParticles = this.scene.getNewParticleSpawner(
+				"Assets/textures/gravestoneParticle.png",
+				nrOfParticles
+			);
+			for (let i = 0; i < nrOfParticles; i++) {
+				let dir = new Vec3([
+					Math.random() * 4.0 - 2.0,
+					1.0,
+					Math.random() * 4.0 - 2.0,
+				]);
+				graveParticles.setParticleData(
+					i,
+					new Vec3(),
+					0.35,
+					dir,
+					new Vec3([0.0, 0.5, 0.0])
+				);
+			}
+			graveParticles.sizeChangePerSecond = -0.1;
+			graveParticles.fadePerSecond = 100000.0;
+
+			let particleComp = new ParticleSpawnerComponent(graveParticles);
+			particleComp.offset.setValues(0.0, 0.3, 0.0);
+			particleComp.lifeTime = 2.0;
+			this.ecsManager.addComponent(entity, particleComp);
+			this.graveStoneList.push(entity);
+		}
+
+		if (type == "Fire place") {
+			let nrOfFireParticles = 6;
+			// TODO: Maybe change this to an icy blue color to not confuse with the candles
+			let fireParticles = this.scene.getNewParticleSpawner(
+				"Assets/textures/fire.png",
+				nrOfFireParticles
+			);
+			for (let i = 0; i < nrOfFireParticles; i++) {
+				let dir = new Vec3([
+					Math.random() * 5.0 - 2.5,
+					1.0,
+					Math.random() * 5.0 - 2.5,
+				]);
+				fireParticles.setParticleData(
+					i,
+					new Vec3(),
+					0.75,
+					dir,
+					new Vec3(dir)
+						.flip()
+						.multiply(0.65)
+						.setValues(null, 0.0, null)
+						.add(new Vec3([0.0, 0.5, 0.0]))
+				);
+			}
+			fireParticles.sizeChangePerSecond = -0.15;
+			fireParticles.fadePerSecond = 0.5;
+
+			let fireParticleComp = new ParticleSpawnerComponent(fireParticles);
+			fireParticleComp.lifeTime = 1.5;
+			fireParticleComp.offset.y = 0.6;
+			this.ecsManager.addComponent(entity, fireParticleComp);
+
+			this.ecsManager.addComponent(entity, new CandleComponent(false));
+			this.ecsManager.addComponent(entity, new VicinityTriggerComponent());
+
+			let pointLightComp = new PointLightComponent(
+				this.scene.getNewPointLight()
+			);
+			pointLightComp.posOffset.y = 0.7;
+			// TODO: Maybe change this to an icy blue color to not confuse with the candles
+			pointLightComp.pointLight.colour.setValues(0.5, 0.15, 0.0);
+			this.ecsManager.addComponent(entity, pointLightComp);
+			this.candlesList.push(entity);
+		}
 
 		if (!placement.addCollision) {
 			return entity;
@@ -277,7 +503,7 @@ export default class ObjectPlacer {
 			}
 		}
 
-		if (closest >= Infinity) {
+		if (closest >= Infinity || this.currentlyEditingEntityId == 0) {
 			this.currentlyEditingEntityId = null;
 		}
 	}
@@ -387,7 +613,9 @@ export default class ObjectPlacer {
 				entityPlacement,
 				new Vec3(posComp.position).add([0.0, 5.0, 0.0]),
 				new Vec3(posComp.scale),
-				new Vec3(posComp.rotation)
+				new Vec3(posComp.rotation),
+				new Vec3(posComp.origin),
+				posComp.rotationOrder
 			);
 		}
 	}
@@ -397,6 +625,9 @@ export default class ObjectPlacer {
 
 		for (let [placementString, placement] of this.placements) {
 			transformsData += "Placement:" + placementString + "\n";
+			if (!placement.saveToTransforms) {
+				continue;
+			}
 			for (let ep of this.entityPlacements) {
 				if (ep[1] == placementString) {
 					let entity = this.ecsManager.getEntity(ep[0]);
@@ -417,6 +648,10 @@ export default class ObjectPlacer {
 								posComp.scale +
 								"|" +
 								posComp.rotation +
+								"|" +
+								posComp.origin +
+								"|" +
+								posComp.rotationOrder +
 								"\n";
 						}
 					}

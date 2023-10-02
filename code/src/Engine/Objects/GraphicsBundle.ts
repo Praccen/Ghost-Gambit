@@ -1,4 +1,5 @@
 import { gl } from "../../main";
+import Vec3 from "../Maths/Vec3";
 import Texture from "../Textures/Texture";
 import GraphicsObject from "./GraphicsObject";
 
@@ -10,7 +11,7 @@ export default class GraphicsBundle {
 	specular: Texture;
 	emission: Texture;
 
-	baseColor: Vector3;
+	emissionColor: Vec3;
 
 	graphicsObject: GraphicsObject;
 
@@ -29,7 +30,7 @@ export default class GraphicsBundle {
 			this.emission = new Texture();
 			this.emission.setTextureData(new Uint8Array([0.0, 0.0, 0.0, 0.0]), 1, 1);
 		}
-		this.baseColor = new Vector3([0, 0, 0]);
+		this.emissionColor = new Vec3([0, 0, 0]);
 
 		this.modelMatrix = new Matrix4(null);
 		this.textureMatrix = new Matrix4(null);
@@ -45,10 +46,10 @@ export default class GraphicsBundle {
 			this.emission.bind(2);
 		}
 
-		let baseColor: [WebGLUniformLocation, boolean] =
-			this.graphicsObject.shaderProgram.getUniformLocation("baseColor");
-		if (baseColor[1]) {
-			gl.uniform3fv(baseColor[0], this.baseColor.elements);
+		let emissionColorU: [WebGLUniformLocation, boolean] =
+			this.graphicsObject.shaderProgram.getUniformLocation("emissionColor");
+		if (emissionColorU[1]) {
+			gl.uniform3fv(emissionColorU[0], this.emissionColor);
 		}
 		let modelReturn: [WebGLUniformLocation, boolean] =
 			this.graphicsObject.shaderProgram.getUniformLocation("modelMatrix");

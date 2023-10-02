@@ -164,7 +164,7 @@ export default class CollisionSystem extends System {
 						movComp.velocity.subtract(new Vec3(axis).multiply(dotProd));
 					}
 
-					if (axis.y > 0.5) {
+					if (axis.y > 0.7) {
 						movComp.onGround = true;
 					}
 				}

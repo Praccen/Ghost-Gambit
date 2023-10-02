@@ -16,33 +16,49 @@ import Triangle from "../../Engine/Physics/Shapes/Triangle";
 import { OverlayRendering } from "../../Engine/Rendering/OverlayRendering";
 import { gl } from "../../main";
 import Scene from "../../Engine/Rendering/Scene";
-import GrassHandler from "../GrassHandler";
 import ObjectPlacer from "../ObjectPlacer";
 import { WebUtils } from "../../Engine/Utils/WebUtils";
-import Doggo from "../Doggo";
-import { ComponentTypeEnum } from "../../Engine/ECS/Components/Component";
 import ParticleSpawnerComponent from "../../Engine/ECS/Components/ParticleSpawnerComponent";
-import ParticleSpawner from "../../Engine/Objects/ParticleSpawner";
 import Vec3 from "../../Engine/Maths/Vec3";
-import PointLightComponent from "../../Engine/ECS/Components/PointLightComponent";
+import PlayerCharacter from "../PlayerCharacter";
+import { Client } from "../../Engine/Client/Client";
+import OpponentCharacter from "../OpponentCharacter";
+import Entity from "../../Engine/ECS/Entity";
+import { ECSUtils } from "../../Engine/Utils/ESCUtils";
 
 export default class Game extends State {
 	rendering: Rendering;
 	ecsManager: ECSManager;
-	private stateAccessible: StateAccessible;
+	stateAccessible: StateAccessible;
+
+	gameStartTime: number;
 
 	private overlayRendering: OverlayRendering;
 	private menuButton: Button;
 	private mapBundle: GraphicsBundle;
-	grassHandler: GrassHandler;
 	objectPlacer: ObjectPlacer;
 
 	private scene: Scene;
 	private static instance: Game;
 
-	private doggo: Doggo;
+	private playerCharacter: PlayerCharacter;
+
+	private candlesList: Array<Entity>;
+	private graveStoneList: Array<Entity>;
+
+	num_bots: number;
+
+	gameItemsDict: {
+		player: PlayerCharacter;
+		opponents: Array<OpponentCharacter>;
+		candles: Array<Entity>;
+		grave_stones: Array<Entity>;
+	};
 
 	private oWasPressed: boolean;
+
+	client: Client;
+	unlockedGraves: boolean;
 
 	public static getInstance(sa: StateAccessible): Game {
 		if (!Game.instance) {
@@ -58,8 +74,26 @@ export default class Game extends State {
 	private constructor(sa: StateAccessible) {
 		super();
 		this.stateAccessible = sa;
-		this.objectPlacer = new ObjectPlacer(this.stateAccessible.meshStore);
+
+		this.candlesList = [] as Array<Entity>;
+		this.graveStoneList = [] as Array<Entity>;
+
+		this.objectPlacer = new ObjectPlacer(
+			this.stateAccessible.meshStore,
+			this.stateAccessible.textureStore,
+			this.candlesList,
+			this.graveStoneList
+		);
 		this.oWasPressed = true;
+
+		this.gameItemsDict = {
+			player: this.playerCharacter,
+			opponents: new Array<OpponentCharacter>(),
+			candles: this.candlesList,
+			grave_stones: this.graveStoneList,
+		};
+		this.num_bots = 0;
+		this.unlockedGraves = false;
 	}
 
 	async load() {
@@ -76,19 +110,35 @@ export default class Game extends State {
 
 		this.createMapEntity();
 
+		this.gameStartTime = Date.now();
+		if (this.client == undefined) {
+			this.client = new Client(this);
+		} else {
+			// this.client.sendLeave();
+		}
+
 		let dirLight = this.scene.getDirectionalLight();
 		dirLight.ambientMultiplier = 0.3;
 		dirLight.direction.setValues(0.2, -0.4, -0.7);
 		dirLight.colour.setValues(0.1, 0.1, 0.4);
 
-		this.doggo = new Doggo(this.scene, this.rendering, this.ecsManager);
-
-		this.grassHandler = new GrassHandler(
-			this.scene,
-			this.mapBundle,
-			this.doggo,
-			this.rendering.camera
+		// 1.4, -3.8, 3
+		// -1.3, -3.9, -6
+		let start_pos = new Vec3([
+			Math.random() * 2 - 1,
+			1.5,
+			Math.random() * 9 - 6,
+		]);
+		this.playerCharacter = new PlayerCharacter(
+			this.rendering,
+			this.ecsManager,
+			this.stateAccessible.audioPlayer,
+			"Ghost Character",
+			this.gameItemsDict,
+			start_pos
 		);
+
+		this.gameItemsDict.player = this.playerCharacter;
 
 		this.menuButton = this.overlayRendering.getNewButton();
 		this.menuButton.position.x = 0.9;
@@ -103,11 +153,10 @@ export default class Game extends State {
 			self.gotoState = StatesEnum.MAINMENU;
 		});
 
-		this.rendering.setSkybox("Assets/textures/skyboxes/LordKittyNight");
+		this.rendering.setSkybox("Assets/textures/skyboxes/NightSky");
 
 		let fireflies = this.ecsManager.createEntity();
-
-		let nrOfFireflies = 10000;
+		let nrOfFireflies = 3000;
 		let firefliesParticles = this.scene.getNewParticleSpawner(
 			"Assets/textures/fire.png",
 			nrOfFireflies
@@ -116,9 +165,9 @@ export default class Game extends State {
 
 		for (let i = 0; i < nrOfFireflies; i++) {
 			let tempPos = new Vec3([
-				Math.random() * 200.0 - 10.0,
+				Math.random() * 100.0 - 50.0,
 				-5.0,
-				Math.random() * 200.0 - 10.0,
+				Math.random() * 100.0 - 50.0,
 			]);
 			// Get the height of the heightmap at the corresponding position
 			let height = (<Heightmap>(
@@ -146,41 +195,17 @@ export default class Game extends State {
 
 		let particleComp = new ParticleSpawnerComponent(firefliesParticles);
 		particleComp.lifeTime = 10;
-		fireflies.addComponent(particleComp);
-
-		let fire = this.ecsManager.createEntity();
-		let nrOfFireParticles = 1000;
-		let fireParticles = this.scene.getNewParticleSpawner(
-			"Assets/textures/fire.png",
-			nrOfFireParticles
-		);
-		for (let i = 0; i < nrOfFireParticles; i++) {
-			fireParticles.setParticleData(
-				i,
-				new Vec3(),
-				0.1,
-				new Vec3([Math.random() - 0.5, 0.0, Math.random() - 0.5]),
-				new Vec3([0.0, 0.5, 0.0])
-			);
-		}
-		fireParticles.sizeChangePerSecond = 0.1;
-		fireParticles.fadePerSecond = 0.5;
-
-		let fireParticleComp = new ParticleSpawnerComponent(fireParticles);
-		fireParticleComp.lifeTime = 2;
-		fire.addComponent(fireParticleComp);
-
-		let firePosComp = new PositionComponent();
-		firePosComp.position.setValues(16, -1.35, 11);
-		fire.addComponent(firePosComp);
-
-		let pointLightComp = new PointLightComponent(this.scene.getNewPointLight());
-		pointLightComp.pointLight.colour.setValues(1.0, 0.3, 0.0);
-		fire.addComponent(pointLightComp);
+		this.ecsManager.addComponent(fireflies, particleComp);
 
 		await this.objectPlacer.load(this.scene, this.ecsManager);
 
-		await this.doggo.init();
+		await this.playerCharacter.init();
+
+		this.num_bots = 0;
+
+		this.unlockedGraves = false;
+
+		self.gotoState = StatesEnum.PRELOBBY;
 	}
 
 	async init() {
@@ -200,6 +225,11 @@ export default class Game extends State {
 			this.gotoState = StatesEnum.DEBUGMODE;
 		}
 		this.oWasPressed = true;
+		// Activate audio
+		this.stateAccessible.audioPlayer.active = true;
+
+		// Play theme music
+		this.stateAccessible.audioPlayer.playAudio("theme_1", true);
 	}
 
 	reset() {
@@ -220,7 +250,7 @@ export default class Game extends State {
 	createMapEntity() {
 		let texturePath = "Assets/heightmaps/heightmap.png";
 		let texturePathColour = "Assets/textures/HeightmapTexture.png";
-		let texturePathSpec = "Assets/textures/HeightmapTexture.png";
+		let texturePathSpec = "Assets/textures/black.png";
 		let entity = this.ecsManager.createEntity();
 		this.mapBundle = this.scene.getNewHeightMap(
 			texturePath,
@@ -232,13 +262,12 @@ export default class Game extends State {
 		let vertices = heightmap.getVertices();
 
 		for (let i = 0; i < heightmap.xResolution * heightmap.zResolution; i++) {
-			if (vertices[i * 8 + 4] > 0.999999999 && vertices[i * 8 + 1] > 0.001) {
-				// Normal is pointing upwards and height is not 0 (ditches)
-				// Set uvs to be tarmac
-				vertices[i * 8 + 6] = 0.75;
-			} else {
-				// Set uvs to be grass
+			if (vertices[i * 8 + 4] > 0.999995) {
+				// Set uvs to be mud
 				vertices[i * 8 + 6] = 0.25;
+			} else {
+				// Set uvs to be gravel
+				vertices[i * 8 + 6] = 0.75;
 			}
 		}
 
@@ -246,8 +275,8 @@ export default class Game extends State {
 
 		this.ecsManager.addComponent(entity, new GraphicsComponent(this.mapBundle));
 		let posComp = new PositionComponent();
-		posComp.position.setValues(-10.0, -4.0, -10.0);
-		posComp.scale.setValues(0.5, 15.0, 0.5);
+		posComp.position.setValues(-50.0, -4.0, -50.0);
+		posComp.scale.setValues(0.5, 25.0, 0.5);
 		this.ecsManager.addComponent(entity, posComp);
 
 		// Collision stuff
@@ -279,23 +308,46 @@ export default class Game extends State {
 		return IntersectionTester.doRayCast(ray, triangleArray);
 	}
 
+	async spawnBots() {
+		for (let i = 0; i < this.num_bots; i++) {
+			let bot = new OpponentCharacter(
+				this.rendering,
+				this.ecsManager,
+				this.stateAccessible.audioPlayer,
+				"Ghost Character",
+				this.gameItemsDict,
+				true,
+				new Vec3([Math.random() * 20, 1.5, Math.random() * 20])
+			);
+			this.gameItemsDict.opponents.push(bot);
+		}
+		for (const bot of this.gameItemsDict.opponents) {
+			await bot.init();
+		}
+	}
+
 	update(dt: number) {
-		this.doggo.update(dt);
-
-		this.grassHandler.update(dt);
-
-		if (input.keys["P"]) {
-			this.doggo.respawn();
+		if (this.playerCharacter.accended) {
+			this.gotoState = StatesEnum.SPECTATEMODE;
+			let allInHeaven = true;
+			for (const opponent of this.gameItemsDict.opponents) {
+				if (!opponent.accended) {
+					allInHeaven = false;
+				}
+			}
+			if (allInHeaven) {
+				this.gotoState = StatesEnum.SCOREMODE;
+			}
+		}
+		this.playerCharacter.update(dt);
+		if (this.playerCharacter.is_lit) {
+			this.unlockedGraves = true;
+		} else {
+			this.unlockedGraves = false;
 		}
 
-		if (input.keys["O"]) {
-			if (!this.oWasPressed) {
-				this.gotoState = StatesEnum.DEBUGMODE;
-				WebUtils.SetCookie("debug", "true");
-			}
-			this.oWasPressed = true;
-		} else {
-			this.oWasPressed = false;
+		for (const bot of this.gameItemsDict.opponents) {
+			bot.update(dt);
 		}
 
 		this.ecsManager.update(dt);

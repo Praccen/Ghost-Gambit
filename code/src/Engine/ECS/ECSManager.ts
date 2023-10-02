@@ -9,6 +9,9 @@ import { Component, ComponentTypeEnum } from "./Components/Component";
 import Camera from "../Camera";
 import CameraFocusSystem from "./Systems/CameraFocusSystem";
 import PositionMatrixUpdateSystem from "./Systems/PositionMatrixUpdateSystem";
+import VicinityTriggerSystem from "../../Game/GameLogic/Systems/VicinityTriggerSystem";
+import SentientSystem from "../../Game/GameLogic/Systems/SentientSystem";
+import GravestoneSystem from "../../Game/GameLogic/Systems/GravestoneSystem";
 
 export default class ECSManager {
 	private systems: Map<String, System>;
@@ -59,6 +62,11 @@ export default class ECSManager {
 			"CAMERAFOCUS",
 			new CameraFocusSystem(this.rendering.camera)
 		);
+
+		// Game logic systems
+		this.systems.set("VICINITYTRIGGER", new VicinityTriggerSystem());
+		this.systems.set("SENTIENT", new SentientSystem(this));
+		this.systems.set("GRAVESTONE", new GravestoneSystem());
 	}
 
 	update(dt: number) {
@@ -75,11 +83,18 @@ export default class ECSManager {
 		this.systems.get("POSITIONMATRIXUPDATE").update(dt);
 		this.systems.get("GRAPHICS").update(dt);
 		this.systems.get("COLLISION").update(dt);
+
+		// Game logic systems
+		this.systems.get("VICINITYTRIGGER").update(dt);
+		this.systems.get("SENTIENT").update(dt);
+		this.systems.get("GRAVESTONE").update(dt);
 	}
 
-	updateRenderingSystems(dt: number) {
+	updateRenderingSystems(dt: number, updateCameraFocus: boolean = true) {
 		this.systems.get("PARTICLE").update(dt);
-		this.systems.get("CAMERAFOCUS").update(dt);
+		if (updateCameraFocus) {
+			this.systems.get("CAMERAFOCUS").update(dt);
+		}
 	}
 
 	createEntity(): Entity {
@@ -94,7 +109,12 @@ export default class ECSManager {
 	}
 
 	removeEntity(entityID: number) {
-		this.entityDeletionQueue.push(entityID);
+		if (this.getEntity(entityID)) {
+			this.entityDeletionQueue.push(entityID);
+			for (const comp of this.getEntity(entityID).components) {
+				this.removeComponent(this.getEntity(entityID), comp.type);
+			}
+		}
 	}
 
 	removeComponent(entity: Entity, componentType: ComponentTypeEnum) {

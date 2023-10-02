@@ -7,22 +7,26 @@ import StateMachine from "../Engine/StateMachine";
 import TextureStore from "../Engine/AssetHandling/TextureStore";
 import ControlsMenu from "./States/ControlsMenu";
 import DebugMode from "./States/DebugMode";
+import SpectateMode from "./States/SpectateMode";
 import Game from "./States/Game";
 import LoadingScreen from "./States/LoadingScreen";
 import Menu from "./States/Menu";
 import OptionsMenu from "./States/OptionsMenu";
 import { WebUtils } from "../Engine/Utils/WebUtils";
 import { OverlayRendering } from "../Engine/Rendering/OverlayRendering";
+import { Client } from "../Engine/Client/Client";
+import LobbyState from "./States/LobbyState";
+import PreLobbyState from "./States/PreLobbyState";
+import ScoreState from "./States/ScoreState";
 
 // Globals
 export let input = new Input();
 export let options = {
 	useCrt: false,
 	useBloom: false,
-	foldableGrass: false,
 	showFps: true,
-	grassDensity: 10000,
-	volume: 0.05,
+	musicVolume: 0.05,
+	effectVolume: 0.05,
 };
 
 /**
@@ -31,9 +35,9 @@ export let options = {
 export class StateAccessible {
 	textureStore: TextureStore;
 	meshStore: MeshStore;
-	// fpsDisplay: TextObject2D;
 	audioPlayer: AudioPlayer;
 	restartGame: boolean;
+	localGame: boolean;
 }
 
 export default class GameMachine extends StateMachine {
@@ -51,7 +55,12 @@ export default class GameMachine extends StateMachine {
 			// fpsDisplay: null,
 			audioPlayer: new AudioPlayer(),
 			restartGame: false,
+			localGame: true,
 		};
+		this.stateAccessible.audioPlayer.setMusicVolume(options.musicVolume);
+		this.stateAccessible.audioPlayer.setSoundEffectVolume(options.effectVolume);
+
+		let game = Game.getInstance(this.stateAccessible);
 
 		// Add states
 		this.addState(
@@ -67,6 +76,18 @@ export default class GameMachine extends StateMachine {
 			new Menu(this.stateAccessible)
 		);
 		this.addState(
+			StatesEnum.PRELOBBY,
+			PreLobbyState,
+			1.0 / 60.0,
+			new PreLobbyState(this.stateAccessible)
+		);
+		this.addState(
+			StatesEnum.LOBBY,
+			LobbyState,
+			1.0 / 60.0,
+			new LobbyState(this.stateAccessible)
+		);
+		this.addState(
 			StatesEnum.OPTIONS,
 			OptionsMenu,
 			1.0 / 60.0,
@@ -78,8 +99,13 @@ export default class GameMachine extends StateMachine {
 			1.0 / 60.0,
 			new ControlsMenu(this.stateAccessible)
 		);
-		let game = Game.getInstance(this.stateAccessible);
 		this.addState(StatesEnum.GAME, Game, 1.0 / 144.0, game);
+		this.addState(
+			StatesEnum.SPECTATEMODE,
+			SpectateMode,
+			1.0 / 144.0,
+			new SpectateMode(this.stateAccessible, game)
+		);
 		this.stateAccessible.restartGame = true;
 
 		// game.load();
@@ -88,6 +114,13 @@ export default class GameMachine extends StateMachine {
 			DebugMode,
 			1.0 / 144.0,
 			new DebugMode(this.stateAccessible, game)
+		);
+
+		this.addState(
+			StatesEnum.SCOREMODE,
+			ScoreState,
+			1.0 / 144.0,
+			new ScoreState(this.stateAccessible)
 		);
 
 		this.overlayRendering = new OverlayRendering();
@@ -103,12 +136,8 @@ export default class GameMachine extends StateMachine {
 		WebUtils.SetCookie("showFps", options.showFps.valueOf().toString());
 		WebUtils.SetCookie("useCrt", options.useCrt.valueOf().toString());
 		WebUtils.SetCookie("useBloom", options.useBloom.valueOf().toString());
-		WebUtils.SetCookie(
-			"foldableGrass",
-			options.foldableGrass.valueOf().toString()
-		);
-		WebUtils.SetCookie("volume", options.volume.toString());
-		WebUtils.SetCookie("grassDensity", options.grassDensity.toString());
+		WebUtils.SetCookie("volume", options.musicVolume.toString());
+		WebUtils.SetCookie("effectVolume", options.effectVolume.toString());
 
 		for (let s of this.states) {
 			s[1].state.onExit(e);
@@ -119,14 +148,13 @@ export default class GameMachine extends StateMachine {
 		options.showFps = !(WebUtils.GetCookie("showFps") == "false");
 		options.useCrt = WebUtils.GetCookie("useCrt") == "true";
 		options.useBloom = WebUtils.GetCookie("useBloom") == "true";
-		options.foldableGrass = WebUtils.GetCookie("foldableGrass") == "true";
 		let volumeCookie = WebUtils.GetCookie("volume");
 		if (volumeCookie != "") {
-			options.volume = parseFloat(volumeCookie);
+			options.musicVolume = parseFloat(volumeCookie);
 		}
-		let grassDensityCookie = WebUtils.GetCookie("grassDensity");
-		if (grassDensityCookie != "") {
-			options.grassDensity = parseFloat(grassDensityCookie);
+		let effectVolumeCookie = WebUtils.GetCookie("effectVolume");
+		if (effectVolumeCookie != "") {
+			options.effectVolume = parseFloat(effectVolumeCookie);
 		}
 	}
 

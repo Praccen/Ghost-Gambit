@@ -1,6 +1,7 @@
 .vscode/
 out/src
 out/libs
+out/server
 out/*.*
 
 # Github gitignore for node

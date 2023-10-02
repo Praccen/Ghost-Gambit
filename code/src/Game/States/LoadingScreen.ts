@@ -69,10 +69,7 @@ export default class LoadingScreen extends State {
 			}
 		}
 
-		let cubeMaps = [
-			"Assets/textures/skyboxes/LordKitty",
-			"Assets/textures/skyboxes/LordKittyNight",
-		];
+		let cubeMaps = ["Assets/textures/skyboxes/NightSky"];
 
 		// Meshes to load
 		let meshes = [];
@@ -102,14 +99,32 @@ export default class LoadingScreen extends State {
 		// Octrees to create
 		this.octreesToLoad = [
 			["Assets/heightmaps/heightmap.png", 0.01, 10],
-			["Assets/objs/house.obj", 0.1, 20],
-			["Assets/objs/mailbox.obj", 0.1, 20],
-			["Assets/objs/BigBuske.obj", 0.1, 20],
-			["Assets/objs/Solros.obj", 0.1, 20],
-			["Assets/objs/SmolBuske.obj", 0.1, 20],
-			["Assets/objs/tree_1.obj", 0.1, 20],
-			["Assets/objs/tree_2.obj", 0.1, 20],
-			["Assets/objs/tree_3.obj", 0.1, 20],
+			["Assets/objs/Gravestone1.obj", 0.1, 20],
+			["Assets/objs/Gravestone2.obj", 0.1, 20],
+			["Assets/objs/Gravestone3.obj", 0.1, 20],
+			["Assets/objs/LudumDare_Cross_Des01_V01.obj", 0.1, 20],
+			["Assets/objs/LudumDare_FirePlate_Des01_V01.obj", 0.1, 20],
+			["Assets/objs/LudumDare_Pillar_Des01_V01.obj", 0.1, 20],
+			["Assets/objs/LudumDare_StartingZone_Des01_V01.obj", 0.1, 20],
+			["Assets/objs/LudumDare_Wall_Des01_V01.obj", 0.1, 20],
+			["Assets/objs/LudumDare_Wall_FlatOneSide_Des01_V01.obj", 0.1, 20],
+			["Assets/objs/LudumDare_Wall_FlatSides_Des01_V01.obj", 0.1, 20],
+			["Assets/objs/LudumDare_Wall_LShapeLeft_Des01_V01.obj", 0.1, 20],
+			["Assets/objs/LudumDare_Wall_LShapeRight_Des01_V01.obj", 0.1, 20],
+			["Assets/objs/Rock1.obj", 0.1, 20],
+			["Assets/objs/Rock2.obj", 0.1, 20],
+			["Assets/objs/Rock3.obj", 0.1, 20],
+			["Assets/objs/Rock4.obj", 0.1, 20],
+			["Assets/objs/Rock5.obj", 0.1, 20],
+			["Assets/objs/Rock6.obj", 0.1, 20],
+			["Assets/objs/Rock7.obj", 0.1, 20],
+			["Assets/objs/treeDead.obj", 0.1, 20],
+			["Assets/objs/treeLeaf.obj", 0.1, 20],
+			["Assets/objs/TreeLeaf3.obj", 0.1, 20],
+			["Assets/objs/TreeLeaf4.obj", 0.1, 20],
+			["Assets/objs/TreePine1.obj", 0.1, 20],
+			["Assets/objs/TreePine2.obj", 0.1, 20],
+			["Assets/objs/TreePine3.obj", 0.1, 20],
 		];
 		this.octreesRequested = this.octreesToLoad.length;
 		this.octreesLoaded = 0;

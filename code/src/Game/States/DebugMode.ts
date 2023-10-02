@@ -17,6 +17,7 @@ export default class DebugMode extends State {
 	private checkpointNeeded: boolean;
 	private actionString: string;
 	private oWasPressed: boolean;
+	private pWasPressed: boolean;
 
 	constructor(sa: StateAccessible, game: Game) {
 		super();
@@ -30,6 +31,7 @@ export default class DebugMode extends State {
 		]);
 
 		this.oWasPressed = true;
+		this.pWasPressed = true;
 		this.mouseWasPressed = false;
 		this.cWasPressed = false;
 		this.checkpointNeeded = true;
@@ -64,6 +66,7 @@ export default class DebugMode extends State {
 		}
 
 		this.oWasPressed = true;
+		this.pWasPressed = true;
 	}
 
 	reset() {
@@ -82,6 +85,15 @@ export default class DebugMode extends State {
 			this.oWasPressed = true;
 		} else {
 			this.oWasPressed = false;
+		}
+
+		if (input.keys["P"]) {
+			if (!this.pWasPressed) {
+				this.debugMenu.toggleHidden();
+			}
+			this.pWasPressed = true;
+		} else {
+			this.pWasPressed = false;
 		}
 
 		let moveVec: Vec3 = new Vec3();
@@ -175,7 +187,10 @@ export default class DebugMode extends State {
 				edited = true;
 				this.actionString = "Rotating";
 			}
-			if (input.keys["T"] || input.keys["G"]) {
+			if (
+				(input.keys["T"] || input.keys["G"]) &&
+				this.game.objectPlacer.currentlyEditingEntityId != 0
+			) {
 				let ray = MousePicking.GetRay(this.game.rendering.camera);
 				let dist: number = Infinity;
 
@@ -253,14 +268,13 @@ export default class DebugMode extends State {
 		let camDir = this.game.rendering.camera.getDir();
 		WebUtils.SetCookie("debugDir", camDir.x + "," + camDir.y + "," + camDir.z);
 
-		this.game.grassHandler.update(dt);
-
 		this.debugMenu.actionText.textString =
 			this.actionString + " " + this.game.objectPlacer.getCurrentObjectName();
 
 		this.debugMenu.update(dt);
 
 		this.game.ecsManager.update(0.0);
+		this.game.ecsManager.updateRenderingSystems(dt, false);
 
 		if (this.checkpointNeeded && !checkpointTriggeredThisFrame) {
 			this.game.objectPlacer.makeCheckpoint();

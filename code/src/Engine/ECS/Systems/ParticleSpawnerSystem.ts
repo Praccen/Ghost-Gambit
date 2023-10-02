@@ -2,6 +2,8 @@ import System from "./System";
 import ParticleSpawnerComponent from "../Components/ParticleSpawnerComponent";
 import { ComponentTypeEnum } from "../Components/Component";
 import PositionComponent from "../Components/PositionComponent";
+import PositionParentComponent from "../Components/PositionParentComponent";
+import { ECSUtils } from "../../Utils/ESCUtils";
 
 export default class ParticleSpawnerSystem extends System {
 	constructor() {
@@ -14,8 +16,11 @@ export default class ParticleSpawnerSystem extends System {
 				e.getComponent(ComponentTypeEnum.PARTICLESPAWNER)
 			);
 			let posComp = <PositionComponent>(
-				e.getComponent(ComponentTypeEnum.POSITION)
+				e.getComponent(ComponentTypeEnum.POSITIONPARENT)
 			);
+			if (posComp == undefined) {
+				posComp = <PositionComponent>e.getComponent(ComponentTypeEnum.POSITION);
+			}
 
 			if (particleComp) {
 				let currentParticle = Math.floor(
@@ -41,7 +46,7 @@ export default class ParticleSpawnerSystem extends System {
 						particleComp.particleSpawner.setParticleStartPosition(
 							currentParticle %
 								particleComp.particleSpawner.getNumberOfParticles(),
-							posComp.position
+							ECSUtils.CalculatePosition(e).add(particleComp.offset)
 						);
 					}
 				}

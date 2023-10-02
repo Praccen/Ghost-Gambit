@@ -8,6 +8,7 @@ export default class EditText extends GuiObject {
 
 	private inputNode: HTMLInputElement;
 	private label: HTMLLabelElement;
+	private onChangeFn: any;
 
 	constructor(parentDiv?: Div) {
 		super(parentDiv);
@@ -31,6 +32,18 @@ export default class EditText extends GuiObject {
 
 	getInputElement(): HTMLInputElement {
 		return this.inputNode;
+	}
+
+	onChange(fn: any) {
+		this.onChangeFn = fn;
+		this.inputNode.addEventListener("change", this.onChangeFn);
+	}
+
+	remove() {
+		if (this.onChangeFn != undefined) {
+			this.inputNode.removeEventListener("change", this.onChangeFn);
+		}
+		super.remove();
 	}
 
 	draw() {

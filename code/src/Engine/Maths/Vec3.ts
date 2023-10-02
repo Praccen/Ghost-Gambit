@@ -51,4 +51,23 @@ export default class Vec3 extends Vec {
 		this.deepAssign(tempVec);
 		return this;
 	}
+
+	equals(otherVec: number[]): boolean {
+		return (
+			this[0] === otherVec[0] &&
+			this[1] === otherVec[1] &&
+			this[2] === otherVec[2]
+		);
+	}
+
+	distanceTo(otherVec: number[]): number {
+		const dx = this[0] - otherVec[0];
+		const dy = this[1] - otherVec[1];
+		const dz = this[2] - otherVec[2];
+		return Math.sqrt(dx * dx + dy * dy + dz * dz);
+	}
+
+	clone(): Vec3 {
+		return new Vec3([this[0], this[1], this[2]]);
+	}
 }

@@ -14,6 +14,12 @@ export enum ComponentTypeEnum {
 	POSITION,
 	POSITIONPARENT,
 	DELIVERYZONE,
+
+	// Game logic component types
+	VICINITYTRIGGER,
+	SENTIENT,
+	CANDLE,
+	GRAVESTONE,
 }
 
 export class Component {
@@ -22,6 +28,8 @@ export class Component {
 	constructor(type: ComponentTypeEnum) {
 		this._type = type;
 	}
+
+	destructor(): void {}
 
 	get type(): ComponentTypeEnum {
 		return this._type;
