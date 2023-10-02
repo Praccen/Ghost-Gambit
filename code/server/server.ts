@@ -169,7 +169,7 @@ wss.on("connection", (ws) => {
 			console.log("Someone disconnected! " + clients.get(ws).id);
 		}
 		const roomName = clients.get(ws).room;
-		if (roomName != "NOT_VALID") {
+		if (roomName != "NOT_VALID" && rooms.get(roomName)) {
 			for (const element of rooms.get(roomName)) {
 				if (element != ws && element.OPEN) {
 					element.send(

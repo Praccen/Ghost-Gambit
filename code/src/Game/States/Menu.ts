@@ -23,7 +23,10 @@ export default class Menu extends State {
 		startButton.onClick(function () {
 			self.gotoState = StatesEnum.GAME;
 			sa.restartGame = true;
-			if (Game.getInstanceNoSa().client.connected) {
+			if (
+				Game.getInstanceNoSa().client &&
+				Game.getInstanceNoSa().client.connected
+			) {
 				Game.getInstanceNoSa().client.sendLeave();
 			}
 		});

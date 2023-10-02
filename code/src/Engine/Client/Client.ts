@@ -107,13 +107,11 @@ export class Client {
 				}
 				break;
 			case "DIS":
-				console.log("Client disconnected" + msg.id);
+				console.log("Client disconnected: " + msg.id);
 				Game.getInstanceNoSa().ecsManager.removeEntity(
 					this.bodyEntities.get(msg.id).bodyEntity.id
 				);
 				this.bodyEntities.delete(msg.id);
-				this.connected = false;
-				this.gameStarted = false;
 				break;
 			case "GET":
 				this.activeRooms = msg.rooms;
