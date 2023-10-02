@@ -82,6 +82,24 @@ export default class LobbyState extends State {
 					key + " Time: " + Math.round(value) * 0.001 + " Seconds"
 				);
 			});
+		} else {
+			playersMap.set(
+				"(You)",
+				Game.getInstanceNoSa().gameItemsDict.player.ascendTime - startTime
+			);
+			let idx = 0;
+			for (const opponent of Game.getInstanceNoSa().gameItemsDict.opponents) {
+				playersMap.set("Bot_" + idx, opponent.ascendTime - startTime);
+			}
+
+			const mapSort = new Map(
+				[...playersMap.entries()].sort((a, b) => a[1] - b[1])
+			);
+			mapSort.forEach((value: number, key: string) => {
+				this.addParticipant(
+					key + " Time: " + Math.round(value) * 0.001 + " Seconds"
+				);
+			});
 		}
 	}
 
