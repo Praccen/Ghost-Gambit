@@ -12,7 +12,7 @@ export default class SpectateMode extends State {
 	private overlay: OverlayRendering;
 	private lastMousePos: Vec2;
 
-	constructor(stateAccessible: StateAccessible,game: Game) {
+	constructor(stateAccessible: StateAccessible, game: Game) {
 		super();
 		this.game = game;
 		this.sa = stateAccessible;
@@ -83,7 +83,10 @@ export default class SpectateMode extends State {
 
 		if (input.joystickLeftDirection.length2() > 0.0) {
 			let joyDir = input.joystickLeftDirection;
-			moveVec.setValues(0.0, 0.0, 0.0).add(new Vec3(this.game.rendering.camera.getRight()).multiply(joyDir.x)).add(new Vec3(this.game.rendering.camera.getDir()).multiply(-joyDir.y));
+			moveVec
+				.setValues(0.0, 0.0, 0.0)
+				.add(new Vec3(this.game.rendering.camera.getRight()).multiply(joyDir.x))
+				.add(new Vec3(this.game.rendering.camera.getDir()).multiply(-joyDir.y));
 			move = true;
 		}
 

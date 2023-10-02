@@ -46,7 +46,8 @@ export default abstract class Character {
 	protected start_origin: Vec3;
 	protected start_rotation_order: string;
 	protected trigger_download_needed: boolean;
-	protected allCharacterDict: object;
+
+	protected gameItemsDict: object;
 	protected drag_addition: number = 10;
 	is_accending: boolean;
 	accended: boolean;
@@ -72,7 +73,7 @@ export default abstract class Character {
 		ecsManager: ECSManager,
 		audioPlayer: AudioPlayer,
 		character_string: string,
-		allCharacterDict: object,
+		gameItemsDict: object,
 		start_position: Vec3 = new Vec3(),
 		start_size: Vec3 = new Vec3([0.25, 0.25, 0.25]),
 		start_rotation: Vec3 = new Vec3(),
@@ -83,7 +84,7 @@ export default abstract class Character {
 		this.rendering = rendering;
 		this.ecsManager = ecsManager;
 		this.audioPlayer = audioPlayer;
-		this.allCharacterDict = allCharacterDict;
+		this.gameItemsDict = gameItemsDict;
 
 		this.character_string = character_string;
 		this.start_position = start_position;

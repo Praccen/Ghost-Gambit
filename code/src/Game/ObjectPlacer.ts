@@ -64,13 +64,22 @@ export default class ObjectPlacer {
 	currentlyEditingEntityId: number;
 
 	game: Game;
+	candlesList: Entity[];
+	graveStoneList: Entity[];
 
-	constructor(meshStore: MeshStore, textureStore: TextureStore) {
+	constructor(
+		meshStore: MeshStore,
+		textureStore: TextureStore,
+		candlesList: Array<Entity>,
+		graveStoneList: Array<Entity>
+	) {
 		this.meshStore = meshStore;
 		this.textureStore = textureStore;
 		this.placements = new Map<string, Placement>();
 		this.entityPlacements = new Map<number, string>();
 		this.downloadNeeded = false;
+		this.candlesList = candlesList;
+		this.graveStoneList = graveStoneList;
 	}
 
 	async load(scene: Scene, ecsManager: ECSManager) {
@@ -299,6 +308,7 @@ export default class ObjectPlacer {
 			pointLightComp.pointLight.colour.setValues(0.2, 0.06, 0.0);
 			pointLightComp.posOffset.y = 0.2;
 			this.ecsManager.addComponent(entity, pointLightComp);
+			this.candlesList.push(entity);
 		}
 
 		if (type == "Gravestone 1" || type == "Gravestone 2") {
@@ -331,10 +341,12 @@ export default class ObjectPlacer {
 			particleComp.offset.setValues(0.0, 0.3, 0.0);
 			particleComp.lifeTime = 2.0;
 			this.ecsManager.addComponent(entity, particleComp);
+			this.graveStoneList.push(entity);
 		}
 
 		if (type == "Fire place") {
 			let nrOfFireParticles = 6;
+			// TODO: Maybe change this to an icy blue color to not confuse with the candles
 			let fireParticles = this.scene.getNewParticleSpawner(
 				"Assets/textures/fire.png",
 				nrOfFireParticles
@@ -369,6 +381,7 @@ export default class ObjectPlacer {
 				this.scene.getNewPointLight()
 			);
 			pointLightComp.posOffset.y = 0.7;
+			// TODO: Maybe change this to an icy blue color to not confuse with the candles
 			pointLightComp.pointLight.colour.setValues(0.5, 0.15, 0.0);
 			this.ecsManager.addComponent(entity, pointLightComp);
 		}

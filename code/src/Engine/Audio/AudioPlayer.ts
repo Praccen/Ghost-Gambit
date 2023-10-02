@@ -41,11 +41,10 @@ export default class AudioPlayer {
 			count++;
 		}
 
-		const song_files = 
-		[
+		const song_files = [
 			"theme_1.mp3", //https://pixabay.com/music/scary-childrens-tunes-dark-ambient-horror-cinematic-halloween-atmosphere-scary-118585/
 			"credits_theme_1.mp3", //https://pixabay.com/music/modern-classical-simple-piano-melody-9834/
-		]; 
+		];
 		const song_files_volume_multilpliers_list = [0.5, 0.5];
 		count = 0;
 		for (const file of song_files) {

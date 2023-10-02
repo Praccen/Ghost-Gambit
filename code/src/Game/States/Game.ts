@@ -23,6 +23,8 @@ import Vec3 from "../../Engine/Maths/Vec3";
 import PlayerCharacter from "../PlayerCharacter";
 import { Client } from "../../Engine/Client/Client";
 import OpponentCharacter from "../OpponentCharacter";
+import Entity from "../../Engine/ECS/Entity";
+import { ECSUtils } from "../../Engine/Utils/ESCUtils";
 
 export default class Game extends State {
 	rendering: Rendering;
@@ -40,11 +42,17 @@ export default class Game extends State {
 	private static instance: Game;
 
 	private playerCharacter: PlayerCharacter;
+
+	private candlesList: Array<Entity>;
+	private graveStoneList: Array<Entity>;
+
 	num_bots: number;
 
-	allCharacterDict: {
+	gameItemsDict: {
 		player: PlayerCharacter;
-		bots: OpponentCharacter[];
+		opponents: Array<OpponentCharacter>;
+		candles: Array<Entity>;
+		grave_stones: Array<Entity>;
 	};
 
 	private oWasPressed: boolean;
@@ -66,15 +74,23 @@ export default class Game extends State {
 	private constructor(sa: StateAccessible) {
 		super();
 		this.stateAccessible = sa;
+
+		this.candlesList = [] as Array<Entity>;
+		this.graveStoneList = [] as Array<Entity>;
+
 		this.objectPlacer = new ObjectPlacer(
 			this.stateAccessible.meshStore,
-			this.stateAccessible.textureStore
+			this.stateAccessible.textureStore,
+			this.candlesList,
+			this.graveStoneList
 		);
 		this.oWasPressed = true;
 
-		this.allCharacterDict = {
+		this.gameItemsDict = {
 			player: this.playerCharacter,
-			bots: new Array<OpponentCharacter>(),
+			opponents: new Array<OpponentCharacter>(),
+			candles: this.candlesList,
+			grave_stones: this.graveStoneList,
 		};
 		this.num_bots = 0;
 		this.unlockedGraves = false;
@@ -118,11 +134,11 @@ export default class Game extends State {
 			this.ecsManager,
 			this.stateAccessible.audioPlayer,
 			"Ghost Character",
-			this.allCharacterDict,
+			this.gameItemsDict,
 			start_pos
 		);
 
-		this.allCharacterDict.player = this.playerCharacter;
+		this.gameItemsDict.player = this.playerCharacter;
 
 		this.menuButton = this.overlayRendering.getNewButton();
 		this.menuButton.position.x = 0.9;
@@ -299,13 +315,13 @@ export default class Game extends State {
 				this.ecsManager,
 				this.stateAccessible.audioPlayer,
 				"Ghost Character",
-				this.allCharacterDict,
+				this.gameItemsDict,
 				true,
 				new Vec3([Math.random() * 20, 1.5, Math.random() * 20])
 			);
-			this.allCharacterDict.bots.push(bot);
+			this.gameItemsDict.opponents.push(bot);
 		}
-		for (const bot of this.allCharacterDict.bots) {
+		for (const bot of this.gameItemsDict.opponents) {
 			await bot.init();
 		}
 	}
@@ -314,7 +330,7 @@ export default class Game extends State {
 		if (this.playerCharacter.accended) {
 			this.gotoState = StatesEnum.SPECTATEMODE;
 			let allInHeaven = true;
-			for (const opponent of this.allCharacterDict.bots) {
+			for (const opponent of this.gameItemsDict.opponents) {
 				if (!opponent.accended) {
 					allInHeaven = false;
 				}
@@ -331,7 +347,7 @@ export default class Game extends State {
 			this.unlockedGraves = false;
 		}
 
-		for (const bot of this.allCharacterDict.bots) {
+		for (const bot of this.gameItemsDict.opponents) {
 			bot.update(dt);
 		}
 

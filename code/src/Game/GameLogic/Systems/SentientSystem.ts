@@ -53,10 +53,7 @@ export default class SentientSystem extends System {
 					sentientComponent.character.light_up();
 					break;
 				}
-				if (
-					!sentientComponent.character.is_lit &&
-					vicinityEntity.hasComponent(ComponentTypeEnum.SENTIENT)
-				) {
+				if (vicinityEntity.hasComponent(ComponentTypeEnum.SENTIENT)) {
 					let otherSentientComponent = vicinityEntity.getComponent(
 						ComponentTypeEnum.SENTIENT
 					) as SentientComponent;
@@ -80,7 +77,7 @@ export default class SentientSystem extends System {
 							this.firstRecentSwitchEntityIds.push(vicinityEntity.id);
 							this.secondRecentSwitchEntityIds.push(e.id);
 							this.reanableFlameStealCounters.push(0);
-							sentientComponent.character.light_up();
+							// sentientComponent.character.light_up();
 							if (otherSentientComponent.character) {
 								otherSentientComponent.character.extinguish();
 							}
@@ -92,7 +89,9 @@ export default class SentientSystem extends System {
 					sentientComponent.character.is_lit &&
 					vicinityEntity.hasComponent(ComponentTypeEnum.GRAVESTONE)
 				) {
-					let gravestoneComp = vicinityEntity.getComponent(ComponentTypeEnum.GRAVESTONE) as GravestoneComponent;
+					let gravestoneComp = vicinityEntity.getComponent(
+						ComponentTypeEnum.GRAVESTONE
+					) as GravestoneComponent;
 					if (!gravestoneComp.claimed) {
 						sentientComponent.character.accend();
 					}

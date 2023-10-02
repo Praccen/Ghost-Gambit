@@ -86,7 +86,8 @@ export default class LobbyState extends State {
 			if (length > 2) {
 				this.participantsDiv.children[length - 1].remove();
 				this.participantsDiv.children.pop();
-				Game.getInstanceNoSa().num_bots = this.participantsDiv.children.length - 2;
+				Game.getInstanceNoSa().num_bots =
+					this.participantsDiv.children.length - 2;
 			}
 		});
 	}

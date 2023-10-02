@@ -67,22 +67,20 @@ export default class LobbyState extends State {
 		if (!this.sa.localGame) {
 			playersMap.set(
 				"Player_" + Game.getInstanceNoSa().client.uid + "(You)",
-				Game.getInstanceNoSa().allCharacterDict.player.ascendTime -
-					startTime
+				Game.getInstanceNoSa().gameItemsDict.player.ascendTime - startTime
 			);
 			Game.getInstanceNoSa().client.bodyEntities.forEach(
 				(value: OpponentCharacter, key: string) => {
-					playersMap.set(
-						"Player_" + key,
-						value.ascendTime - startTime
-					);
+					playersMap.set("Player_" + key, value.ascendTime - startTime);
 				}
 			);
 			const mapSort = new Map(
 				[...playersMap.entries()].sort((a, b) => a[1] - b[1])
 			);
 			mapSort.forEach((value: number, key: string) => {
-				this.addParticipant(key + " Time: " + Math.round(value) * 0.001 + " Seconds");
+				this.addParticipant(
+					key + " Time: " + Math.round(value) * 0.001 + " Seconds"
+				);
 			});
 		}
 	}

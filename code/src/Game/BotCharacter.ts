@@ -7,11 +7,10 @@ import AudioPlayer from "../Engine/Audio/AudioPlayer";
 import GravestoneComponent from "./GameLogic/Components/GravestoneComponent";
 import { ComponentTypeEnum } from "../Engine/ECS/Components/Component";
 
-export default class OpponentCharacter extends Character {
+export default class BotCharacter extends Character {
 	audioThreshholdDist: number = 50;
 	drag_addition: number = 15;
 	bot_number: number;
-	isBot: boolean;
 
 	constructor(
 		rendering: Rendering,
@@ -19,7 +18,7 @@ export default class OpponentCharacter extends Character {
 		audioPlayer: AudioPlayer,
 		character_string: string,
 		gameItemsDict: object,
-		isBot: boolean,
+		bot_number: number,
 		start_position: Vec3 = new Vec3(),
 		start_size: Vec3 = new Vec3([0.25, 0.25, 0.25]),
 		start_rotation: Vec3 = new Vec3(),
@@ -40,23 +39,25 @@ export default class OpponentCharacter extends Character {
 			start_rotation_order,
 			trigger_download_needed
 		);
-		this.isBot = isBot;
+		this.bot_number = bot_number;
 	}
 
 	async init() {
 		super.init();
+
+		// this.cameraFocusComp = new CameraFocusComponent();
+		// this.cameraFocusComp.offset.setValues(0.0, 1.5, -3.0);
+		// this.cameraFocusComp.focusPoint.setValues(0.0, 1.5, 0.0);
+		// this.ecsManager.addComponent(this.bodyEntity, this.cameraFocusComp);
 	}
 
 	character_specific_accended_operations(dt) {
 		// this.gameItemsDict["opponents"].remove(this.bot_number);
 		this.ecsManager.removeEntity(this.bodyEntity.id);
-		this.ecsManager.removeEntity(this.fireEntity.id);
 	}
 
 	accend() {
 		this.is_accending = true;
-		this.ascendTime = Date.now();
-		console.log("Player ascending!");
 		let bot_pos = ECSUtils.CalculatePosition(this.bodyEntity);
 		let dist = this.get_dist_to_player(bot_pos);
 		if (dist < this.audioThreshholdDist) {
@@ -110,7 +111,7 @@ export default class OpponentCharacter extends Character {
 		for (let itemId in this.gameItemsDict["opponents"]) {
 			let item = this.gameItemsDict["opponents"][itemId];
 			let itemEnt = item.bodyEntity;
-			if (itemEnt != null && !itemEnt.accended && !itemEnt.is_accending) {
+			if (itemEnt != null) {
 				let itemPos = ECSUtils.CalculatePosition(itemEnt);
 				let rVecToItem = new Vec3(itemPos.subtract(bot_pos.clone()));
 				let lenToItem = rVecToItem.len();
@@ -192,10 +193,6 @@ export default class OpponentCharacter extends Character {
 	}
 
 	modify_acc_vec(accVec: Vec3) {
-		if (!this.isBot) {
-			return;
-		}
-
 		let bot_pos = ECSUtils.CalculatePosition(this.bodyEntity);
 
 		let player_relational_vec = this.get_closest_relational_vec(
@@ -324,9 +321,6 @@ export default class OpponentCharacter extends Character {
 	}
 
 	jump_controll() {
-		if (!this.isBot) {
-			return;
-		}
 		if (Math.random() > 0.995) {
 			this.movComp.jumpRequested = true;
 			this.offGroundTimer = 0.5;
@@ -414,18 +408,18 @@ export default class OpponentCharacter extends Character {
 	//     // Use A* algorithm to navigate to the chosen goal
 	//     const path = AStar.findPath(this.currentPosition, goal);
 
-	//     // Move the OpponentCharacter along the path (assuming you have a method to move the OpponentCharacter)
+	//     // Move the BotCharacter along the path (assuming you have a method to move the BotCharacter)
 	//     this.moveAlongPath(path);
 	// }
 
 	// moveAlongPath(path: Vec3[]) {
-	//     // Implement logic to move the OpponentCharacter along the path
-	//     // You can update the OpponentCharacter's position based on the path
-	//     // For example, you can set the OpponentCharacter's position to the next point in the path.
+	//     // Implement logic to move the BotCharacter along the path
+	//     // You can update the BotCharacter's position based on the path
+	//     // For example, you can set the BotCharacter's position to the next point in the path.
 	//     if (path.length > 0) {
 	//         const nextPosition = path[0];
-	//         // Move the OpponentCharacter towards the next position
-	//         // Update the OpponentCharacter's position accordingly
+	//         // Move the BotCharacter towards the next position
+	//         // Update the BotCharacter's position accordingly
 	//         this.currentPosition = nextPosition;
 	//     }
 	// }

@@ -80,7 +80,7 @@ export class Client {
 				console.log("Client connected: " + msg.id);
 				// Send pos to joind clients
 				let posComp = <PositionParentComponent>(
-					this.game.allCharacterDict.player.bodyEntity.getComponent(
+					this.game.gameItemsDict.player.bodyEntity.getComponent(
 						ComponentTypeEnum.POSITIONPARENT
 					)
 				);
@@ -92,13 +92,13 @@ export class Client {
 					this.game.ecsManager,
 					this.game.stateAccessible.audioPlayer,
 					"Ghost Character",
-					this.game.allCharacterDict,
+					this.game.gameItemsDict,
 					false,
 					new Vec3([0.0, -10.0, 0.0])
 				);
 				newEnt.init();
 				this.bodyEntities.set(msg.id, newEnt);
-				this.game.allCharacterDict.bots.push(newEnt);
+				this.game.gameItemsDict.opponents.push(newEnt);
 				break;
 			case "MOV":
 				if (this.bodyEntities.get(msg.id) != undefined) {
