@@ -23,12 +23,12 @@ import Vec3 from "../../Engine/Maths/Vec3";
 import PointLightComponent from "../../Engine/ECS/Components/PointLightComponent";
 import PlayerCharacter from "../PlayerCharacter";
 import { Client } from "../../Engine/Client/Client";
-import BotCharacter from "../BotCharacter";
+import OpponentCharacter from "../OpponentCharacter";
 
 export default class Game extends State {
 	rendering: Rendering;
 	ecsManager: ECSManager;
-	private stateAccessible: StateAccessible;
+	stateAccessible: StateAccessible;
 
 	private overlayRendering: OverlayRendering;
 	private menuButton: Button;
@@ -40,10 +40,13 @@ export default class Game extends State {
 
 	private playerCharacter: PlayerCharacter;
 
-	private botCharacterList: Array<BotCharacter>;
+	private opponentCharacterList: Array<OpponentCharacter>;
 	num_bots: number;
 
-	private allCharacterDict: { player: PlayerCharacter; bots: BotCharacter[] };
+	allCharacterDict: {
+		player: PlayerCharacter;
+		bots: OpponentCharacter[];
+	};
 
 	private oWasPressed: boolean;
 
@@ -70,11 +73,11 @@ export default class Game extends State {
 		);
 		this.oWasPressed = true;
 
-		this.botCharacterList = [];
+		this.opponentCharacterList = [];
 
 		this.allCharacterDict = {
 			player: this.playerCharacter,
-			bots: this.botCharacterList,
+			bots: this.opponentCharacterList,
 		};
 		this.num_bots = 0;
 		this.unlockedGraves = false;
@@ -95,7 +98,7 @@ export default class Game extends State {
 		this.createMapEntity();
 
 		if (this.client == undefined) {
-			this.client = new Client();
+			this.client = new Client(this);
 		} else {
 			// this.client.sendLeave();
 		}
@@ -176,7 +179,7 @@ export default class Game extends State {
 
 		await this.playerCharacter.init();
 
-		this.botCharacterList.length = 0;
+		this.opponentCharacterList.length = 0;
 		this.num_bots = 0;
 
 		this.unlockedGraves = false;
@@ -286,18 +289,17 @@ export default class Game extends State {
 
 	async spawnBots() {
 		for (let i = 0; i < this.num_bots; i++) {
-			let bot = new BotCharacter(
+			let bot = new OpponentCharacter(
 				this.rendering,
 				this.ecsManager,
 				this.stateAccessible.audioPlayer,
 				"Ghost Character",
 				this.allCharacterDict,
-				i,
 				new Vec3([Math.random() * 20, 1.5, Math.random() * 20])
 			);
-			this.botCharacterList.push(bot);
+			this.opponentCharacterList.push(bot);
 		}
-		for (const bot of this.botCharacterList) {
+		for (const bot of this.opponentCharacterList) {
 			await bot.init();
 		}
 	}
@@ -313,7 +315,7 @@ export default class Game extends State {
 			this.unlockedGraves = true;
 		}
 
-		for (const bot of this.botCharacterList) {
+		for (const bot of this.opponentCharacterList) {
 			bot.update(dt);
 		}
 

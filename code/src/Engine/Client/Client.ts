@@ -1,3 +1,4 @@
+import OpponentCharacter from "../../Game/OpponentCharacter";
 import Game from "../../Game/States/Game";
 import { ComponentTypeEnum } from "../ECS/Components/Component";
 import PositionParentComponent from "../ECS/Components/PositionParentComponent";
@@ -7,14 +8,19 @@ import { StatesEnum } from "../State";
 
 export class Client {
 	private socket: WebSocket;
-	bodyEntities: Map<string, Entity> = new Map<string, Entity>();
+	bodyEntities: Map<string, OpponentCharacter> = new Map<
+		string,
+		OpponentCharacter
+	>();
 	connected: boolean = false;
 	private uid: string;
 	activeRooms: string[] = [];
 	isServer: boolean = true;
 	gameStarted: boolean = false;
+	private game: Game;
 
-	constructor() {
+	constructor(game: Game) {
+		this.game = game;
 		this.socket = new WebSocket("wss://sever54.rlyeh.nu", "v1");
 		this.socket.addEventListener("open", (event) => {
 			console.log("Connected to server");
@@ -72,12 +78,15 @@ export class Client {
 				break;
 			case "JOI":
 				console.log("Client connected: " + msg.id);
-				const newEnt = Game.getInstanceNoSa().objectPlacer.placePlayer(
-					new Vec3([-10.0, -10.0, -10.0]),
-					new Vec3([0.25, 0.25, 0.25]),
-					new Vec3(),
-					null
-				)[0];
+				const newEnt = new OpponentCharacter(
+					this.game.rendering,
+					this.game.ecsManager,
+					this.game.stateAccessible.audioPlayer,
+					"Ghost Character",
+					this.game.allCharacterDict,
+					new Vec3([Math.random() * 20, 1.5, Math.random() * 20])
+				);
+				newEnt.init();
 				this.bodyEntities.set(msg.id, newEnt);
 				break;
 			case "MOV":
@@ -85,7 +94,7 @@ export class Client {
 					let posComp = <PositionParentComponent>(
 						this.bodyEntities
 							.get(msg.id)
-							.getComponent(ComponentTypeEnum.POSITIONPARENT)
+							.bodyEntity.getComponent(ComponentTypeEnum.POSITIONPARENT)
 					);
 					if (posComp) {
 						posComp.position.x = msg.x_pos;
@@ -100,7 +109,7 @@ export class Client {
 			case "DIS":
 				console.log("Client disconnected" + msg.id);
 				Game.getInstanceNoSa().ecsManager.removeEntity(
-					this.bodyEntities.get(msg.id).id
+					this.bodyEntities.get(msg.id).bodyEntity.id
 				);
 				this.bodyEntities.delete(msg.id);
 				this.connected = false;

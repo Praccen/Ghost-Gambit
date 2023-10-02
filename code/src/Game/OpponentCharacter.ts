@@ -5,7 +5,7 @@ import Rendering from "../Engine/Rendering/Rendering";
 import ECSManager from "../Engine/ECS/ECSManager";
 import AudioPlayer from "../Engine/Audio/AudioPlayer";
 
-export default class BotCharacter extends Character {
+export default class OpponentCharacter extends Character {
 	audioThreshholdDist: number = 50;
 	drag_addition: number = 15;
 	bot_number: number;
@@ -16,7 +16,6 @@ export default class BotCharacter extends Character {
 		audioPlayer: AudioPlayer,
 		character_string: string,
 		allCharacterDict: object,
-		bot_number: number,
 		start_position: Vec3 = new Vec3(),
 		start_size: Vec3 = new Vec3([0.25, 0.25, 0.25]),
 		start_rotation: Vec3 = new Vec3(),
@@ -247,18 +246,18 @@ export default class BotCharacter extends Character {
 	//     // Use A* algorithm to navigate to the chosen goal
 	//     const path = AStar.findPath(this.currentPosition, goal);
 
-	//     // Move the BotCharacter along the path (assuming you have a method to move the BotCharacter)
+	//     // Move the OpponentCharacter along the path (assuming you have a method to move the OpponentCharacter)
 	//     this.moveAlongPath(path);
 	// }
 
 	// moveAlongPath(path: Vec3[]) {
-	//     // Implement logic to move the BotCharacter along the path
-	//     // You can update the BotCharacter's position based on the path
-	//     // For example, you can set the BotCharacter's position to the next point in the path.
+	//     // Implement logic to move the OpponentCharacter along the path
+	//     // You can update the OpponentCharacter's position based on the path
+	//     // For example, you can set the OpponentCharacter's position to the next point in the path.
 	//     if (path.length > 0) {
 	//         const nextPosition = path[0];
-	//         // Move the BotCharacter towards the next position
-	//         // Update the BotCharacter's position accordingly
+	//         // Move the OpponentCharacter towards the next position
+	//         // Update the OpponentCharacter's position accordingly
 	//         this.currentPosition = nextPosition;
 	//     }
 	// }

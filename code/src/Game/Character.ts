@@ -20,7 +20,7 @@ export default abstract class Character {
 	protected ecsManager: ECSManager;
 	protected audioPlayer: AudioPlayer;
 
-	protected bodyEntity: Entity;
+	bodyEntity: Entity;
 	protected fireEntity: Entity;
 
 	protected groupPositionComp: PositionParentComponent;

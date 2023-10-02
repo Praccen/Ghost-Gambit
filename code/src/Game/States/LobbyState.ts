@@ -4,6 +4,7 @@ import Div from "../../Engine/GUI/Div";
 import { OverlayRendering } from "../../Engine/Rendering/OverlayRendering";
 import State, { StatesEnum } from "../../Engine/State";
 import { StateAccessible } from "../GameMachine";
+import OpponentCharacter from "../OpponentCharacter";
 import Game from "./Game";
 
 export default class LobbyState extends State {
@@ -124,7 +125,7 @@ export default class LobbyState extends State {
 					}
 					this.addParticipant("You");
 					Game.getInstanceNoSa().client.bodyEntities.forEach(
-						(value: Entity, key: string) => {
+						(value: OpponentCharacter, key: string) => {
 							this.addParticipant("Player_" + key);
 						}
 					);
