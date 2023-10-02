@@ -176,7 +176,6 @@ export default class Game extends State {
 		this.num_bots = 0;
 
 		this.unlockedGraves = false;
-		
 
 		self.gotoState = StatesEnum.PRELOBBY;
 	}

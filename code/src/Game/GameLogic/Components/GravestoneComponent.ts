@@ -1,4 +1,7 @@
-import { Component, ComponentTypeEnum } from "../../../Engine/ECS/Components/Component";
+import {
+	Component,
+	ComponentTypeEnum,
+} from "../../../Engine/ECS/Components/Component";
 import Entity from "../../../Engine/ECS/Entity";
 
 export default class GravestoneComponent extends Component {

@@ -365,7 +365,9 @@ export default class ObjectPlacer {
 			fireParticleComp.offset.y = 0.6;
 			this.ecsManager.addComponent(entity, fireParticleComp);
 
-			let pointLightComp = new PointLightComponent(this.scene.getNewPointLight());
+			let pointLightComp = new PointLightComponent(
+				this.scene.getNewPointLight()
+			);
 			pointLightComp.posOffset.y = 0.7;
 			pointLightComp.pointLight.colour.setValues(0.5, 0.15, 0.0);
 			this.ecsManager.addComponent(entity, pointLightComp);

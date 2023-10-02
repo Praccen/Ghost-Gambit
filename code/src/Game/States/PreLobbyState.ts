@@ -54,7 +54,9 @@ export default class PreLobbyState extends State {
 		joinButton.center = true;
 		joinButton.textString = "Join";
 		joinButton.onClick(function () {
-			Game.getInstanceNoSa().client.joinRoom(self.roomName.getInputElement().value);
+			Game.getInstanceNoSa().client.joinRoom(
+				self.roomName.getInputElement().value
+			);
 			self.joinedGame(10);
 			self.sa.localGame = false;
 		});
