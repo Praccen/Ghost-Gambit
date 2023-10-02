@@ -45,6 +45,7 @@ export default class OpponentCharacter extends Character {
 	character_specific_accended_operations(dt) {
 		// this.allCharacterDict["bots"].remove(this.bot_number);
 		this.ecsManager.removeEntity(this.bodyEntity.id);
+		this.ecsManager.removeEntity(this.fireEntity.id);
 	}
 
 	accend() {

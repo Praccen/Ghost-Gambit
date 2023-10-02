@@ -74,7 +74,7 @@ export default class LobbyState extends State {
 		this.addBotButton.position.y = 0.7;
 		this.addBotButton.textString = "Add bot";
 		this.addBotButton.onClick(() => {
-			this.addParticipant("Bot " + Game.getInstanceNoSa().num_bots++);
+			this.addParticipant("Bot " + Game.getInstanceNoSa().num_bots);
 		});
 
 		this.removeParticipantButton = this.overlay.getNewButton();
@@ -86,7 +86,7 @@ export default class LobbyState extends State {
 			if (length > 2) {
 				this.participantsDiv.children[length - 1].remove();
 				this.participantsDiv.children.pop();
-				Game.getInstanceNoSa().num_bots--;
+				Game.getInstanceNoSa().num_bots = this.participantsDiv.children.length - 2;
 			}
 		});
 	}
@@ -94,11 +94,13 @@ export default class LobbyState extends State {
 	private addParticipant(name: string) {
 		let participantText = this.overlay.getNew2DText(this.participantsDiv);
 		participantText.textString = name;
+		Game.getInstanceNoSa().num_bots = this.participantsDiv.children.length - 2;
 	}
 
 	async init() {
 		super.init();
 		this.overlay.show();
+		Game.getInstanceNoSa().num_bots = this.participantsDiv.children.length - 2;
 	}
 
 	reset() {

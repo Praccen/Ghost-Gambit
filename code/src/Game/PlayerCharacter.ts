@@ -23,10 +23,7 @@ export default class PlayerCharacter extends Character {
 	}
 
 	character_specific_accended_operations(dt) {
-		let particleSpawnerComp = this.fireEntity.getComponent(
-			ComponentTypeEnum.PARTICLESPAWNER
-		) as ParticleSpawnerComponent;
-		particleSpawnerComp.destructor();
+		this.ecsManager.removeEntity(this.fireEntity.id);
 		this.ecsManager.removeEntity(this.bodyEntity.id);
 	}
 
