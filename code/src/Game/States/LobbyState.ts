@@ -46,6 +46,8 @@ export default class LobbyState extends State {
 
 		backButton.onClick(function () {
 			self.gotoState = StatesEnum.MAINMENU;
+			Game.getInstanceNoSa().client.sendLeave();
+			sa.restartGame = true;
 		});
 
 		this.participantsDiv = this.overlay.getNewDiv();

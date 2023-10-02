@@ -122,6 +122,9 @@ export class Client {
 	sendStart(): void {
 		this.send(JSON.stringify({ type: "STR" }), 0);
 	}
+	sendLeave(): void {
+		this.send(JSON.stringify({ type: "LEA" }), 0);
+	}
 
 	// Send message, try {tries} numper of times with 3 sec intercal
 	send(message: string, tries: number): boolean {

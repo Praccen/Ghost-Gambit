@@ -109,9 +109,11 @@ export default class ECSManager {
 	}
 
 	removeEntity(entityID: number) {
-		this.entityDeletionQueue.push(entityID);
-		for (const comp of this.getEntity(entityID).components) {
-			this.removeComponent(this.getEntity(entityID), comp.type);
+		if (this.getEntity(entityID)) {
+			this.entityDeletionQueue.push(entityID);
+			for (const comp of this.getEntity(entityID).components) {
+				this.removeComponent(this.getEntity(entityID), comp.type);
+			}
 		}
 	}
 

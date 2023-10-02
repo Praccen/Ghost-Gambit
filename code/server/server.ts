@@ -126,7 +126,33 @@ wss.on("connection", (ws) => {
 						}
 					}
 				}
-
+				break;
+			case "LEA":
+				const roomLeaveName = clients.get(ws).room;
+				if (clients.get(ws)) {
+					console.log("Someone left room! " + clients.get(ws).id);
+				}
+				if (roomLeaveName != "NOT_VALID") {
+					// Remove player from room
+					rooms
+						.get(roomLeaveName)
+						.splice(rooms.get(roomLeaveName).indexOf(ws), 1);
+					// Send disconnect to all other players
+					for (const element of rooms.get(roomLeaveName)) {
+						if (element != ws && element.OPEN) {
+							element.send(
+								JSON.stringify({
+									type: "DIS",
+									id: clients.get(ws).id.toString(),
+								})
+							);
+						}
+					}
+					// Remove room if empty
+					if (rooms.get(roomLeaveName).length <= 0) {
+						rooms.delete(roomLeaveName);
+					}
+				}
 				break;
 		}
 	});
@@ -146,6 +172,7 @@ wss.on("connection", (ws) => {
 				}
 			}
 
+			// Remove room if empty
 			rooms.get(roomName).splice(rooms.get(roomName).indexOf(ws), 1);
 			if (rooms.get(roomName).length <= 0) {
 				rooms.delete(roomName);
