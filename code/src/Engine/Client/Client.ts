@@ -110,7 +110,7 @@ export class Client {
 			case "STR":
 				console.log("Strating game!");
 				// Game.getInstanceNoSa().gotoState = StatesEnum.GAME;
-				this.gameStarted = true;
+				this.connected = true;
 				break;
 		}
 	}
@@ -124,6 +124,7 @@ export class Client {
 	}
 	sendLeave(): void {
 		this.send(JSON.stringify({ type: "LEA" }), 0);
+		this.connected = false;
 	}
 
 	// Send message, try {tries} numper of times with 3 sec intercal

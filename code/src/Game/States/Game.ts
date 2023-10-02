@@ -94,7 +94,9 @@ export default class Game extends State {
 
 		this.createMapEntity();
 
-		this.client = new Client();
+		if (this.client == undefined) {
+			this.client = new Client();
+		}
 
 		let dirLight = this.scene.getDirectionalLight();
 		dirLight.ambientMultiplier = 0.3;

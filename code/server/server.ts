@@ -4,6 +4,7 @@ const wss = new WebSocket.Server({ port: 8080 });
 
 // Store connected clients
 const rooms = new Map<string, WebSocket[]>();
+const roomsStarted = new Map<string, boolean>();
 const clients = new Map<
 	WebSocket,
 	{
@@ -41,6 +42,7 @@ wss.on("connection", (ws) => {
 					clients.get(ws).room = msg.room_id;
 					// Add client to room
 					rooms.set(msg.room_id, new Array());
+					roomsStarted.set(msg.room_id, false);
 					rooms.get(msg.room_id).push(ws);
 					// Send CON msg to client
 					ws.send(
@@ -62,7 +64,7 @@ wss.on("connection", (ws) => {
 				break;
 			case "JOI":
 				// Join room
-				if (rooms.has(msg.room_id)) {
+				if (rooms.has(msg.room_id) && !roomsStarted.get(msg.room_id)) {
 					console.log("Joining room: " + msg.room_id);
 					rooms.get(msg.room_id).push(ws);
 					clients.get(ws).room = msg.room_id;
@@ -106,9 +108,10 @@ wss.on("connection", (ws) => {
 				break;
 			case "GET":
 				var roomList = [];
-
 				for (const room of rooms.keys()) {
-					roomList.push(room);
+					if (!roomsStarted.get(room)) {
+						roomList.push(room);
+					}
 				}
 				ws.send(
 					JSON.stringify({
@@ -120,6 +123,7 @@ wss.on("connection", (ws) => {
 			case "STR":
 				const roomNames = clients.get(ws).room;
 				if (roomNames != "NOT_VALID") {
+					roomsStarted.set(roomNames, true);
 					for (const element of rooms.get(roomNames)) {
 						if (element != ws && element.OPEN) {
 							element.send(JSON.stringify({ type: "STR" }));

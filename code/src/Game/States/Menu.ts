@@ -2,6 +2,7 @@ import { OverlayRendering } from "../../Engine/Rendering/OverlayRendering";
 import State, { StatesEnum } from "../../Engine/State";
 import { WebUtils } from "../../Engine/Utils/WebUtils";
 import { StateAccessible } from "../GameMachine";
+import Game from "./Game";
 
 export default class Menu extends State {
 	private overlayRendering: OverlayRendering;
@@ -22,6 +23,9 @@ export default class Menu extends State {
 		startButton.onClick(function () {
 			self.gotoState = StatesEnum.GAME;
 			sa.restartGame = true;
+			if (Game.getInstanceNoSa().client.connected) {
+				Game.getInstanceNoSa().client.sendLeave();
+			}
 		});
 
 		let restartButton = this.overlayRendering.getNewButton();
