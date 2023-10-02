@@ -89,7 +89,7 @@ export default class PlayerCharacter extends Character {
 	}
 
 	jump_controll() {
-		if (input.keys[" "] || input.buttons.get("A")) {
+		if (input.keys[" "] || input.buttons.get("A") || input.buttons.get("B")) {
 			this.movComp.jumpRequested = true;
 			this.offGroundTimer = 0.5;
 			this.audioPlayer.pauseAudio("ghost_sound_2");

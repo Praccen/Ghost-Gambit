@@ -225,8 +225,6 @@ export default abstract class Character {
 			return;
 		}
 
-		console.log("Pos: " + this.groupPositionComp.position);
-
 		if (this.accended) {
 			return;
 		}

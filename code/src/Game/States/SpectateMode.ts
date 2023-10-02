@@ -81,6 +81,12 @@ export default class SpectateMode extends State {
 			move = true;
 		}
 
+		if (input.joystickLeftDirection.length2() > 0.0) {
+			let joyDir = input.joystickLeftDirection;
+			moveVec.setValues(0.0, 0.0, 0.0).add(new Vec3(this.game.rendering.camera.getRight()).multiply(joyDir.x)).add(new Vec3(this.game.rendering.camera.getDir()).multiply(-joyDir.y));
+			move = true;
+		}
+
 		if (input.keys[" "]) {
 			moveVec.add(new Vec3([0.0, 1.0, 0.0]));
 			move = true;
@@ -92,7 +98,6 @@ export default class SpectateMode extends State {
 		}
 
 		if (move) {
-			moveVec.normalize();
 			moveVec.multiply(15.0 * dt); // Speed
 
 			this.game.rendering.camera.translate(moveVec.x, moveVec.y, moveVec.z);
@@ -111,6 +116,14 @@ export default class SpectateMode extends State {
 				(input.mousePosition.previousX - input.mousePosition.x) * 0.2
 			);
 
+			rotate = true;
+		}
+
+		if (input.joystickRightDirection.length2() > 0.0) {
+			rotVec.setValues(
+				-input.joystickRightDirection.y,
+				-input.joystickRightDirection.x
+			);
 			rotate = true;
 		}
 
