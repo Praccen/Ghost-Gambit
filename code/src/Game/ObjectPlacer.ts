@@ -486,7 +486,7 @@ export default class ObjectPlacer {
 			}
 		}
 
-		if (closest >= Infinity) {
+		if (closest >= Infinity || this.currentlyEditingEntityId == 0) {
 			this.currentlyEditingEntityId = null;
 		}
 	}
