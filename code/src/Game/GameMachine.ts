@@ -103,7 +103,7 @@ export default class GameMachine extends StateMachine {
 			StatesEnum.SPECTATEMODE,
 			SpectateMode,
 			1.0 / 144.0,
-			new SpectateMode(game)
+			new SpectateMode(this.stateAccessible, game)
 		);
 		this.stateAccessible.restartGame = true;
 

@@ -92,15 +92,11 @@ export default class SentientSystem extends System {
 					sentientComponent.character.is_lit &&
 					vicinityEntity.hasComponent(ComponentTypeEnum.GRAVESTONE)
 				) {
-					(
-						vicinityEntity.getComponent(
-							ComponentTypeEnum.GRAVESTONE
-						) as GravestoneComponent
-					).claimed = true;
-					if (sentientComponent.character instanceof PlayerCharacter) {
-						// Success!
+					let gravestoneComp = vicinityEntity.getComponent(ComponentTypeEnum.GRAVESTONE) as GravestoneComponent;
+					if (!gravestoneComp.claimed) {
 						sentientComponent.character.accend();
 					}
+					gravestoneComp.claimed = true;
 					break;
 				}
 			}

@@ -1,5 +1,5 @@
 import State, { StatesEnum } from "../../Engine/State";
-import { input } from "../GameMachine";
+import { StateAccessible, input } from "../GameMachine";
 import Game from "./Game";
 import Vec2 from "../../Engine/Maths/Vec2";
 import Vec3 from "../../Engine/Maths/Vec3";
@@ -8,12 +8,14 @@ import { gl } from "../../main";
 
 export default class SpectateMode extends State {
 	private game: Game;
+	private sa: StateAccessible;
 	private overlay: OverlayRendering;
 	private lastMousePos: Vec2;
 
-	constructor(game: Game) {
+	constructor(stateAccessible: StateAccessible,game: Game) {
 		super();
 		this.game = game;
+		this.sa = stateAccessible;
 
 		this.lastMousePos = new Vec2([
 			input.mousePosition.x,
@@ -49,6 +51,9 @@ export default class SpectateMode extends State {
 		gl.clear(gl.COLOR_BUFFER_BIT);
 		input.touchUsed = false;
 		input.drawTouchControls();
+		if (this.sa.audioPlayer != undefined) {
+			this.sa.audioPlayer.stopAll();
+		}
 	}
 
 	update(dt: number) {

@@ -1,4 +1,5 @@
 import ObjectPlacer from "../../../Game/ObjectPlacer";
+import Game from "../../../Game/States/Game";
 import Div from "../../GUI/Div";
 import PointLight from "../../Lighting/PointLight";
 import Vec3 from "../../Maths/Vec3";
@@ -13,6 +14,10 @@ export default class PointLightComponent extends Component {
 		super(ComponentTypeEnum.POINTLIGHT);
 		this.pointLight = pointLight;
 		this.posOffset = new Vec3();
+	}
+
+	destructor(): void {
+		Game.getInstanceNoSa().rendering.scene.deletePointLight(this.pointLight);
 	}
 
 	addToGui(

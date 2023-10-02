@@ -40,15 +40,10 @@ export default class OpponentCharacter extends Character {
 
 	async init() {
 		super.init();
-
-		// this.cameraFocusComp = new CameraFocusComponent();
-		// this.cameraFocusComp.offset.setValues(0.0, 1.5, -3.0);
-		// this.cameraFocusComp.focusPoint.setValues(0.0, 1.5, 0.0);
-		// this.ecsManager.addComponent(this.bodyEntity, this.cameraFocusComp);
 	}
 
 	character_specific_accended_operations(dt) {
-		this.allCharacterDict["bots"].remove(this.bot_number);
+		// this.allCharacterDict["bots"].remove(this.bot_number);
 		this.ecsManager.removeEntity(this.bodyEntity.id);
 	}
 
