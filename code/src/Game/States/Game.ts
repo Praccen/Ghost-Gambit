@@ -302,9 +302,8 @@ export default class Game extends State {
 	update(dt: number) {
 		// TODO: Fix spectate mode, currently only a black screen
 		if (this.playerCharacter.accended) {
-			if (this.gotoState != StatesEnum.SPECTATEMODE) {
-				this.gotoState = StatesEnum.SPECTATEMODE;
-			}
+			this.gotoState = StatesEnum.SPECTATEMODE;
+			console.info("this.gotoState = StatesEnum.SPECTATEMODE;");
 		}
 		this.playerCharacter.update(dt);
 		if (this.playerCharacter.is_lit) {

@@ -21,6 +21,11 @@ export default class SpectateMode extends State {
 		]);
 	}
 
+	async init() {
+		super.init();
+		this.game.rendering.camera.setPosition(0, 0, 0);
+	}
+
 	update(dt: number) {
 		let moveVec: Vec3 = new Vec3();
 		let move = false;
@@ -108,5 +113,12 @@ export default class SpectateMode extends State {
 
 		this.game.ecsManager.update(dt);
 		this.game.ecsManager.updateRenderingSystems(dt, false);
+	}
+
+	prepareDraw(dt: number): void {}
+
+	draw() {
+		this.game.rendering.draw();
+		input.drawTouchControls();
 	}
 }

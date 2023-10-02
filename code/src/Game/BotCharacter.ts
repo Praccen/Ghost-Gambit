@@ -1,8 +1,5 @@
-import { random } from "quaternion";
-import { ComponentTypeEnum } from "../Engine/ECS/Components/Component";
 import Vec3 from "../Engine/Maths/Vec3";
 import { ECSUtils } from "../Engine/Utils/ESCUtils";
-import AStar from "./AStar";
 import Character from "./Character";
 import Rendering from "../Engine/Rendering/Rendering";
 import ECSManager from "../Engine/ECS/ECSManager";
@@ -65,15 +62,23 @@ export default class BotCharacter extends Character {
 		}
 	}
 	get_dist_to_player(): number {
-		return this.get_player_relational_vec().len();
+		if (!this.allCharacterDict["player"].accended) {
+			return this.get_player_relational_vec().len();
+		} else {
+			return 200;
+		}
 	}
 
 	get_player_relational_vec(): Vec3 {
-		let player_pos = ECSUtils.CalculatePosition(
-			this.allCharacterDict["player"].bodyEntity
-		);
-		let bot_pos = ECSUtils.CalculatePosition(this.bodyEntity);
-		return new Vec3(player_pos.subtract(bot_pos.clone()));
+		if (!this.allCharacterDict["player"].accended) {
+			let player_pos = ECSUtils.CalculatePosition(
+				this.allCharacterDict["player"].bodyEntity
+			);
+			let bot_pos = ECSUtils.CalculatePosition(this.bodyEntity);
+			return new Vec3(player_pos.subtract(bot_pos.clone()));
+		} else {
+			return new Vec3();
+		}
 	}
 
 	extinguish_audio_operations() {
