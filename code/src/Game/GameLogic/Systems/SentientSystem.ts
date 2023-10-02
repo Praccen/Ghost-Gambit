@@ -60,7 +60,10 @@ export default class SentientSystem extends System {
 					let otherSentientComponent = vicinityEntity.getComponent(
 						ComponentTypeEnum.SENTIENT
 					) as SentientComponent;
-					if (otherSentientComponent.character.is_lit) {
+					if (
+						otherSentientComponent.character &&
+						otherSentientComponent.character.is_lit
+					) {
 						let takenIds = false;
 						for (let i = 0; i < this.firstRecentSwitchEntityIds.length; i++) {
 							let id_1 = this.firstRecentSwitchEntityIds[i];
@@ -78,7 +81,9 @@ export default class SentientSystem extends System {
 							this.secondRecentSwitchEntityIds.push(e.id);
 							this.reanableFlameStealCounters.push(0);
 							sentientComponent.character.light_up();
-							otherSentientComponent.character.extinguish();
+							if (otherSentientComponent.character) {
+								otherSentientComponent.character.extinguish();
+							}
 						}
 						break;
 					}

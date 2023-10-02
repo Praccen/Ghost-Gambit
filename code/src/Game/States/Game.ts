@@ -96,6 +96,8 @@ export default class Game extends State {
 
 		if (this.client == undefined) {
 			this.client = new Client();
+		} else {
+			// this.client.sendLeave();
 		}
 
 		let dirLight = this.scene.getDirectionalLight();

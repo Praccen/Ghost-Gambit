@@ -103,14 +103,16 @@ export class Client {
 					this.bodyEntities.get(msg.id).id
 				);
 				this.bodyEntities.delete(msg.id);
+				this.connected = false;
+				this.gameStarted = false;
 				break;
 			case "GET":
 				this.activeRooms = msg.rooms;
 				break;
 			case "STR":
 				console.log("Strating game!");
+				this.gameStarted = true;
 				// Game.getInstanceNoSa().gotoState = StatesEnum.GAME;
-				this.connected = true;
 				break;
 		}
 	}
@@ -125,6 +127,7 @@ export class Client {
 	sendLeave(): void {
 		this.send(JSON.stringify({ type: "LEA" }), 0);
 		this.connected = false;
+		this.gameStarted = false;
 	}
 
 	// Send message, try {tries} numper of times with 3 sec intercal

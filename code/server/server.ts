@@ -123,6 +123,7 @@ wss.on("connection", (ws) => {
 			case "STR":
 				const roomNames = clients.get(ws).room;
 				if (roomNames != "NOT_VALID") {
+					console.log("Starting game: " + roomNames);
 					roomsStarted.set(roomNames, true);
 					for (const element of rooms.get(roomNames)) {
 						if (element != ws && element.OPEN) {
@@ -154,6 +155,7 @@ wss.on("connection", (ws) => {
 					}
 					// Remove room if empty
 					if (rooms.get(roomLeaveName).length <= 0) {
+						console.log("Delete room: " + roomLeaveName);
 						rooms.delete(roomLeaveName);
 					}
 				}
@@ -179,6 +181,7 @@ wss.on("connection", (ws) => {
 			// Remove room if empty
 			rooms.get(roomName).splice(rooms.get(roomName).indexOf(ws), 1);
 			if (rooms.get(roomName).length <= 0) {
+				console.log("Delete room: " + roomName);
 				rooms.delete(roomName);
 			}
 		}
