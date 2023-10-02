@@ -44,9 +44,12 @@ export class Client {
 				JSON.stringify({
 					type: "MOV",
 					id: this.uid,
-					x: pos.x,
-					y: pos.y,
-					z: pos.z,
+					x_pos: pos.x,
+					y_pos: pos.y,
+					z_pos: pos.z,
+					x_rot: rot.x,
+					y_rot: rot.y,
+					z_rot: rot.z,
 				}),
 				0 // No retries
 			);
@@ -85,9 +88,12 @@ export class Client {
 							.getComponent(ComponentTypeEnum.POSITIONPARENT)
 					);
 					if (posComp) {
-						posComp.position.x = msg.x;
-						posComp.position.y = msg.y;
-						posComp.position.z = msg.z;
+						posComp.position.x = msg.x_pos;
+						posComp.position.y = msg.y_pos;
+						posComp.position.z = msg.z_pos;
+						posComp.rotation.x = msg.x_rot;
+						posComp.rotation.y = msg.y_rot;
+						posComp.rotation.z = msg.z_rot;
 					}
 				}
 				break;
