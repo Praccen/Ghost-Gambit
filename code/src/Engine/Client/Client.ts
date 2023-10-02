@@ -105,7 +105,7 @@ export class Client {
 							.get(msg.id)
 							.bodyEntity.getComponent(ComponentTypeEnum.POSITIONPARENT)
 					);
-					if (posComp) {
+					if (posComp && !this.bodyEntities.get(msg.id).is_accending) {
 						posComp.position.x = msg.x_pos;
 						posComp.position.y = msg.y_pos;
 						posComp.position.z = msg.z_pos;

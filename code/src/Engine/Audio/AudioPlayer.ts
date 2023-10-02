@@ -27,10 +27,9 @@ export default class AudioPlayer {
 			"light_up.mp3", //https://pixabay.com/sound-effects/match-lighting-candle-81020/
 			"fire.mp3", //https://pixabay.com/sound-effects/small-artisanal-oven-at-night-23698/
 			"success_1.mp3", //https://pixabay.com/sound-effects/ahhhh-37191/
-			"credits_theme_1.mp3", //https://pixabay.com/music/modern-classical-simple-piano-melody-9834/
 		];
 		const sound_effect_volume_multilpliers_list = [
-			0.5, 0.5, 1, 1, 0.5, 0.5, 1, 1, 0.5,
+			0.5, 0.5, 1, 1, 0.5, 0.5, 1, 1,
 		];
 		let count = 0;
 		for (const file of sound_effect_files) {
@@ -42,8 +41,12 @@ export default class AudioPlayer {
 			count++;
 		}
 
-		const song_files = ["theme_1.mp3"]; //https://pixabay.com/music/scary-childrens-tunes-dark-ambient-horror-cinematic-halloween-atmosphere-scary-118585/
-		const song_files_volume_multilpliers_list = [0.5];
+		const song_files = 
+		[
+			"theme_1.mp3", //https://pixabay.com/music/scary-childrens-tunes-dark-ambient-horror-cinematic-halloween-atmosphere-scary-118585/
+			"credits_theme_1.mp3", //https://pixabay.com/music/modern-classical-simple-piano-melody-9834/
+		]; 
+		const song_files_volume_multilpliers_list = [0.5, 0.5];
 		count = 0;
 		for (const file of song_files) {
 			this.songs[file.split(".")[0]] = new Audio(this.songs_dir + "/" + file);

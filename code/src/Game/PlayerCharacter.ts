@@ -28,7 +28,6 @@ export default class PlayerCharacter extends Character {
 		) as ParticleSpawnerComponent;
 		particleSpawnerComp.destructor();
 		this.ecsManager.removeEntity(this.bodyEntity.id);
-		this.audioPlayer.playAudio("credits_theme_1", true);
 	}
 
 	extinguish_audio_operations() {

@@ -48,7 +48,7 @@ export default abstract class Character {
 	protected trigger_download_needed: boolean;
 	protected allCharacterDict: object;
 	protected drag_addition: number = 10;
-	protected is_accending: boolean;
+	is_accending: boolean;
 	accended: boolean;
 	protected accentionTimerThreshold: number = 4;
 	protected accention_rotation_base: number = 0.1;

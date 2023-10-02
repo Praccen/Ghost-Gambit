@@ -42,6 +42,8 @@ export default class SpectateMode extends State {
 		super.init();
 		this.game.rendering.camera.setPosition(0, 0, 0);
 		this.overlay.show();
+		this.sa.audioPlayer.stopAll();
+		this.sa.audioPlayer.playAudio("credits_theme_1", true);
 	}
 
 	reset() {
