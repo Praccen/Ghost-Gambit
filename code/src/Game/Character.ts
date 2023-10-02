@@ -31,7 +31,9 @@ export default abstract class Character {
 	protected lastAnimation: Function;
 	protected currentAnimation: Function;
 
-	protected offGroundTimer;
+	protected offGroundTimer: number;
+	protected accentionTimer: number;
+	protected accentionEffectInterval: number;
 
 	protected timer: number;
 
@@ -46,15 +48,22 @@ export default abstract class Character {
 	protected trigger_download_needed: boolean;
 	protected allCharacterDict: object;
 	protected drag_addition: number = 10;
+	protected is_accending: boolean;
+	accended: boolean;
+	protected accentionTimerThreshold: number = 4;
+	protected accention_rotation_base: number = 0.1;
+	protected accention_pl_color_base: number = 0.1;
 
 	abstract get_forward_and_right(): [Vec3, Vec3];
 	abstract update_client();
 	abstract modify_acc_vec(Vec3);
 	abstract jump_controll();
 	abstract character_specific_controll();
-	abstract camera_operations(number);
+	abstract character_specific_camera_operations(number);
 	abstract extinguish_audio_operations();
 	abstract light_up_audio_operations();
+	abstract accend();
+	abstract character_specific_accended_operations(number);
 
 	constructor(
 		rendering: Rendering,
@@ -86,7 +95,11 @@ export default abstract class Character {
 		this.lastAnimation = this.resetAnimation;
 		this.currentAnimation = this.resetAnimation;
 		this.offGroundTimer = 0.0;
+		this.accentionTimer = 0.0;
+		this.accentionEffectInterval = 0.001;
 		this.is_lit = false;
+		this.is_accending = false;
+		this.accended = false;
 	}
 
 	async init() {
@@ -125,8 +138,12 @@ export default abstract class Character {
 
 	extinguish() {
 		if (this.is_lit) {
-			let particleSpawnerComp = this.fireEntity.getComponent(ComponentTypeEnum.PARTICLESPAWNER) as ParticleSpawnerComponent;
-			let pointLightComp = this.fireEntity.getComponent(ComponentTypeEnum.POINTLIGHT) as PointLightComponent;
+			let particleSpawnerComp = this.fireEntity.getComponent(
+				ComponentTypeEnum.PARTICLESPAWNER
+			) as ParticleSpawnerComponent;
+			let pointLightComp = this.fireEntity.getComponent(
+				ComponentTypeEnum.POINTLIGHT
+			) as PointLightComponent;
 
 			this.extinguish_audio_operations();
 			particleSpawnerComp.particleSpawner.setNumParticles(0);
@@ -139,8 +156,12 @@ export default abstract class Character {
 		if (!this.is_lit) {
 			this.light_up_audio_operations();
 
-			let particleSpawnerComp = this.fireEntity.getComponent(ComponentTypeEnum.PARTICLESPAWNER) as ParticleSpawnerComponent;
-			let pointLightComp = this.fireEntity.getComponent(ComponentTypeEnum.POINTLIGHT) as PointLightComponent;
+			let particleSpawnerComp = this.fireEntity.getComponent(
+				ComponentTypeEnum.PARTICLESPAWNER
+			) as ParticleSpawnerComponent;
+			let pointLightComp = this.fireEntity.getComponent(
+				ComponentTypeEnum.POINTLIGHT
+			) as PointLightComponent;
 
 			let nrOfFireParticles = 4;
 			particleSpawnerComp.particleSpawner.setNumParticles(nrOfFireParticles);
@@ -204,76 +225,121 @@ export default abstract class Character {
 			return;
 		}
 
+		if (this.accended) {
+			return;
+		}
+
 		this.update_client();
 
 		this.timer += dt;
 
 		let accVec = new Vec3();
 
-		this.modify_acc_vec(accVec);
+		if (!this.is_accending) {
+			this.modify_acc_vec(accVec);
 
-		if (accVec.length2() > 0.001) {
-			// Handle rotation
-			let targetRotation =
-				90 - Math.atan2(accVec.z, accVec.x) * (180 / Math.PI);
-			let diff = targetRotation - this.groupPositionComp.rotation.y;
-			if (diff > 180) {
-				diff -= 360;
-			} else if (diff < -180) {
-				diff += 360;
+			if (accVec.length2() > 0.001) {
+				// Handle rotation
+				let targetRotation =
+					90 - Math.atan2(accVec.z, accVec.x) * (180 / Math.PI);
+				let diff = targetRotation - this.groupPositionComp.rotation.y;
+				if (diff > 180) {
+					diff -= 360;
+				} else if (diff < -180) {
+					diff += 360;
+				}
+
+				this.groupPositionComp.rotation.y =
+					(this.groupPositionComp.rotation.y + diff * 0.04) % 360;
+
+				let acceleration = accVec.len();
+
+				this.movComp.accelerationDirection.x =
+					Math.cos((90 - this.groupPositionComp.rotation.y) * (Math.PI / 180)) *
+					Math.min(acceleration, 1.0);
+				this.movComp.accelerationDirection.z =
+					Math.sin((90 - this.groupPositionComp.rotation.y) * (Math.PI / 180)) *
+					Math.min(acceleration, 1.0);
+
+				// Walk/run animation based on velocity
+				let vel = this.movComp.velocity.len();
+
+				this.currentAnimation = this.walkAnimation;
+
+				if (vel > 5.0) {
+					this.currentAnimation = this.runAnimation;
+				}
+			} else {
+				// No acceleration, stand still
+				this.currentAnimation = this.resetAnimation;
 			}
 
-			this.groupPositionComp.rotation.y =
-				(this.groupPositionComp.rotation.y + diff * 0.04) % 360;
-
-			let acceleration = accVec.len();
-
-			this.movComp.accelerationDirection.x =
-				Math.cos((90 - this.groupPositionComp.rotation.y) * (Math.PI / 180)) *
-				Math.min(acceleration, 1.0);
-			this.movComp.accelerationDirection.z =
-				Math.sin((90 - this.groupPositionComp.rotation.y) * (Math.PI / 180)) *
-				Math.min(acceleration, 1.0);
-
-			// Walk/run animation based on velocity
-			let vel = this.movComp.velocity.len();
-
-			this.currentAnimation = this.walkAnimation;
-
-			if (vel > 5.0) {
-				this.currentAnimation = this.runAnimation;
+			// Jumping
+			this.jump_controll();
+			if (!this.movComp.onGround || this.movComp.jumpRequested) {
+				this.offGroundTimer += dt;
+				if (this.offGroundTimer >= 0.5) {
+					this.currentAnimation = this.jumpAnimation;
+				}
+			} else {
+				this.offGroundTimer = 0.0;
 			}
+
+			this.character_specific_controll();
+
+			this.character_specific_camera_operations(dt);
+
+			// Update drag based on velocity
+			let xzVelocity = new Vec3(this.movComp.velocity);
+			xzVelocity.y = 0.0;
+			this.movComp.drag = this.drag_addition + xzVelocity.len();
+
+			// Reset animation timer if animation has changed since last frame
+			if (this.currentAnimation != this.lastAnimation) {
+				this.timer = 0.0;
+			}
+			this.currentAnimation();
+			this.lastAnimation = this.currentAnimation;
 		} else {
-			// No acceleration, stand still
-			this.currentAnimation = this.resetAnimation;
-		}
+			// Accending
+			this.accentionTimer += dt;
 
-		// Jumping
-		this.jump_controll();
-		if (!this.movComp.onGround || this.movComp.jumpRequested) {
-			this.offGroundTimer += dt;
-			if (this.offGroundTimer >= 0.5) {
-				this.currentAnimation = this.jumpAnimation;
+			const accention_pl_color_addition = 0.01;
+			const accention_rotation_addition = 0.1;
+			const accention_y_vel_addition = 0.2;
+
+			this.currentAnimation = this.runAnimation;
+			this.movComp.velocity.add(new Vec3([0, accention_y_vel_addition, 0]));
+			let particleSpawnerComp = this.fireEntity.getComponent(
+				ComponentTypeEnum.PARTICLESPAWNER
+			) as ParticleSpawnerComponent;
+			particleSpawnerComp.destructor();
+
+			let posComp = this.bodyEntity.getComponent(
+				ComponentTypeEnum.POSITION
+			) as PositionComponent;
+			posComp.rotation.y += this.accention_rotation_base;
+			this.accention_rotation_base += accention_rotation_addition;
+
+			let pointLightComp = this.fireEntity.getComponent(
+				ComponentTypeEnum.POINTLIGHT
+			) as PointLightComponent;
+
+			pointLightComp.pointLight.colour.setValues(
+				this.accention_pl_color_base,
+				this.accention_pl_color_base,
+				this.accention_pl_color_base
+			);
+
+			this.accention_pl_color_base += accention_pl_color_addition;
+
+			if (this.accentionTimer > this.accentionTimerThreshold) {
+				this.accended = true;
+				this.is_accending = false;
+				this.movComp.velocity = new Vec3([0, 0, 0]);
+				this.character_specific_accended_operations(dt);
 			}
-		} else {
-			this.offGroundTimer = 0.0;
 		}
-
-		this.character_specific_controll();
-
-		this.camera_operations(dt);
-
-		// Update drag based on velocity
-		let xzVelocity = new Vec3(this.movComp.velocity);
-		xzVelocity.y = 0.0;
-		this.movComp.drag = this.drag_addition + xzVelocity.len();
-
-		// Reset animation timer if animation has changed since last frame
-		if (this.currentAnimation != this.lastAnimation) {
-			this.timer = 0.0;
-		}
-		this.currentAnimation();
-		this.lastAnimation = this.currentAnimation;
 
 		let currentTime = Date.now() * 0.001;
 		this.bodyMesh.emissionColor.setValues(

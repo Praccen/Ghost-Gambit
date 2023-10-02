@@ -3,6 +3,8 @@ import Vec3 from "../Engine/Maths/Vec3";
 import { input } from "./GameMachine";
 import Game from "./States/Game";
 import Character from "./Character";
+import { ComponentTypeEnum } from "../Engine/ECS/Components/Component";
+import ParticleSpawnerComponent from "../Engine/ECS/Components/ParticleSpawnerComponent";
 
 export default class PlayerCharacter extends Character {
 	async init() {
@@ -12,6 +14,21 @@ export default class PlayerCharacter extends Character {
 		this.cameraFocusComp.offset.setValues(0.0, 1.5, -3.0);
 		this.cameraFocusComp.focusPoint.setValues(0.0, 1.5, 0.0);
 		this.ecsManager.addComponent(this.bodyEntity, this.cameraFocusComp);
+	}
+
+	accend() {
+		this.audioPlayer.stopAll();
+		this.audioPlayer.playAudio("success_1", false);
+		this.is_accending = true;
+	}
+
+	character_specific_accended_operations(dt) {
+		let particleSpawnerComp = this.fireEntity.getComponent(
+			ComponentTypeEnum.PARTICLESPAWNER
+		) as ParticleSpawnerComponent;
+		particleSpawnerComp.destructor();
+		this.ecsManager.removeEntity(this.bodyEntity.id);
+		this.audioPlayer.playAudio("credits_theme_1", true);
 	}
 
 	extinguish_audio_operations() {
@@ -96,7 +113,7 @@ export default class PlayerCharacter extends Character {
 		}
 	}
 
-	camera_operations(dt: number) {
+	character_specific_camera_operations(dt: number) {
 		// Update camera
 		if (input.keys["ARROWLEFT"]) {
 			this.cameraFocusComp.offset.add(

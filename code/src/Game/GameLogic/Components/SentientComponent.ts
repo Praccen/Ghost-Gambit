@@ -1,4 +1,7 @@
-import { Component, ComponentTypeEnum } from "../../../Engine/ECS/Components/Component";
+import {
+	Component,
+	ComponentTypeEnum,
+} from "../../../Engine/ECS/Components/Component";
 import Character from "../../Character";
 
 export default class SentientComponent extends Component {

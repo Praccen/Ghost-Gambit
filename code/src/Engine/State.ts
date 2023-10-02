@@ -9,6 +9,7 @@ export enum StatesEnum {
 	GAME,
 	ENDSCREEN,
 	DEBUGMODE,
+	SPECTATEMODE,
 }
 
 export default class State {

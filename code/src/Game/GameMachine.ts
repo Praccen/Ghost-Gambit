@@ -7,6 +7,7 @@ import StateMachine from "../Engine/StateMachine";
 import TextureStore from "../Engine/AssetHandling/TextureStore";
 import ControlsMenu from "./States/ControlsMenu";
 import DebugMode from "./States/DebugMode";
+import SpectateMode from "./States/SpectateMode";
 import Game from "./States/Game";
 import LoadingScreen from "./States/LoadingScreen";
 import Menu from "./States/Menu";
@@ -106,6 +107,13 @@ export default class GameMachine extends StateMachine {
 			DebugMode,
 			1.0 / 144.0,
 			new DebugMode(this.stateAccessible, game)
+		);
+
+		this.addState(
+			StatesEnum.SPECTATEMODE,
+			SpectateMode,
+			1.0 / 144.0,
+			new SpectateMode(game)
 		);
 
 		this.overlayRendering = new OverlayRendering();

@@ -289,6 +289,7 @@ export default class Game extends State {
 				this.stateAccessible.audioPlayer,
 				"Ghost Character",
 				this.allCharacterDict,
+				i,
 				new Vec3([Math.random() * 20, 1.5, Math.random() * 20])
 			);
 			this.botCharacterList.push(bot);
@@ -299,6 +300,12 @@ export default class Game extends State {
 	}
 
 	update(dt: number) {
+		// TODO: Fix spectate mode, currently only a black screen
+		// if (this.playerCharacter.accended) {
+		// 	if (this.gotoState != StatesEnum.SPECTATEMODE) {
+		// 		this.gotoState = StatesEnum.SPECTATEMODE;
+		// 	}
+		// }
 		this.playerCharacter.update(dt);
 		if (this.playerCharacter.is_lit) {
 			this.unlockedGraves = true;

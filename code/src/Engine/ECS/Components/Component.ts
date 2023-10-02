@@ -19,7 +19,7 @@ export enum ComponentTypeEnum {
 	VICINITYTRIGGER,
 	SENTIENT,
 	CANDLE,
-	GRAVESTONE
+	GRAVESTONE,
 }
 
 export class Component {

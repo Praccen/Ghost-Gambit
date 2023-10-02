@@ -64,7 +64,7 @@ export default class ECSManager {
 		);
 
 		// Game logic systems
-		this.systems.set("VICINITYTRIGGER", new VicinityTriggerSystem);
+		this.systems.set("VICINITYTRIGGER", new VicinityTriggerSystem());
 		this.systems.set("SENTIENT", new SentientSystem(this));
 		this.systems.set("GRAVESTONE", new GravestoneSystem());
 	}
@@ -83,7 +83,7 @@ export default class ECSManager {
 		this.systems.get("POSITIONMATRIXUPDATE").update(dt);
 		this.systems.get("GRAPHICS").update(dt);
 		this.systems.get("COLLISION").update(dt);
-		
+
 		// Game logic systems
 		this.systems.get("VICINITYTRIGGER").update(dt);
 		this.systems.get("SENTIENT").update(dt);

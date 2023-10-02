@@ -41,4 +41,8 @@ export default class ParticleSpawnerComponent extends Component {
 		addTextEdit("OffsetY", this.offset, 1);
 		addTextEdit("OffsetZ", this.offset, 2);
 	}
+	
+	destructor(): void {
+		this.particleSpawner.setNumParticles(0);
+	}
 }

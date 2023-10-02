@@ -4,10 +4,43 @@ import Vec3 from "../Engine/Maths/Vec3";
 import { ECSUtils } from "../Engine/Utils/ESCUtils";
 import AStar from "./AStar";
 import Character from "./Character";
+import Rendering from "../Engine/Rendering/Rendering";
+import ECSManager from "../Engine/ECS/ECSManager";
+import AudioPlayer from "../Engine/Audio/AudioPlayer";
 
 export default class BotCharacter extends Character {
 	audioThreshholdDist: number = 50;
 	drag_addition: number = 15;
+	bot_number: number;
+
+	constructor(
+		rendering: Rendering,
+		ecsManager: ECSManager,
+		audioPlayer: AudioPlayer,
+		character_string: string,
+		allCharacterDict: object,
+		bot_number: number,
+		start_position: Vec3 = new Vec3(),
+		start_size: Vec3 = new Vec3([0.25, 0.25, 0.25]),
+		start_rotation: Vec3 = new Vec3(),
+		start_origin: Vec3 = new Vec3(),
+		start_rotation_order: string = "XYZ",
+		trigger_download_needed: boolean = false
+	) {
+		super(
+			rendering,
+			ecsManager,
+			audioPlayer,
+			character_string,
+			allCharacterDict,
+			start_position,
+			start_size,
+			start_rotation,
+			start_origin,
+			start_rotation_order,
+			trigger_download_needed
+		);
+	}
 
 	async init() {
 		super.init();
@@ -18,6 +51,19 @@ export default class BotCharacter extends Character {
 		// this.ecsManager.addComponent(this.bodyEntity, this.cameraFocusComp);
 	}
 
+	character_specific_accended_operations(dt) {
+		this.allCharacterDict["bots"].remove(this.bot_number);
+		this.ecsManager.removeEntity(this.bodyEntity.id);
+	}
+
+	accend() {
+		this.is_accending = true;
+		let dist = this.get_dist_to_player();
+		if (dist < this.audioThreshholdDist) {
+			let audio_level = dist / this.audioThreshholdDist;
+			this.audioPlayer.playAudio("success_1", false, audio_level);
+		}
+	}
 	get_dist_to_player(): number {
 		return this.get_player_relational_vec().len();
 	}
@@ -132,7 +178,7 @@ export default class BotCharacter extends Character {
 		// }
 	}
 
-	camera_operations(dt: number) {
+	character_specific_camera_operations(dt: number) {
 		// Update camera
 		// if (input.keys["ARROWLEFT"]) {
 		//     this.cameraFocusComp.offset.add(

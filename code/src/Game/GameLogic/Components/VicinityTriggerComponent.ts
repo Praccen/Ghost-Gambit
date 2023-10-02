@@ -1,7 +1,10 @@
-import { Component, ComponentTypeEnum } from "../../../Engine/ECS/Components/Component";
+import {
+	Component,
+	ComponentTypeEnum,
+} from "../../../Engine/ECS/Components/Component";
 import Entity from "../../../Engine/ECS/Entity";
 
-ComponentTypeEnum
+ComponentTypeEnum;
 
 export default class VicinityTriggerComponent extends Component {
 	range: number;

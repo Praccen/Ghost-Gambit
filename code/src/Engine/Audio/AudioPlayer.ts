@@ -26,8 +26,12 @@ export default class AudioPlayer {
 			"extinguish.mp3", //https://pixabay.com/sound-effects/blowing-out-candlewav-14441/
 			"light_up.mp3", //https://pixabay.com/sound-effects/match-lighting-candle-81020/
 			"fire.mp3", //https://pixabay.com/sound-effects/small-artisanal-oven-at-night-23698/
+			"success_1.mp3", //https://pixabay.com/sound-effects/ahhhh-37191/
+			"credits_theme_1.mp3", //https://pixabay.com/music/modern-classical-simple-piano-melody-9834/
 		];
-		const sound_effect_volume_multilpliers_list = [0.5, 0.5, 1, 1, 0.5, 0.5, 1];
+		const sound_effect_volume_multilpliers_list = [
+			0.5, 0.5, 1, 1, 0.5, 0.5, 1, 1, 0.5,
+		];
 		let count = 0;
 		for (const file of sound_effect_files) {
 			this.sound_effects[file.split(".")[0]] = new Audio(
