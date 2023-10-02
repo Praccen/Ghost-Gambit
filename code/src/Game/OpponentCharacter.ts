@@ -9,6 +9,7 @@ export default class OpponentCharacter extends Character {
 	audioThreshholdDist: number = 50;
 	drag_addition: number = 15;
 	bot_number: number;
+	isBot: boolean;
 
 	constructor(
 		rendering: Rendering,
@@ -16,6 +17,7 @@ export default class OpponentCharacter extends Character {
 		audioPlayer: AudioPlayer,
 		character_string: string,
 		allCharacterDict: object,
+		isBot: boolean,
 		start_position: Vec3 = new Vec3(),
 		start_size: Vec3 = new Vec3([0.25, 0.25, 0.25]),
 		start_rotation: Vec3 = new Vec3(),
@@ -36,6 +38,7 @@ export default class OpponentCharacter extends Character {
 			start_rotation_order,
 			trigger_download_needed
 		);
+		this.isBot = isBot;
 	}
 
 	async init() {
@@ -120,6 +123,9 @@ export default class OpponentCharacter extends Character {
 	}
 
 	modify_acc_vec(accVec: Vec3) {
+		if (!this.isBot) {
+			return;
+		}
 		let dir_vec = this.get_player_relational_vec();
 		dir_vec.y = 0;
 		accVec.add(dir_vec);
@@ -156,6 +162,9 @@ export default class OpponentCharacter extends Character {
 	}
 
 	jump_controll() {
+		if (!this.isBot) {
+			return;
+		}
 		if (Math.random() > 0.995) {
 			this.movComp.jumpRequested = true;
 			this.offGroundTimer = 0.5;

@@ -278,14 +278,6 @@ export default abstract class Character {
 
 			// Jumping
 			this.jump_controll();
-			if (!this.movComp.onGround || this.movComp.jumpRequested) {
-				this.offGroundTimer += dt;
-				if (this.offGroundTimer >= 0.5) {
-					this.currentAnimation = this.jumpAnimation;
-				}
-			} else {
-				this.offGroundTimer = 0.0;
-			}
 
 			this.character_specific_controll();
 
@@ -395,20 +387,5 @@ export default abstract class Character {
 		this.resetAnimation();
 
 		this.walkAnimation(animationSpeed);
-	}
-
-	private jumpAnimation(animationSpeed: number = 1.0) {
-		this.resetAnimation();
-
-		// let bodyPosComp = this.bodyEntity.getComponent(
-		// 	ComponentTypeEnum.POSITION
-		// ) as PositionComponent;
-		// if (bodyPosComp) {
-		// 	bodyPosComp.rotation.setValues(
-		// 		Math.sin((Math.min(this.timer, 1.4) + 1.1) * animationSpeed) * 5.0,
-		// 		0.0,
-		// 		0.0
-		// 	);
-		// }
 	}
 }

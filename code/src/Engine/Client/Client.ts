@@ -93,10 +93,12 @@ export class Client {
 					this.game.stateAccessible.audioPlayer,
 					"Ghost Character",
 					this.game.allCharacterDict,
+					false,
 					new Vec3([0.0, -10.0, 0.0])
 				);
 				newEnt.init();
 				this.bodyEntities.set(msg.id, newEnt);
+				this.game.allCharacterDict.bots.push(newEnt);
 				break;
 			case "MOV":
 				if (this.bodyEntities.get(msg.id) != undefined) {

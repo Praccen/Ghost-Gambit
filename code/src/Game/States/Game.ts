@@ -302,6 +302,7 @@ export default class Game extends State {
 				this.stateAccessible.audioPlayer,
 				"Ghost Character",
 				this.allCharacterDict,
+				true,
 				new Vec3([Math.random() * 20, 1.5, Math.random() * 20])
 			);
 			this.opponentCharacterList.push(bot);
