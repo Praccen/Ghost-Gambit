@@ -28,13 +28,13 @@ export default class Menu extends State {
 			}
 		});
 
-		let restartButton = this.overlayRendering.getNewButton();
-		restartButton.position.x = 0.5;
-		restartButton.position.y = 0.4;
-		restartButton.center = true;
-		restartButton.textString = "Resume";
+		let resumeButton = this.overlayRendering.getNewButton();
+		resumeButton.position.x = 0.5;
+		resumeButton.position.y = 0.4;
+		resumeButton.center = true;
+		resumeButton.textString = "Resume";
 
-		restartButton.onClick(function () {
+		resumeButton.onClick(function () {
 			self.gotoState = StatesEnum.GAME;
 		});
 

@@ -1,4 +1,5 @@
 skyboxes
+base_color.png
 black.png
 CandleTextureAlbedo.jpg
 characterTextureAlbedo.jpg
