@@ -184,7 +184,7 @@ export default class Game extends State {
 		await this.objectPlacer.load(this.scene, this.ecsManager);
 
 		await this.playerCharacter.init();
-		
+
 		this.num_bots = 0;
 
 		this.unlockedGraves = false;
@@ -326,6 +326,9 @@ export default class Game extends State {
 		this.playerCharacter.update(dt);
 		if (this.playerCharacter.is_lit) {
 			this.unlockedGraves = true;
+		}
+		else {
+			this.unlockedGraves = false;
 		}
 
 		for (const bot of this.allCharacterDict.bots) {
