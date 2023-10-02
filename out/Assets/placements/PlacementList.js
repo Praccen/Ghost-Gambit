@@ -5,7 +5,7 @@ this.placements.set(
 	new Placement(
 		"Assets/objs/Rock1.obj",
 		"Assets/textures/rock.png",
-		"Assets/textures/black.png",
+		"Assets/textures/black.png"
 	)
 );
 this.placements.set(
@@ -159,7 +159,7 @@ this.placements.set(
 	"Cube",
 	new Placement(
 		"Assets/objs/cube.obj",
-		"Assets/textures/white.png",
+		"Assets/textures/base_color.png",
 		"Assets/textures/black.png"
 	)
 );
@@ -199,7 +199,7 @@ this.placements.set(
 	"Cross",
 	new Placement(
 		"Assets/objs/LudumDare_Cross_Des01_V01.obj",
-		"Assets/textures/white.png",
+		"Assets/textures/base_color.png",
 		"Assets/textures/black.png"
 	)
 );
@@ -207,7 +207,7 @@ this.placements.set(
 	"Fire place",
 	new Placement(
 		"Assets/objs/LudumDare_FirePlate_Des01_V01.obj",
-		"Assets/textures/white.png",
+		"Assets/textures/base_color.png",
 		"Assets/textures/black.png"
 	)
 );
@@ -215,7 +215,7 @@ this.placements.set(
 	"Pillar",
 	new Placement(
 		"Assets/objs/LudumDare_Pillar_Des01_V01.obj",
-		"Assets/textures/white.png",
+		"Assets/textures/base_color.png",
 		"Assets/textures/black.png"
 	)
 );
@@ -223,7 +223,7 @@ this.placements.set(
 	"Starting zone",
 	new Placement(
 		"Assets/objs/LudumDare_StartingZone_Des01_V01.obj",
-		"Assets/textures/white.png",
+		"Assets/textures/base_color.png",
 		"Assets/textures/black.png"
 	)
 );
@@ -231,7 +231,7 @@ this.placements.set(
 	"LudumDare_Wall_Des01_V01.obj",
 	new Placement(
 		"Assets/objs/LudumDare_Wall_Des01_V01.obj",
-		"Assets/textures/white.png",
+		"Assets/textures/base_color.png",
 		"Assets/textures/black.png"
 	)
 );
@@ -239,7 +239,7 @@ this.placements.set(
 	"LudumDare_Wall_FlatOneSide_Des01_V01.obj",
 	new Placement(
 		"Assets/objs/LudumDare_Wall_FlatOneSide_Des01_V01.obj",
-		"Assets/textures/white.png",
+		"Assets/textures/base_color.png",
 		"Assets/textures/black.png"
 	)
 );
@@ -247,7 +247,7 @@ this.placements.set(
 	"LudumDare_Wall_FlatSides_Des01_V01.obj",
 	new Placement(
 		"Assets/objs/LudumDare_Wall_FlatSides_Des01_V01.obj",
-		"Assets/textures/white.png",
+		"Assets/textures/base_color.png",
 		"Assets/textures/black.png"
 	)
 );
@@ -255,7 +255,7 @@ this.placements.set(
 	"LudumDare_Wall_LShapeLeft_Des01_V01.obj",
 	new Placement(
 		"Assets/objs/LudumDare_Wall_LShapeLeft_Des01_V01.obj",
-		"Assets/textures/white.png",
+		"Assets/textures/base_color.png",
 		"Assets/textures/black.png"
 	)
 );
@@ -263,7 +263,7 @@ this.placements.set(
 	"LudumDare_Wall_LShapeRight_Des01_V01.obj",
 	new Placement(
 		"Assets/objs/LudumDare_Wall_LShapeRight_Des01_V01.obj",
-		"Assets/textures/white.png",
+		"Assets/textures/base_color.png",
 		"Assets/textures/black.png"
 	)
 );
