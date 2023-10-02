@@ -99,6 +99,12 @@ export default class GameMachine extends StateMachine {
 			new ControlsMenu(this.stateAccessible)
 		);
 		this.addState(StatesEnum.GAME, Game, 1.0 / 144.0, game);
+		this.addState(
+			StatesEnum.SPECTATEMODE,
+			SpectateMode,
+			1.0 / 144.0,
+			new SpectateMode(game)
+		);
 		this.stateAccessible.restartGame = true;
 
 		// game.load();
@@ -107,13 +113,6 @@ export default class GameMachine extends StateMachine {
 			DebugMode,
 			1.0 / 144.0,
 			new DebugMode(this.stateAccessible, game)
-		);
-
-		this.addState(
-			StatesEnum.SPECTATEMODE,
-			SpectateMode,
-			1.0 / 144.0,
-			new SpectateMode(game)
 		);
 
 		this.overlayRendering = new OverlayRendering();

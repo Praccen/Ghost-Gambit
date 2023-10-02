@@ -109,8 +109,9 @@ export default class StateMachine {
 		if (this.states.get(this.currentState).state.gotoState != StatesEnum.STAY) {
 			let oldState = this.currentState;
 			this.currentState = this.states.get(this.currentState).state.gotoState;
-
-			this.states.get(oldState).state.reset();
+			if (this.currentState != StatesEnum.SPECTATEMODE) {
+				this.states.get(oldState).state.reset();
+			}
 			this.states.get(oldState).state.gotoState = StatesEnum.STAY;
 
 			// TODO: Add different ways to switch states, like for example, maybe we want to just have a state overlayed on top of another (pause menu).
