@@ -319,7 +319,7 @@ export default class Game extends State {
 		if (this.playerCharacter.accended) {
 			this.gotoState = StatesEnum.SPECTATEMODE;
 			let allInHeaven = true;
-			for (const opponent of this.allCharacterDict.bots) {
+			for (const opponent of this.opponentCharacterList) {
 				if (!opponent.accended) {
 					allInHeaven = false;
 				}

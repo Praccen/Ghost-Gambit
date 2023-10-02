@@ -17,10 +17,11 @@ export default class PlayerCharacter extends Character {
 	}
 
 	accend() {
+		this.ascendTime = new Date();
+		console.log("Player ascending!");
 		this.audioPlayer.stopAll();
 		this.audioPlayer.playAudio("success_1", false);
 		this.is_accending = true;
-		this.ascendTime = new Date();
 	}
 
 	character_specific_accended_operations(dt) {
