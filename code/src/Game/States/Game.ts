@@ -29,6 +29,8 @@ export default class Game extends State {
 	ecsManager: ECSManager;
 	stateAccessible: StateAccessible;
 
+	gameStartTime: Date;
+
 	private overlayRendering: OverlayRendering;
 	private menuButton: Button;
 	private mapBundle: GraphicsBundle;
@@ -96,6 +98,7 @@ export default class Game extends State {
 
 		this.createMapEntity();
 
+		this.gameStartTime = new Date();
 		if (this.client == undefined) {
 			this.client = new Client(this);
 		} else {
@@ -315,6 +318,15 @@ export default class Game extends State {
 	update(dt: number) {
 		if (this.playerCharacter.accended) {
 			this.gotoState = StatesEnum.SPECTATEMODE;
+			let allInHeaven = true;
+			for (const opponent of this.allCharacterDict.bots) {
+				if (!opponent.accended) {
+					allInHeaven = false;
+				}
+			}
+			if (allInHeaven) {
+				this.gotoState = StatesEnum.SCOREMODE;
+			}
 		}
 		this.playerCharacter.update(dt);
 		if (this.playerCharacter.is_lit) {

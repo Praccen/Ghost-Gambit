@@ -17,6 +17,7 @@ import { OverlayRendering } from "../Engine/Rendering/OverlayRendering";
 import { Client } from "../Engine/Client/Client";
 import LobbyState from "./States/LobbyState";
 import PreLobbyState from "./States/PreLobbyState";
+import ScoreState from "./States/ScoreState";
 
 // Globals
 export let input = new Input();
@@ -113,6 +114,13 @@ export default class GameMachine extends StateMachine {
 			DebugMode,
 			1.0 / 144.0,
 			new DebugMode(this.stateAccessible, game)
+		);
+
+		this.addState(
+			StatesEnum.SCOREMODE,
+			ScoreState,
+			1.0 / 144.0,
+			new ScoreState(this.stateAccessible)
 		);
 
 		this.overlayRendering = new OverlayRendering();

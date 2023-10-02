@@ -13,7 +13,7 @@ export class Client {
 		OpponentCharacter
 	>();
 	connected: boolean = false;
-	private uid: string;
+	uid: string;
 	activeRooms: string[] = [];
 	isServer: boolean = true;
 	gameStarted: boolean = false;
