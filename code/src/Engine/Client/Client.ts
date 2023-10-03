@@ -130,6 +130,7 @@ export class Client {
 			case "STR":
 				console.log("Strating game!");
 				this.gameStarted = true;
+				this.game.resetStartTime();
 				// Game.getInstanceNoSa().gotoState = StatesEnum.GAME;
 				break;
 		}

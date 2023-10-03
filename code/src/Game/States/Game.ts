@@ -243,6 +243,10 @@ export default class Game extends State {
 		input.drawTouchControls();
 	}
 
+	resetStartTime() {
+		this.gameStartTime = Date.now();
+	}
+
 	onExit(e: BeforeUnloadEvent) {
 		this.objectPlacer.onExit(e);
 	}

@@ -35,6 +35,7 @@ export default class LobbyState extends State {
 			} else {
 				if (Game.getInstanceNoSa().client.isServer) {
 					Game.getInstanceNoSa().client.sendStart();
+					Game.getInstanceNoSa().resetStartTime();
 					self.gotoState = StatesEnum.GAME;
 				}
 			}
