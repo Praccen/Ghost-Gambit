@@ -1,0 +1,31 @@
+name: Build and publish develop
+
+on:
+  push:
+    branches: ["updated"]
+  pull_request:
+    branches: ["updated"]
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Build
+        run: |
+          PATH=/run/wrappers/bin:/root/.nix-profile/bin:/etc/profiles/per-user/root/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin:$PATH
+          npm install
+          npm run build
+          rm -rf /var/www/updated.rlyeh.nu/*
+          rsync -og -r out/* /var/www/updated.rlyeh.nu/
