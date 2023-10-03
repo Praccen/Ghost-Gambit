@@ -160,6 +160,9 @@ export default class SpectateMode extends State {
 		]);
 
 		this.game.update(dt);
+		if (this.game.gotoState != StatesEnum.SPECTATEMODE && this.game.gotoState != StatesEnum.STAY) {
+			this.gotoState = this.game.gotoState;
+		}
 		this.game.ecsManager.update(dt);
 		this.game.ecsManager.updateRenderingSystems(dt, false);
 	}
