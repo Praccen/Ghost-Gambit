@@ -159,6 +159,7 @@ export default class SpectateMode extends State {
 			input.mousePosition.y,
 		]);
 
+		this.game.update(dt);
 		this.game.ecsManager.update(dt);
 		this.game.ecsManager.updateRenderingSystems(dt, false);
 	}
